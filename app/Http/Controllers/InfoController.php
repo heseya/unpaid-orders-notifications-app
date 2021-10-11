@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 
 class InfoController extends Controller
@@ -17,17 +18,8 @@ class InfoController extends Controller
             "description" => "Application lets you put your products on Facebook/Instagram marketplace",
             "icon" => "https://picsum.photos/200",
             "licence_required" => true,
-            "required_permissions" => [
-                "products.show",
-                "products.show_details",
-            ],
-            "internal_permissions" => [
-                [
-                    "name" => "config",
-                    "description" => "Allows to configure the app",
-                    "display_name" => "Facebook/Instagram catalogue configuration",
-                ],
-            ],
+            "required_permissions" => Config::get('permissions.required'),
+            "internal_permissions" => Config::get('permissions.internal'),
         ]);
     }
 }
