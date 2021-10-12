@@ -6,6 +6,7 @@ use App\Http\Requests\InstallRequest;
 use App\Models\Api;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
@@ -49,7 +50,9 @@ class InstallationController extends Controller
             throw new Exception("App doesn't have all required permissions");
         }
 
-        $uninstallToken = Str::random(128);
+        do {
+            $uninstallToken = Str::random(128);
+        } while(Api::where("uninstall_token", $uninstallToken)->exists());
 
         Api::create([
             "url" => $request->input("api_url"),
@@ -66,8 +69,13 @@ class InstallationController extends Controller
         ]);
     }
 
-    public function uninstall(): JsonResponse
+    public function uninstall(Request $request): JsonResponse
     {
+        $uninstallToken = $request->input("uninstall_token");
+        $api = Api::where("uninstall_token", $uninstallToken)->firstOrFail();
+
+        $api->delete();
+
         return Response::json(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }
