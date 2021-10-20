@@ -9,6 +9,8 @@ class ConfigController extends Controller
 {
     public function show(): JsonResponse
     {
+        
+
         return Response::json([
             [
                 "key" => "facebook_graph_token",

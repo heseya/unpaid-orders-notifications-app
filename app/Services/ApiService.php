@@ -40,7 +40,7 @@ class ApiService implements ApiServiceContract
         Api $api,
         string $method,
         string $url,
-        array $data = [],
+        ?array $data = [],
         array $headers = [],
         bool $tryRefreshing = true,
         bool $withToken = true,
@@ -91,7 +91,7 @@ class ApiService implements ApiServiceContract
         array $headers = [],
         bool $tryRefreshing = true,
     ): Response {
-        return $this->send($api, 'get', $url, [], $headers, $tryRefreshing);
+        return $this->send($api, 'get', $url, null, $headers, $tryRefreshing);
     }
 
     /**

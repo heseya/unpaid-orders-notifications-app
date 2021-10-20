@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Api extends Model
 {
@@ -18,4 +19,9 @@ class Api extends Model
         "refresh_token",
         "uninstall_token",
     ];
+
+    public function settings(): HasOne
+    {
+        return $this->hasOne(Settings::class, 'api_id');
+    }
 }
