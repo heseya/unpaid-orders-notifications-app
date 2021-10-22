@@ -10,12 +10,9 @@ class Settings extends Model
 {
     use HasUuid;
 
-    public string $api_id;
-    public string $products_url;
-
     protected $fillable = [
-        "api_id",
-        "products_url",
+        'api_id',
+        'products_url',
     ];
 
     public function api(): BelongsTo

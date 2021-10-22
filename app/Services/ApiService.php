@@ -22,16 +22,16 @@ class ApiService implements ApiServiceContract
     private function refreshToken(Api $api): Api
     {
         try {
-            $response = $this->send($api, "post", "/auth/refresh", [
-                "refresh_token" => $api->refresh_token,
+            $response = $this->send($api, 'post', '/auth/refresh', [
+                'refresh_token' => $api->refresh_token,
             ], [], false, false);
         } catch (ApiAuthenticationException) {
-            throw new ApiAuthenticationException("Failed refreshing integration token");
+            throw new ApiAuthenticationException('Failed refreshing integration token');
         }
 
         $api->update([
-           "integration_token" => $response->json("data.token"),
-           "refresh_token" => $response->json("data.refresh_token"),
+           'integration_token' => $response->json('data.token'),
+           'refresh_token' => $response->json('data.refresh_token'),
         ]);
 
         return $api;
@@ -57,30 +57,30 @@ class ApiService implements ApiServiceContract
             }
 
             $response = match ($method) {
-                "post" => $request->post($api->url . $url, $data),
-                "patch" => $request->patch($api->url . $url, $data),
-                "delete" => $request->delete($api->url . $url, $data),
+                'post' => $request->post($api->url . $url, $data),
+                'patch' => $request->patch($api->url . $url, $data),
+                'delete' => $request->delete($api->url . $url, $data),
                 default => $request->get($api->url . $url, $data),
             };
         } catch (Throwable) {
-            throw new ApiConnectionException("Cannot reach the API");
+            throw new ApiConnectionException('Cannot reach the API');
         }
 
         if ($response->failed()) {
             if ($response->serverError()) {
-                throw new ApiServerErrorException("API responded with an Error");
+                throw new ApiServerErrorException('API responded with an Error');
             }
 
             if ($response->status() === 403) {
-                throw new ApiAuthorizationException("This action is unauthorized by API");
+                throw new ApiAuthorizationException('This action is unauthorized by API');
             }
 
             if ($response->status() !== 401) {
-                throw new ApiClientErrorException("API responded with an Error");
+                throw new ApiClientErrorException('API responded with an Error');
             }
 
             if ($tryRefreshing === false) {
-                throw new ApiAuthenticationException("Integration token was rejected by API");
+                throw new ApiAuthenticationException('Integration token was rejected by API');
             }
 
             $api = $this->refreshToken($api);

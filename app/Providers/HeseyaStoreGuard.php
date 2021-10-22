@@ -67,19 +67,19 @@ class HeseyaStoreGuard implements Guard
         }
 
         $payload = $this->getTokenPayload();
-        $url = $payload["iss"];
+        $url = $payload['iss'];
 
         try {
             $api = Api::where('url', $url)->firstOrFail();
         } catch (Throwable) {
-            throw new UnknownApiException("Unregistered API call");
+            throw new UnknownApiException('Unregistered API call');
         }
 
         $apiService = new ApiService();
         try {
-            $response = $apiService->get($api, "/auth/profile/" . $this->getToken());
+            $response = $apiService->get($api, '/auth/profile/' . $this->getToken());
         } catch (ApiClientErrorException) {
-            throw new AuthenticationException("Invalid identity_token");
+            throw new AuthenticationException('Invalid identity_token');
         }
 
         $this->user = new StoreUser(
@@ -92,7 +92,7 @@ class HeseyaStoreGuard implements Guard
         return $this->user;
     }
 
-    public function getTokenPayload()
+    public function getTokenPayload(): ?array
     {
         $token = $this->getToken();
 

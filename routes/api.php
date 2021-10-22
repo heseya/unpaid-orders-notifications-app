@@ -12,6 +12,7 @@ Route::post("/install", [InstallationController::class, "install"]);
 Route::post("/uninstall", [InstallationController::class, "uninstall"]);
 
 Route::get("/config", [ConfigController::class, "show"]);
-Route::post("/config", [ConfigController::class, "store"]);
+Route::post("/config", [ConfigController::class, "store"])
+    ->middleware('can:config');
 
 Route::get("/products", [ProductsController::class, "show"]);

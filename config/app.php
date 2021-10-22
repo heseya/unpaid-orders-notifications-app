@@ -1,5 +1,12 @@
 <?php
 
+use Illuminate\Support\Str;
+
+$appUrl = env('APP_URL', 'http://localhost');
+$appUrl = Str::endsWith($appUrl, '/')
+    ? Str::substr($appUrl, 0, Str::length($appUrl) - 1)
+    : $appUrl;
+
 return [
 
     /*
@@ -52,7 +59,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => $appUrl,
 
     'asset_url' => env('ASSET_URL', null),
 
