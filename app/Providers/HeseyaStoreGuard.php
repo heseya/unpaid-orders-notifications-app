@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
-use App\Exceptions\ApiException;
+use App\Exceptions\ApiClientErrorException;
+use App\Exceptions\UnknownApiException;
 use App\Services\ApiService;
 use App\Models\Api;
 use App\Models\StoreUser;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
@@ -64,21 +66,21 @@ class HeseyaStoreGuard implements Guard
             return null;
         }
 
-        $this->token = $this->getToken();
-        $payload = $this->getTokenPayload($this->token);
-
-        $url = Str::endsWith($payload["iss"], '/')
-            ? Str::replaceLast("/","", $payload["iss"])
-            : $payload["iss"];
+        $payload = $this->getTokenPayload();
+        $url = $payload["iss"];
 
         try {
             $api = Api::where('url', $url)->firstOrFail();
         } catch (Throwable) {
-            throw new ApiException("Unregistered API call");
+            throw new UnknownApiException("Unregistered API call");
         }
 
         $apiService = new ApiService();
-        $response = $apiService->get($api, "/auth/profile/" . $this->getToken());
+        try {
+            $response = $apiService->get($api, "/auth/profile/" . $this->getToken());
+        } catch (ApiClientErrorException) {
+            throw new AuthenticationException("Invalid identity_token");
+        }
 
         $this->user = new StoreUser(
             $response->json('data.id'),
@@ -90,8 +92,14 @@ class HeseyaStoreGuard implements Guard
         return $this->user;
     }
 
-    private function getTokenPayload(string $token)
+    public function getTokenPayload()
     {
+        $token = $this->getToken();
+
+        if ($token === null) {
+            return null;
+        }
+
         $payloadEncoded = Str::between($token, ".", ".");
 
         return json_decode(base64_decode($payloadEncoded), true);

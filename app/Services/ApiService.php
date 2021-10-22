@@ -2,7 +2,11 @@
 
 namespace App\Services;
 
-use App\Exceptions\ApiException;
+use App\Exceptions\ApiAuthenticationException;
+use App\Exceptions\ApiConnectionException;
+use App\Exceptions\ApiClientErrorException;
+use App\Exceptions\ApiAuthorizationException;
+use App\Exceptions\ApiServerErrorException;
 use App\Services\Contracts\ApiServiceContract;
 use App\Models\Api;
 use Exception;
@@ -21,8 +25,8 @@ class ApiService implements ApiServiceContract
             $response = $this->send($api, "post", "/auth/refresh", [
                 "refresh_token" => $api->refresh_token,
             ], [], false, false);
-        } catch (ApiException) {
-            throw new ApiException("Failed refreshing integration token");
+        } catch (ApiAuthenticationException) {
+            throw new ApiAuthenticationException("Failed refreshing integration token");
         }
 
         $api->update([
@@ -59,20 +63,24 @@ class ApiService implements ApiServiceContract
                 default => $request->get($api->url . $url, $data),
             };
         } catch (Throwable) {
-            throw new ApiException("Cannot reach the API");
+            throw new ApiConnectionException("Cannot reach the API");
         }
 
         if ($response->failed()) {
+            if ($response->serverError()) {
+                throw new ApiServerErrorException("API responded with an Error");
+            }
+
             if ($response->status() === 403) {
-                throw new ApiException("This action is unauthorized by API");
+                throw new ApiAuthorizationException("This action is unauthorized by API");
             }
 
             if ($response->status() !== 401) {
-                throw new ApiException("API responded with an Error");
+                throw new ApiClientErrorException("API responded with an Error");
             }
 
             if ($tryRefreshing === false) {
-                throw new ApiException("Integration token was rejected by API");
+                throw new ApiAuthenticationException("Integration token was rejected by API");
             }
 
             $api = $this->refreshToken($api);

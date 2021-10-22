@@ -11,7 +11,7 @@ class InfoController extends Controller
     public function index(): JsonResponse
     {
         return Response::json([
-            "name" => "Facebook/Instagram Catalogue",
+            "name" => "Facebook/Instagram Catalog",
             "author" => "Heseya",
             "version" => "0.1.0",
             "api_version" => "^2.0.0",

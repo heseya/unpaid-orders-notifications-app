@@ -5,7 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Throwable;
 
-class ApiException extends Exception
+class ApiClientErrorException extends Exception
 {
     public function __construct(
         string $message = '',

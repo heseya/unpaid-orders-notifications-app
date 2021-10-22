@@ -39,8 +39,23 @@ class Handler extends ExceptionHandler
         ValidationException::class => [
             'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
         ],
-        ApiException::class => [
-            'code' => Response::HTTP_BAD_REQUEST,
+        ApiConnectionException::class => [
+            'code' => Response::HTTP_SERVICE_UNAVAILABLE,
+        ],
+        ApiServerErrorException::class => [
+            'code' => Response::HTTP_SERVICE_UNAVAILABLE,
+        ],
+        ApiClientErrorException::class => [
+            'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
+        ],
+        ApiAuthenticationException::class => [
+            'code' => Response::HTTP_FORBIDDEN,
+        ],
+        ApiAuthorizationException::class => [
+            'code' => Response::HTTP_FORBIDDEN,
+        ],
+        UnknownApiException::class => [
+            'code' => Response::HTTP_NOT_FOUND,
         ],
     ];
 
