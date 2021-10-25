@@ -19,6 +19,7 @@ class ProductsController extends Controller
         $csv = 'id,title,description,availability,condition,price,link,image_link,brand';
 
         $api = Api::where('url', $request->input('api'))->firstOrFail();
+        $settings = $api->settings()->firstOrFail();
 
         $products = Collection::make([]);
         $page = 0;
@@ -40,7 +41,7 @@ class ProductsController extends Controller
                 $product['available'] ? 'in stock' : 'out of stock',
                 'new',
                 $product['price'] . " $currency",
-                $api->settings->products_url . $product['slug'],
+                $settings->products_url . $product['slug'],
                 $product['cover']['url'] ?? 'https://example.com',
                 'Brak',
             ]),

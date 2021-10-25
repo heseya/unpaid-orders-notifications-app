@@ -1,0 +1,15 @@
+FROM php:8.0-apache
+WORKDIR /usr/src/app
+ENV APACHE_DOCUMENT_ROOT /usr/src/app/public
+
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+RUN a2enmod rewrite
+
+RUN apt-get update && apt-get install -y zip unzip
+RUN docker-php-ext-install pdo_mysql
+
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+
+COPY .. ./
+RUN composer i
