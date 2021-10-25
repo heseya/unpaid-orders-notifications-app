@@ -11,15 +11,15 @@ class InfoController extends Controller
     public function index(): JsonResponse
     {
         return Response::json([
-            "name" => "Facebook/Instagram Catalog",
-            "author" => "Heseya",
-            "version" => "0.1.0",
-            "api_version" => "^2.0.0",
-            "description" => "Application lets you put your products on Facebook/Instagram marketplace",
-            "icon" => "https://picsum.photos/200",
-            "licence_required" => true,
-            "required_permissions" => Config::get('permissions.required'),
-            "internal_permissions" => Config::get('permissions.internal'),
+            'name' => 'Facebook/Instagram Catalog',
+            'author' => 'Heseya',
+            'version' => '0.1.0',
+            'api_version' => '^2.0.0',
+            'description' => 'Application lets you put your products on Facebook/Instagram marketplace',
+            'icon' => 'https://picsum.photos/200',
+            'licence_required' => true,
+            'required_permissions' => Config::get('permissions.required'),
+            'internal_permissions' => Config::get('permissions.internal'),
         ]);
     }
 }

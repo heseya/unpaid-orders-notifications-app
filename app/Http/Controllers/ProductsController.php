@@ -31,6 +31,8 @@ class ProductsController extends Controller
             $lastPage = $response->json('meta.last_page');
         } while ($page < $lastPage);
 
+        $products = $products->filter(fn ($product) => $product['cover'] !== null);
+
         $currency = $response->json('meta.currency.symbol');
 
         $products = $products->map(
@@ -42,7 +44,7 @@ class ProductsController extends Controller
                 'new',
                 $product['price'] . " $currency",
                 $settings->products_url . $product['slug'],
-                $product['cover']['url'] ?? 'https://example.com',
+                $product['cover']['url'],
                 'Brak',
             ]),
         )->unique();
