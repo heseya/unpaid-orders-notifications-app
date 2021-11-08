@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 
 class AuthServiceProvider extends ServiceProvider
@@ -26,7 +27,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Auth::extend('heseya-store', function ($app, $name, array $config) {
-            return new HeseyaStoreGuard();
+            return App::make(HeseyaStoreGuard::class);
         });
     }
 }

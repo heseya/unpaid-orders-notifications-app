@@ -3,15 +3,14 @@
 namespace App\Providers;
 
 use App\Exceptions\ApiClientErrorException;
-use App\Exceptions\UnknownApiException;
-use App\Services\ApiService;
+use App\Exceptions\InvalidTokenException;
 use App\Models\Api;
 use App\Models\StoreUser;
+use App\Services\Contracts\ApiServiceContract;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Throwable;
@@ -20,9 +19,13 @@ class HeseyaStoreGuard implements Guard
 {
     private ?Authenticatable $user = null;
     private ?string $token = null;
+    private ?string $apiUrl = null;
 
-    public function __construct()
-    {
+
+    public function __construct(
+      private ApiServiceContract $apiService,
+      private Request $request,
+    ) {
         Gate::before(function ($user, $ability) {
             if ($user instanceof StoreUser && $user->getPermissions()->contains($ability)) {
                 return true;
@@ -62,22 +65,28 @@ class HeseyaStoreGuard implements Guard
 
     public function fetchUser(): ?Authenticatable
     {
-        if ($this->getToken() === null || $this->getToken() === $this->token) {
+        $apiUrl = $this->request->header('X-Core-Url');
+        $token = $this->getToken();
+
+        if ($apiUrl === null || ($apiUrl === $this->apiUrl && $token === $this->token)) {
             return null;
         }
 
-        $payload = $this->getTokenPayload();
-        $url = $payload['iss'];
+        [$this->token, $this->apiUrl] = [$token, $apiUrl];
 
         try {
-            $api = Api::where('url', $url)->firstOrFail();
+            $api = Api::where('url', $apiUrl)->firstOrFail();
         } catch (Throwable) {
-            throw new UnknownApiException('Unregistered API call');
+            throw new InvalidTokenException('Unregistered API call');
         }
 
-        $apiService = new ApiService();
+        $payload = $this->getTokenPayload();
+        if (rtrim($apiUrl, '/') !== rtrim($payload['iss'], '/')) {
+            throw new InvalidTokenException("Token doesn't match the X-Core-Url API");
+        }
+
         try {
-            $response = $apiService->get($api, '/auth/profile/' . $this->getToken());
+            $response = $this->apiService->get($api, '/auth/check/' . $token);
         } catch (ApiClientErrorException) {
             throw new AuthenticationException('Invalid identity_token');
         }
@@ -107,9 +116,6 @@ class HeseyaStoreGuard implements Guard
 
     private function getToken(): ?string
     {
-        /** @var Request $request */
-        $request = App::make(Request::class);
-
-        return $request->bearerToken();
+        return $this->request->bearerToken();
     }
 }

@@ -10,15 +10,16 @@ class InstallRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "api_url" => [
-                "string",
+            'api_url' => [
+                'required',
+                'string',
                 Rule::unique('apis', 'url'),
             ],
-            "api_name" => ["nullable", "string"],
-            "api_version" => ["string"],
-            "licence_key" => ["nullable", "string"],
-            "integration_token" => ["string"],
-            "refresh_token" => ["string"],
+            'api_name' => ['nullable', 'string'],
+            'api_version' => ['required', 'string'],
+            'licence_key' => ['nullable', 'string'],
+            'integration_token' => ['required', 'string'],
+            'refresh_token' => ['required', 'string'],
         ];
     }
 }

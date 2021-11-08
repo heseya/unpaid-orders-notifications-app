@@ -57,6 +57,9 @@ class Handler extends ExceptionHandler
         UnknownApiException::class => [
             'code' => Response::HTTP_NOT_FOUND,
         ],
+        InvalidTokenException::class => [
+            'code' => Response::HTTP_UNPROCESSABLE_ENTITY ,
+        ],
     ];
 
     /**
