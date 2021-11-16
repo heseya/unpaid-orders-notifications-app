@@ -31,7 +31,9 @@ class ProductsController extends Controller
             $lastPage = $response->json('meta.last_page');
         } while ($page < $lastPage);
 
-        $products = $products->filter(fn ($product) => $product['cover'] !== null);
+        $products = $products->filter(
+            fn ($product) => $product['cover'] !== null && $product['description_short'] !== null,
+        );
 
         $currency = $response->json('meta.currency.symbol');
 
@@ -39,7 +41,7 @@ class ProductsController extends Controller
             fn ($product) => implode(",", [
                 $product['id'],
                 $product['name'],
-                $product['meta_description'],
+                $product['description_short'],
                 $product['available'] ? 'in stock' : 'out of stock',
                 'new',
                 $product['price'] . " $currency",
