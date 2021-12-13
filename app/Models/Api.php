@@ -6,6 +6,15 @@ use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * @property string $url;
+ * @property ?string $name;
+ * @property string $version;
+ * @property ?string $licence_key;
+ * @property string $integration_token;
+ * @property string $refresh_token;
+ * @property string $uninstall_token;
+ */
 class Api extends Model
 {
     use HasUuid;
