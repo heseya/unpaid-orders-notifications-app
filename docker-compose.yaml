@@ -11,6 +11,13 @@ services:
     - bash
     - -c
     - |
+      if [ ! -f "${DB_DATABASE}" ]; then
+        touch ${DB_DATABASE}
+      fi
+      composer install
+      php artisan key:generate
+      chmod -R 777 *
+      php artisan migrate
       exec apache2-foreground
   nginx:
     image: nginx
