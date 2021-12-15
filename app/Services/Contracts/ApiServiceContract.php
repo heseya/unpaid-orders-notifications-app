@@ -2,13 +2,22 @@
 
 namespace App\Services\Contracts;
 
+use App\Exceptions\ApiAuthenticationException;
+use App\Exceptions\ApiAuthorizationException;
+use App\Exceptions\ApiClientErrorException;
+use App\Exceptions\ApiConnectionException;
+use App\Exceptions\ApiServerErrorException;
 use App\Models\Api;
 use Illuminate\Http\Client\Response;
 
 interface ApiServiceContract
 {
     /**
-     * @throws Exception
+     * @throws ApiServerErrorException
+     * @throws ApiConnectionException
+     * @throws ApiAuthenticationException
+     * @throws ApiAuthorizationException
+     * @throws ApiClientErrorException
      */
     public function get(
         Api $api,
@@ -18,7 +27,11 @@ interface ApiServiceContract
     ): Response;
 
     /**
-     * @throws Exception
+     * @throws ApiServerErrorException
+     * @throws ApiConnectionException
+     * @throws ApiAuthenticationException
+     * @throws ApiAuthorizationException
+     * @throws ApiClientErrorException
      */
     public function post(
         Api $api,
@@ -29,7 +42,11 @@ interface ApiServiceContract
     ): Response;
 
     /**
-     * @throws Exception
+     * @throws ApiServerErrorException
+     * @throws ApiConnectionException
+     * @throws ApiAuthenticationException
+     * @throws ApiAuthorizationException
+     * @throws ApiClientErrorException
      */
     public function patch(
         Api $api,
@@ -40,7 +57,11 @@ interface ApiServiceContract
     ): Response;
 
     /**
-     * @throws Exception
+     * @throws ApiServerErrorException
+     * @throws ApiConnectionException
+     * @throws ApiAuthenticationException
+     * @throws ApiAuthorizationException
+     * @throws ApiClientErrorException
      */
     public function delete(
         Api $api,

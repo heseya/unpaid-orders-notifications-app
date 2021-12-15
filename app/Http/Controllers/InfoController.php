@@ -13,11 +13,11 @@ class InfoController extends Controller
         return Response::json([
             'name' => 'Facebook/Instagram Catalog',
             'author' => 'Heseya',
-            'version' => '0.1.0',
+            'version' => '1.0.0',
             'api_version' => '^2.0.0',
             'description' => 'Application lets you put your products on Facebook/Instagram marketplace',
-            'icon' => 'https://picsum.photos/200',
-            'licence_required' => true,
+            'icon' => Config::get('app.url') . '/logo.png',
+            'licence_required' => false,
             'required_permissions' => Config::get('permissions.required'),
             'internal_permissions' => Config::get('permissions.internal'),
         ]);

@@ -9,15 +9,19 @@ use App\Exceptions\ApiAuthorizationException;
 use App\Exceptions\ApiServerErrorException;
 use App\Services\Contracts\ApiServiceContract;
 use App\Models\Api;
-use Exception;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Throwable;
 
 class ApiService implements ApiServiceContract
 {
+
     /**
-     * @throws Exception
+     * @throws ApiServerErrorException
+     * @throws ApiConnectionException
+     * @throws ApiAuthenticationException
+     * @throws ApiClientErrorException
+     * @throws ApiAuthorizationException
      */
     private function refreshToken(Api $api): Api
     {
@@ -38,7 +42,11 @@ class ApiService implements ApiServiceContract
     }
 
     /**
-     * @throws Exception
+     * @throws ApiServerErrorException
+     * @throws ApiConnectionException
+     * @throws ApiAuthenticationException
+     * @throws ApiAuthorizationException
+     * @throws ApiClientErrorException
      */
     private function send(
         Api $api,
@@ -91,7 +99,11 @@ class ApiService implements ApiServiceContract
     }
 
     /**
-     * @throws Exception
+     * @throws ApiServerErrorException
+     * @throws ApiConnectionException
+     * @throws ApiAuthenticationException
+     * @throws ApiAuthorizationException
+     * @throws ApiClientErrorException
      */
     public function get(
         Api $api,
@@ -103,7 +115,11 @@ class ApiService implements ApiServiceContract
     }
 
     /**
-     * @throws Exception
+     * @throws ApiServerErrorException
+     * @throws ApiConnectionException
+     * @throws ApiAuthenticationException
+     * @throws ApiAuthorizationException
+     * @throws ApiClientErrorException
      */
     public function post(
         Api $api,
@@ -116,7 +132,11 @@ class ApiService implements ApiServiceContract
     }
 
     /**
-     * @throws Exception
+     * @throws ApiServerErrorException
+     * @throws ApiConnectionException
+     * @throws ApiAuthenticationException
+     * @throws ApiAuthorizationException
+     * @throws ApiClientErrorException
      */
     public function patch(
         Api $api,
@@ -129,7 +149,11 @@ class ApiService implements ApiServiceContract
     }
 
     /**
-     * @throws Exception
+     * @throws ApiServerErrorException
+     * @throws ApiConnectionException
+     * @throws ApiAuthenticationException
+     * @throws ApiAuthorizationException
+     * @throws ApiClientErrorException
      */
     public function delete(
         Api $api,
