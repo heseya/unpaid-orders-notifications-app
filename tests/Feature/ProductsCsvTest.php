@@ -72,7 +72,7 @@ class ProductsCsvTest extends TestCase
 
     private function setApiProductsUrl() {
         $this->api->settings()->create([
-            'products_url' => "http://store.com/products/",
+            'store_front_url' => "http://store.com/products/",
         ]);
     }
 

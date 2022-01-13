@@ -9,25 +9,13 @@ $appUrl = Str::endsWith($appUrl, '/')
 
 return [
 
-    'fields' => [
-        [
-            'key' => 'products_url',
-            'label' => 'Storefront product URL without product slug',
-            'placeholder' => 'https://example.store/product/',
-            'type' => 'text',
-            'default_value' => null,
-            'required' => true,
-            'options' => [],
-        ],
-        [
-            'key' => 'csv_url',
-            'label' => 'CSV formated Facebook Catalog url',
-            'placeholder' => $appUrl . '/products?api=api_url',
-            'type' => 'text',
-            'default_value' => null,
-            'required' => false,
-            'options' => [],
-        ],
+    'store_front_url' => [
+        'key' => 'store_front_url',
+        'label' => 'Storefront URL',
+        'placeholder' => 'https://example.store/product/',
+        'type' => 'text',
+        'default_value' => null,
+        'required' => true,
+        'options' => [],
     ],
-
 ];

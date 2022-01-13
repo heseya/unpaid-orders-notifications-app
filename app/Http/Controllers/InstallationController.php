@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\InstallRequest;
 use App\Models\Api;
+use App\Services\Contracts\InfoServiceContract;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
@@ -16,6 +15,11 @@ use Throwable;
 
 class InstallationController extends Controller
 {
+    public function __construct(
+        private InfoServiceContract $infoService,
+    ) {
+    }
+
     /**
      * @throws Exception
      */
@@ -44,7 +48,7 @@ class InstallationController extends Controller
         }
 
         $permissions = $response->json('data.permissions');
-        $requiredPermissions = Collection::make(Config::get('permissions.required'));
+        $requiredPermissions = $this->infoService->getRequiredPermissions();
 
         if ($requiredPermissions->diff($permissions)->isNotEmpty()) {
             throw new Exception('App doesn\'t have all required permissions');
