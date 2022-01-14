@@ -3,15 +3,30 @@
 return [
 
     "required" => [
-        "products.show",
-        "products.show_details",
+        "products" => [
+            "products.show",
+            "products.show_details",
+        ],
+        "products-private" => [
+            "products.show",
+            "products.show_details",
+            "products.show_hidden",
+        ],
+        "orders" => [
+            "orders.show",
+            "orders.show_details",
+        ],
+        "items" => [
+            "items.show",
+            "items.show_details",
+        ],
     ],
 
     "internal" => [
         [
             "name" => "config",
             "description" => "Allows to configure the app",
-            "display_name" => "Facebook/Instagram catalogue configuration",
+            "display_name" => "Super Exporter configuration",
         ],
     ],
 

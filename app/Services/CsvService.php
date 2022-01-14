@@ -30,7 +30,7 @@ class CsvService implements CsvServiceContract
                 $product['available'] ? 'in stock' : 'out of stock',
                 'new',
                 "{$product['price']} {$product['currency']}",
-                $settings->products_url . $product['slug'],
+                $settings->store_front_url . $product['slug'],
                 $product['cover']['url'],
                 'Brak',
             ],

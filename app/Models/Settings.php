@@ -12,7 +12,7 @@ class Settings extends Model
 
     protected $fillable = [
         'api_id',
-        'products_url',
+        'store_front_url',
     ];
 
     public function api(): BelongsTo

@@ -238,4 +238,9 @@ return [
 
     ],
 
+    'author' => env('APP_AUTHOR', 'Heseya'),
+    'icon' => env('APP_ICON'),
+    'description' => env('APP_DESCRIPTION'),
+    'microfrontend' => env('APP_MICROFRONTEND'),
+
 ];
