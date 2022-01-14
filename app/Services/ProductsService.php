@@ -2,10 +2,13 @@
 
 namespace App\Services;
 
+use App\Dtos\ProductsExportDto;
+use App\Exports\ProductsExport;
 use App\Models\Api;
 use App\Services\Contracts\ApiServiceContract;
 use App\Services\Contracts\ProductsServiceContract;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductsService implements ProductsServiceContract
 {
@@ -29,5 +32,16 @@ class ProductsService implements ProductsServiceContract
         $currency = $response->json('meta.currency.symbol');
 
         return $products->map(fn ($product) => $product + ['currency' => $currency]);
+    }
+
+    public function exportProducts(ProductsExportDto $dto)
+    {
+        $api = Api::where('url', $dto->getApi())->firstOrFail();
+
+        $products = $this->getAll($api);
+
+        $setting = $api->settings()->firstOrFail();
+
+        return Excel::download(new ProductsExport($products, $setting->store_front_url), 'products.' . $dto->getFormat());
     }
 }
