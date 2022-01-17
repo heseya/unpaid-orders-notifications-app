@@ -38,10 +38,20 @@ class ProductsService implements ProductsServiceContract
     {
         $api = Api::where('url', $dto->getApi())->firstOrFail();
 
-        $products = $this->getAll($api);
+        $products = $this->productsWithCoverAndDescriptions($this->getAll($api));
 
         $setting = $api->settings()->firstOrFail();
 
-        return Excel::download(new ProductsExport($products, $setting->store_front_url), 'products.' . $dto->getFormat());
+        return Excel::download(
+            new ProductsExport($products, $setting->store_front_url),
+            'products.' . $dto->getFormat()
+        );
+    }
+
+    private function productsWithCoverAndDescriptions(Collection $products): Collection
+    {
+        return $products->filter(
+            fn ($product) => $product['cover'] !== null && $product['description_short'] !== null,
+        );
     }
 }

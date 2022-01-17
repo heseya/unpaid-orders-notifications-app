@@ -44,8 +44,8 @@ class ProductsExport implements FromCollection, WithHeadings, WithMapping
             $row['available'] ? 'in stock' : 'out of stock',
             'new',
             "{$row['price']} {$row['currency']}",
-            $this->store_front_url . $row['slug'],
-            $row['cover'] ? $row['cover']['url'] : 'brak cover',
+            "{$this->store_front_url}products/{$row['slug']}",
+            $row['cover'] ? $row['cover']['url'] : '',
             'Brak',
         ];
     }

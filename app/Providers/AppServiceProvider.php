@@ -24,7 +24,6 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(ApiServiceContract::class, ApiService::class);
-        $this->app->bind(CsvServiceContract::class, CsvService::class);
         $this->app->bind(ProductsServiceContract::class, ProductsService::class);
         $this->app->bind(InfoServiceContract::class, InfoService::class);
         $this->app->bind(ConfigServiceContract::class, ConfigService::class);
