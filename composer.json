@@ -9,7 +9,7 @@
         "doctrine/dbal": "^3.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "heseya/dto": "*",
+        "heseya/dto": "^1.0",
         "laravel/framework": "^8.53",
         "league/csv": "^9.7"
     },
@@ -68,11 +68,5 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "repositories": [
-        {
-            "type": "path",
-            "url": "./heseya/dto"
-        }
-    ]
+    "prefer-stable": true
 }

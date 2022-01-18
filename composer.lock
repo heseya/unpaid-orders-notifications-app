@@ -4,35 +4,35 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "207f2365b7864aaf34c932fc3f2ae228",
+    "content-hash": "c6a205c07010fa6bf6e572985a3d20fd",
     "packages": [
         {
             "name": "asm89/stack-cors",
-            "version": "v2.0.5",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/asm89/stack-cors.git",
-                "reference": "7a198ec737e926eab15d29368fc6fff66772b0e2"
+                "reference": "73e5b88775c64ccc0b84fb60836b30dc9d92ac4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/asm89/stack-cors/zipball/7a198ec737e926eab15d29368fc6fff66772b0e2",
-                "reference": "7a198ec737e926eab15d29368fc6fff66772b0e2",
+                "url": "https://api.github.com/repos/asm89/stack-cors/zipball/73e5b88775c64ccc0b84fb60836b30dc9d92ac4a",
+                "reference": "73e5b88775c64ccc0b84fb60836b30dc9d92ac4a",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0|^8.0",
-                "symfony/http-foundation": "~2.7|~3.0|~4.0|~5.0|~6.0",
-                "symfony/http-kernel": "~2.7|~3.0|~4.0|~5.0|~6.0"
+                "php": "^7.2|^8.0",
+                "symfony/http-foundation": "^4|^5|^6",
+                "symfony/http-kernel": "^4|^5|^6"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6|^7|^8|^9",
+                "phpunit/phpunit": "^7|^9",
                 "squizlabs/php_codesniffer": "^3.5"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0-dev"
+                    "dev-master": "2.1-dev"
                 }
             },
             "autoload": {
@@ -58,9 +58,9 @@
             ],
             "support": {
                 "issues": "https://github.com/asm89/stack-cors/issues",
-                "source": "https://github.com/asm89/stack-cors/tree/v2.0.5"
+                "source": "https://github.com/asm89/stack-cors/tree/v2.1.1"
             },
-            "time": "2022-01-03T15:27:13+00:00"
+            "time": "2022-01-18T09:12:03+00:00"
         },
         {
             "name": "brick/math",
@@ -1308,14 +1308,21 @@
         },
         {
             "name": "heseya/dto",
-            "version": "dev-main",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/heseya/dto.git",
+                "reference": "3a761f600cba75f4941b2781777e3f463d73a290"
+            },
             "dist": {
-                "type": "path",
-                "url": "./heseya/dto",
-                "reference": "0d88051f99fa5820233120222cb6bcf3dd6a81b8"
+                "type": "zip",
+                "url": "https://api.github.com/repos/heseya/dto/zipball/3a761f600cba75f4941b2781777e3f463d73a290",
+                "reference": "3a761f600cba75f4941b2781777e3f463d73a290",
+                "shasum": ""
             },
             "require": {
-                "laravel/framework": "^8.0"
+                "laravel/framework": "^8.0|^9.0",
+                "php": "^8.0"
             },
             "type": "library",
             "autoload": {
@@ -1324,16 +1331,19 @@
                     "Heseya\\Dto\\Tests\\": "tests/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "authors": [
                 {
                     "name": "Bartosz Juraszewski",
                     "email": "bartek@heseya.com"
                 }
             ],
-            "description": "Heseya Store Dto with optional properties",
-            "transport-options": {
-                "relative": true
-            }
+            "description": "Heseya Dto with optional properties",
+            "support": {
+                "issues": "https://github.com/heseya/dto/issues",
+                "source": "https://github.com/heseya/dto/tree/1.0.0"
+            },
+            "time": "2022-01-17T13:48:06+00:00"
         },
         {
             "name": "laravel/framework",
