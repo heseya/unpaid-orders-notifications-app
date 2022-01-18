@@ -58,7 +58,7 @@ class Handler extends ExceptionHandler
             'code' => Response::HTTP_NOT_FOUND,
         ],
         InvalidTokenException::class => [
-            'code' => Response::HTTP_UNPROCESSABLE_ENTITY ,
+            'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
         ],
     ];
 
@@ -68,7 +68,6 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
     ];
 
     /**
@@ -90,7 +89,6 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->reportable(function (Throwable $e) {
-            //
         });
     }
 

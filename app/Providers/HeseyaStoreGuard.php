@@ -21,10 +21,9 @@ class HeseyaStoreGuard implements Guard
     private ?string $token = null;
     private ?string $apiUrl = null;
 
-
     public function __construct(
-      private ApiServiceContract $apiService,
-      private Request $request,
+        private ApiServiceContract $apiService,
+        private Request $request,
     ) {
         Gate::before(function ($user, $ability) {
             if ($user instanceof StoreUser && $user->getPermissions()->contains($ability)) {
@@ -109,7 +108,7 @@ class HeseyaStoreGuard implements Guard
             return null;
         }
 
-        $payloadEncoded = Str::between($token, ".", ".");
+        $payloadEncoded = Str::between($token, '.', '.');
 
         return json_decode(base64_decode($payloadEncoded), true);
     }

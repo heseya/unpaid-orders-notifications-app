@@ -36,7 +36,7 @@ interface ApiServiceContract
     public function post(
         Api $api,
         string $url,
-        array $data ,
+        array $data,
         array $headers,
         bool $tryRefreshing,
     ): Response;

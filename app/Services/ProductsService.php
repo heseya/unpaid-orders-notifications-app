@@ -23,7 +23,7 @@ class ProductsService implements ProductsServiceContract
 
         $lastPage = 1; // Get products at least once
         for ($page = 1; $page <= $lastPage; $page++) {
-            $response = $this->apiService->get($api, "/products?limit=500&full&page=$page");
+            $response = $this->apiService->get($api, "/products?limit=500&full&page=${page}");
             $products = $products->concat($response->json('data'));
 
             $lastPage = $response->json('meta.last_page');

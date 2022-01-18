@@ -20,13 +20,13 @@ class Api extends Model
     use HasUuid;
 
     protected $fillable = [
-        "url",
-        "name",
-        "version",
-        "licence_key",
-        "integration_token",
-        "refresh_token",
-        "uninstall_token",
+        'url',
+        'name',
+        'version',
+        'licence_key',
+        'integration_token',
+        'refresh_token',
+        'uninstall_token',
     ];
 
     public function settings(): HasOne
