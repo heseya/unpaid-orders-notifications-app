@@ -39,41 +39,41 @@ class ProductsTest extends TestCase
     /**
      * @dataProvider productHiddenProvider
      */
-    public function testApiMissing($url, $param)
+    public function testApiMissing($report, $param)
     {
-        $this->get("/{$url}?api=https://missing.com&format=csv")
+        $this->get("/{$report}?api=https://missing.com&format=csv")
             ->assertStatus(404);
     }
 
     /**
      * @dataProvider productHiddenProvider
      */
-    public function testApiNoProductUrl($url, $param)
+    public function testApiNoProductUrl($report, $param)
     {
         $this->mockApiNoProducts($param);
 
-        $this->get("/{$url}?api={$this->api->url}&format=csv")
+        $this->get("/{$report}?api={$this->api->url}&format=csv")
             ->assertStatus(404);
     }
 
     /**
      * @dataProvider productHiddenProvider
      */
-    public function testApiNoProductInvalidFormat($url, $param)
+    public function testApiNoProductInvalidFormat($report, $param)
     {
-        $this->get("/{$url}?api={$this->api->url}&format=png")
+        $this->get("/{$report}?api={$this->api->url}&format=png")
             ->assertStatus(422);
     }
 
     /**
      * @dataProvider productHiddenProvider
      */
-    public function testApiHasNoProducts($url, $param)
+    public function testApiHasNoProducts($report, $param)
     {
         $this->setApiProductsUrl();
         $this->mockApiNoProducts($param);
 
-        $this->get("/{$url}?api={$this->api->url}&format=csv")
+        $this->get("/{$report}?api={$this->api->url}&format=csv")
             ->assertStatus(200)
             ->assertSeeText(
                 '',
@@ -83,15 +83,35 @@ class ProductsTest extends TestCase
     /**
      * @dataProvider productHiddenProvider
      */
-    public function testApiProducts($url, $param)
+    public function testApiProducts($report, $param)
     {
         $this->setApiProductsUrl();
         $this->mockApiProducts($param);
 
-        $response = $this->get("/{$url}?api={$this->api->url}&format=csv");
+        $response = $this->get("/{$report}?api={$this->api->url}&format=csv");
 
         $response->assertStatus(200);
-        $response->assertDownload('products.csv');
+        $response->assertDownload("{$report}.csv");
+        $this->assertEquals(
+            '"id","title","description","availability","condition","price","link","image_link","brand"
+"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Brak"
+',
+            $response->getFile()->getContent(),
+        );
+    }
+
+    /**
+     * @dataProvider productHiddenProvider
+     */
+    public function testApiProductsDefaultFormat($report, $param)
+    {
+        $this->setApiProductsUrl();
+        $this->mockApiProducts($param);
+
+        $response = $this->get("/{$report}?api={$this->api->url}");
+
+        $response->assertStatus(200);
+        $response->assertDownload("{$report}.csv");
         $this->assertEquals(
             '"id","title","description","availability","condition","price","link","image_link","brand"
 "1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Brak"

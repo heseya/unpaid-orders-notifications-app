@@ -38,7 +38,7 @@ class ConfigController extends Controller
         $productsUrl = $request->input('store_front_url');
 
         Settings::updateOrCreate(['api_id' => $api->getKey()], [
-           'store_front_url' => Str::endsWith($productsUrl, '/') ? $productsUrl : "$productsUrl/",
+            'store_front_url' => Str::endsWith($productsUrl, '/') ? $productsUrl : "${productsUrl}/",
         ]);
 
         return Response::json($this->configService->getConfigs(true));

@@ -12,7 +12,6 @@ use Illuminate\Support\Str;
 
 class ConfigService implements ConfigServiceContract
 {
-
     public function getConfigs(bool $with_values): Collection
     {
         $store_front_url = null;

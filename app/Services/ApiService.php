@@ -3,25 +3,91 @@
 namespace App\Services;
 
 use App\Exceptions\ApiAuthenticationException;
-use App\Exceptions\ApiConnectionException;
-use App\Exceptions\ApiClientErrorException;
 use App\Exceptions\ApiAuthorizationException;
+use App\Exceptions\ApiClientErrorException;
+use App\Exceptions\ApiConnectionException;
 use App\Exceptions\ApiServerErrorException;
-use App\Services\Contracts\ApiServiceContract;
 use App\Models\Api;
+use App\Services\Contracts\ApiServiceContract;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Throwable;
 
 class ApiService implements ApiServiceContract
 {
+    /**
+     * @throws ApiAuthenticationException
+     * @throws ApiAuthorizationException
+     * @throws ApiClientErrorException
+     * @throws ApiConnectionException
+     * @throws ApiServerErrorException
+     */
+    public function get(
+        Api $api,
+        string $url,
+        array $headers = [],
+        bool $tryRefreshing = true,
+    ): Response {
+        return $this->send($api, 'get', $url, null, $headers, $tryRefreshing);
+    }
 
     /**
-     * @throws ApiServerErrorException
-     * @throws ApiConnectionException
      * @throws ApiAuthenticationException
-     * @throws ApiClientErrorException
      * @throws ApiAuthorizationException
+     * @throws ApiClientErrorException
+     * @throws ApiConnectionException
+     * @throws ApiServerErrorException
+     */
+    public function post(
+        Api $api,
+        string $url,
+        array $data = [],
+        array $headers = [],
+        bool $tryRefreshing = true,
+    ): Response {
+        return $this->send($api, 'post', $url, $data, $headers, $tryRefreshing);
+    }
+
+    /**
+     * @throws ApiAuthenticationException
+     * @throws ApiAuthorizationException
+     * @throws ApiClientErrorException
+     * @throws ApiConnectionException
+     * @throws ApiServerErrorException
+     */
+    public function patch(
+        Api $api,
+        string $url,
+        array $data = [],
+        array $headers = [],
+        bool $tryRefreshing = true,
+    ): Response {
+        return $this->send($api, 'patch', $url, $data, $headers, $tryRefreshing);
+    }
+
+    /**
+     * @throws ApiAuthenticationException
+     * @throws ApiAuthorizationException
+     * @throws ApiClientErrorException
+     * @throws ApiConnectionException
+     * @throws ApiServerErrorException
+     */
+    public function delete(
+        Api $api,
+        string $url,
+        array $data = [],
+        array $headers = [],
+        bool $tryRefreshing = true,
+    ): Response {
+        return $this->send($api, 'delete', $url, $data, $headers, $tryRefreshing);
+    }
+
+    /**
+     * @throws ApiAuthenticationException
+     * @throws ApiAuthorizationException
+     * @throws ApiClientErrorException
+     * @throws ApiConnectionException
+     * @throws ApiServerErrorException
      */
     private function refreshToken(Api $api): Api
     {
@@ -34,19 +100,19 @@ class ApiService implements ApiServiceContract
         }
 
         $api->update([
-           'integration_token' => $response->json('data.token'),
-           'refresh_token' => $response->json('data.refresh_token'),
+            'integration_token' => $response->json('data.token'),
+            'refresh_token' => $response->json('data.refresh_token'),
         ]);
 
         return $api;
     }
 
     /**
-     * @throws ApiServerErrorException
-     * @throws ApiConnectionException
      * @throws ApiAuthenticationException
      * @throws ApiAuthorizationException
      * @throws ApiClientErrorException
+     * @throws ApiConnectionException
+     * @throws ApiServerErrorException
      */
     private function send(
         Api $api,
@@ -96,72 +162,5 @@ class ApiService implements ApiServiceContract
         }
 
         return $response;
-    }
-
-    /**
-     * @throws ApiServerErrorException
-     * @throws ApiConnectionException
-     * @throws ApiAuthenticationException
-     * @throws ApiAuthorizationException
-     * @throws ApiClientErrorException
-     */
-    public function get(
-        Api $api,
-        string $url,
-        array $headers = [],
-        bool $tryRefreshing = true,
-    ): Response {
-        return $this->send($api, 'get', $url, null, $headers, $tryRefreshing);
-    }
-
-    /**
-     * @throws ApiServerErrorException
-     * @throws ApiConnectionException
-     * @throws ApiAuthenticationException
-     * @throws ApiAuthorizationException
-     * @throws ApiClientErrorException
-     */
-    public function post(
-        Api $api,
-        string $url,
-        array $data = [],
-        array $headers = [],
-        bool $tryRefreshing = true,
-    ): Response {
-        return $this->send($api, 'post', $url, $data, $headers, $tryRefreshing);
-    }
-
-    /**
-     * @throws ApiServerErrorException
-     * @throws ApiConnectionException
-     * @throws ApiAuthenticationException
-     * @throws ApiAuthorizationException
-     * @throws ApiClientErrorException
-     */
-    public function patch(
-        Api $api,
-        string $url,
-        array $data = [],
-        array $headers = [],
-        bool $tryRefreshing = true,
-    ): Response {
-        return $this->send($api, 'patch', $url, $data, $headers, $tryRefreshing);
-    }
-
-    /**
-     * @throws ApiServerErrorException
-     * @throws ApiConnectionException
-     * @throws ApiAuthenticationException
-     * @throws ApiAuthorizationException
-     * @throws ApiClientErrorException
-     */
-    public function delete(
-        Api $api,
-        string $url,
-        array $data = [],
-        array $headers = [],
-        bool $tryRefreshing = true,
-    ): Response {
-        return $this->send($api, 'delete', $url, $data, $headers, $tryRefreshing);
     }
 }

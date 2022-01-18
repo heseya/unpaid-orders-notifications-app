@@ -11,7 +11,7 @@ class ProductsExportRequest extends FormRequest
     {
         return [
             'api' => ['required', 'string'],
-            'format' => ['required', 'string', new Formats()],
+            'format' => ['nullable', 'string', new Formats()],
         ];
     }
 }

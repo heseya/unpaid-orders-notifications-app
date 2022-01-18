@@ -34,7 +34,7 @@ class InstallationController extends Controller
         $token = $request->input('integration_token');
 
         try {
-            $response = Http::withToken($token)->get("$storeUrl/auth/profile");
+            $response = Http::withToken($token)->get("${storeUrl}/auth/profile");
         } catch (Throwable) {
             throw new Exception('Failed to connect to the API');
         }
@@ -43,7 +43,7 @@ class InstallationController extends Controller
             throw new Exception('Failed to verify assigned permissions');
         }
 
-        if ($response->json('data.url') == null) {
+        if ($response->json('data.url') === null) {
             throw new Exception('Integration token validation failed');
         }
 
@@ -56,7 +56,7 @@ class InstallationController extends Controller
 
         do {
             $uninstallToken = Str::random(128);
-        } while(Api::where('uninstall_token', $uninstallToken)->exists());
+        } while (Api::where('uninstall_token', $uninstallToken)->exists());
 
         Api::create([
             'url' => $request->input('api_url'),

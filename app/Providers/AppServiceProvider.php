@@ -6,10 +6,8 @@ use App\Services\ApiService;
 use App\Services\ConfigService;
 use App\Services\Contracts\ApiServiceContract;
 use App\Services\Contracts\ConfigServiceContract;
-use App\Services\Contracts\CsvServiceContract;
 use App\Services\Contracts\InfoServiceContract;
 use App\Services\Contracts\ProductsServiceContract;
-use App\Services\CsvService;
 use App\Services\InfoService;
 use App\Services\ProductsService;
 use Illuminate\Support\ServiceProvider;
@@ -36,6 +34,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
     }
 }

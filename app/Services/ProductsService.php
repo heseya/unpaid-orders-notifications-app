@@ -25,7 +25,7 @@ class ProductsService implements ProductsServiceContract
 
         $lastPage = 1; // Get products at least once
         for ($page = 1; $page <= $lastPage; $page++) {
-            $response = $this->apiService->get($api, "/products?limit=500&full&page=$page$public");
+            $response = $this->apiService->get($api, "/products?limit=500&full&page=${page}${public}");
             $products = $products->concat($response->json('data'));
 
             $lastPage = $response->json('meta.last_page');
@@ -46,7 +46,7 @@ class ProductsService implements ProductsServiceContract
 
         return Excel::download(
             new ProductsExport($products, $setting->store_front_url),
-            'products.' . $dto->getFormat()
+            ($public ? 'products.' : 'products-private.') . $dto->getFormat()
         );
     }
 
