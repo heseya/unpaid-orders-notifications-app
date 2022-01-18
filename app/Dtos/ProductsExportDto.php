@@ -4,6 +4,7 @@ namespace App\Dtos;
 
 use App\Http\Requests\ProductsExportRequest;
 use Heseya\Dto\Dto;
+use Illuminate\Support\Facades\Config;
 
 class ProductsExportDto extends Dto
 {
@@ -14,7 +15,7 @@ class ProductsExportDto extends Dto
     {
         return new self(
             api: $request->input('api'),
-            format: $request->input('format'),
+            format: $request->input('format', Config::get('export.default_format')),
         );
     }
 
