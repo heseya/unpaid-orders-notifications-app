@@ -77,6 +77,23 @@ class ProductsCsvTest extends TestCase
         );
     }
 
+    public function testApiProductsDefaultFormat()
+    {
+        $this->setApiProductsUrl();
+        $this->mockApiProducts();
+
+        $response = $this->get("/products?api={$this->api->url}");
+
+        $response->assertStatus(200);
+        $response->assertDownload('products.csv');
+        $this->assertEquals(
+            '"id","title","description","availability","condition","price","link","image_link","brand"
+"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Brak"
+',
+            $response->getFile()->getContent(),
+        );
+    }
+
     private function setApiProductsUrl() {
         $this->api->settings()->create([
             'store_front_url' => "http://store.com/",
