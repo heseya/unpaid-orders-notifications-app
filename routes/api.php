@@ -16,3 +16,4 @@ Route::post("/config", [ConfigController::class, "store"])
     ->middleware('can:config');
 
 Route::get("/products", [ProductsController::class, "show"]);
+Route::get("/products-private", [ProductsController::class, "showPrivate"]);
