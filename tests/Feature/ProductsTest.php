@@ -31,8 +31,8 @@ class ProductsTest extends TestCase
     public function productHiddenProvider(): array
     {
         return [
-            'as products-private' => ['products-private', '&public=0'],
-            'as products' => ['products', ''],
+            'as products-private' => ['products-private', ''],
+            'as products' => ['products', '&public=1'],
         ];
     }
 

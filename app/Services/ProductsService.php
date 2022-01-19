@@ -21,7 +21,7 @@ class ProductsService implements ProductsServiceContract
     public function getAll(Api $api, bool $public = true): Collection
     {
         $products = Collection::make([]);
-        $public = $public ? '' : '&public=0';
+        $public = $public ? '&public=1' : '';
 
         $lastPage = 1; // Get products at least once
         for ($page = 1; $page <= $lastPage; $page++) {
