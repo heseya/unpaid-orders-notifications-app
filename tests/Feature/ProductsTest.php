@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
-class ProductsCsvTest extends TestCase
+class ProductsTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -28,47 +28,70 @@ class ProductsCsvTest extends TestCase
         ]);
     }
 
-    public function testApiMissing()
+    public function productHiddenProvider(): array
     {
-        $this->get('/products?api=https://missing.com&format=csv')
+        return [
+            'as products-private' => ['products-private', '&public=0'],
+            'as products' => ['products', ''],
+        ];
+    }
+
+    /**
+     * @dataProvider productHiddenProvider
+     */
+    public function testApiMissing($report, $param)
+    {
+        $this->get("/{$report}?api=https://missing.com&format=csv")
             ->assertStatus(404);
     }
 
-    public function testApiNoProductUrl()
+    /**
+     * @dataProvider productHiddenProvider
+     */
+    public function testApiNoProductUrl($report, $param)
     {
-        $this->mockApiNoProducts();
+        $this->mockApiNoProducts($param);
 
-        $this->get("/products?api={$this->api->url}&format=csv")
+        $this->get("/{$report}?api={$this->api->url}&format=csv")
             ->assertStatus(404);
     }
 
-    public function testApiNoProductInvalidFormat()
+    /**
+     * @dataProvider productHiddenProvider
+     */
+    public function testApiNoProductInvalidFormat($report, $param)
     {
-        $this->get("/products?api={$this->api->url}&format=png")
+        $this->get("/{$report}?api={$this->api->url}&format=png")
             ->assertStatus(422);
     }
 
-    public function testApiHasNoProducts()
+    /**
+     * @dataProvider productHiddenProvider
+     */
+    public function testApiHasNoProducts($report, $param)
     {
         $this->setApiProductsUrl();
-        $this->mockApiNoProducts();
+        $this->mockApiNoProducts($param);
 
-        $this->get("/products?api={$this->api->url}&format=csv")
+        $this->get("/{$report}?api={$this->api->url}&format=csv")
             ->assertStatus(200)
             ->assertSeeText(
                 '',
             );
     }
 
-    public function testApiProducts()
+    /**
+     * @dataProvider productHiddenProvider
+     */
+    public function testApiProducts($report, $param)
     {
         $this->setApiProductsUrl();
-        $this->mockApiProducts();
+        $this->mockApiProducts($param);
 
-        $response = $this->get("/products?api={$this->api->url}&format=csv");
+        $response = $this->get("/{$report}?api={$this->api->url}&format=csv");
 
         $response->assertStatus(200);
-        $response->assertDownload('products.csv');
+        $response->assertDownload("{$report}.csv");
         $this->assertEquals(
             '"id","title","description","availability","condition","price","link","image_link","brand"
 "1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Brak"
@@ -77,15 +100,18 @@ class ProductsCsvTest extends TestCase
         );
     }
 
-    public function testApiProductsDefaultFormat()
+    /**
+     * @dataProvider productHiddenProvider
+     */
+    public function testApiProductsDefaultFormat($report, $param)
     {
         $this->setApiProductsUrl();
-        $this->mockApiProducts();
+        $this->mockApiProducts($param);
 
-        $response = $this->get("/products?api={$this->api->url}");
+        $response = $this->get("/{$report}?api={$this->api->url}");
 
         $response->assertStatus(200);
-        $response->assertDownload('products.csv');
+        $response->assertDownload("{$report}.csv");
         $this->assertEquals(
             '"id","title","description","availability","condition","price","link","image_link","brand"
 "1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Brak"
@@ -100,9 +126,9 @@ class ProductsCsvTest extends TestCase
         ]);
     }
 
-    private function mockApiNoProducts() {
+    private function mockApiNoProducts($param) {
         Http::fake([
-            "{$this->api->url}/products?limit=500&full&page=1" => Http::response([
+            "{$this->api->url}/products?limit=500&full&page=1{$param}" => Http::response([
                 'data' => [],
                 'meta' => [
                     'last_page' => 1,
@@ -114,9 +140,9 @@ class ProductsCsvTest extends TestCase
         ]);
     }
 
-    private function mockApiProducts() {
+    private function mockApiProducts($param) {
         Http::fake([
-            "{$this->api->url}/products?limit=500&full&page=1" => Http::response([
+            "{$this->api->url}/products?limit=500&full&page=1{$param}" => Http::response([
                 'data' => [
                     [
                         'id' => 1,
