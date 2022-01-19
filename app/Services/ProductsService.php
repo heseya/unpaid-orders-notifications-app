@@ -2,10 +2,13 @@
 
 namespace App\Services;
 
+use App\Dtos\ProductsExportDto;
+use App\Exports\ProductsExport;
 use App\Models\Api;
 use App\Services\Contracts\ApiServiceContract;
 use App\Services\Contracts\ProductsServiceContract;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductsService implements ProductsServiceContract
 {
@@ -20,7 +23,7 @@ class ProductsService implements ProductsServiceContract
 
         $lastPage = 1; // Get products at least once
         for ($page = 1; $page <= $lastPage; $page++) {
-            $response = $this->apiService->get($api, "/products?limit=500&full&page=$page");
+            $response = $this->apiService->get($api, "/products?limit=500&full&page=${page}");
             $products = $products->concat($response->json('data'));
 
             $lastPage = $response->json('meta.last_page');
@@ -29,5 +32,26 @@ class ProductsService implements ProductsServiceContract
         $currency = $response->json('meta.currency.symbol');
 
         return $products->map(fn ($product) => $product + ['currency' => $currency]);
+    }
+
+    public function exportProducts(ProductsExportDto $dto)
+    {
+        $api = Api::where('url', $dto->getApi())->firstOrFail();
+
+        $products = $this->productsWithCoverAndDescriptions($this->getAll($api));
+
+        $setting = $api->settings()->firstOrFail();
+
+        return Excel::download(
+            new ProductsExport($products, $setting->store_front_url),
+            'products.' . $dto->getFormat()
+        );
+    }
+
+    private function productsWithCoverAndDescriptions(Collection $products): Collection
+    {
+        return $products->filter(
+            fn ($product) => $product['cover'] !== null && $product['description_short'] !== null,
+        );
     }
 }

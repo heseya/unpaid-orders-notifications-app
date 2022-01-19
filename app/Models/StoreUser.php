@@ -20,9 +20,9 @@ class StoreUser implements AuthenticatableContract, AuthorizableContract
     ) {
     }
 
-    public function getKeyName (): string
+    public function getKeyName(): string
     {
-        return "id";
+        return 'id';
     }
 
     /**

@@ -30,7 +30,7 @@ class ProductsCsvTest extends TestCase
 
     public function testApiMissing()
     {
-        $this->get('/products?api=https://missing.com')
+        $this->get('/products?api=https://missing.com&format=csv')
             ->assertStatus(404);
     }
 
@@ -38,8 +38,14 @@ class ProductsCsvTest extends TestCase
     {
         $this->mockApiNoProducts();
 
-        $this->get("/products?api={$this->api->url}")
+        $this->get("/products?api={$this->api->url}&format=csv")
             ->assertStatus(404);
+    }
+
+    public function testApiNoProductInvalidFormat()
+    {
+        $this->get("/products?api={$this->api->url}&format=png")
+            ->assertStatus(422);
     }
 
     public function testApiHasNoProducts()
@@ -47,10 +53,10 @@ class ProductsCsvTest extends TestCase
         $this->setApiProductsUrl();
         $this->mockApiNoProducts();
 
-        $this->get("/products?api={$this->api->url}")
+        $this->get("/products?api={$this->api->url}&format=csv")
             ->assertStatus(200)
             ->assertSeeText(
-                'id,title,description,availability,condition,price,link,image_link,brand',
+                '',
             );
     }
 
@@ -59,20 +65,38 @@ class ProductsCsvTest extends TestCase
         $this->setApiProductsUrl();
         $this->mockApiProducts();
 
+        $response = $this->get("/products?api={$this->api->url}&format=csv");
+
+        $response->assertStatus(200);
+        $response->assertDownload('products.csv');
+        $this->assertEquals(
+            '"id","title","description","availability","condition","price","link","image_link","brand"
+"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Brak"
+',
+            $response->getFile()->getContent(),
+        );
+    }
+
+    public function testApiProductsDefaultFormat()
+    {
+        $this->setApiProductsUrl();
+        $this->mockApiProducts();
+
         $response = $this->get("/products?api={$this->api->url}");
 
         $response->assertStatus(200);
+        $response->assertDownload('products.csv');
         $this->assertEquals(
-            "id,title,description,availability,condition,price,link,image_link,brand\n" .
-            '1,Name,Description,"in stock",new,"11.49 PLN",http://store.com/products/name,' .
-            "https://store.com/cover-1.png,Brak\n",
-            $response->content(),
+            '"id","title","description","availability","condition","price","link","image_link","brand"
+"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Brak"
+',
+            $response->getFile()->getContent(),
         );
     }
 
     private function setApiProductsUrl() {
         $this->api->settings()->create([
-            'store_front_url' => "http://store.com/products/",
+            'store_front_url' => "http://store.com/",
         ]);
     }
 

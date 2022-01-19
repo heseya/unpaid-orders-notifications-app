@@ -1,5 +1,5 @@
 {
-    "name": "laravel/laravel",
+    "name": "heseya/exporter",
     "type": "project",
     "description": "The Laravel Framework.",
     "keywords": ["framework", "laravel"],
@@ -11,7 +11,8 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "heseya/dto": "^1.0",
         "laravel/framework": "^8.53",
-        "league/csv": "^9.7"
+        "league/csv": "^9.7",
+        "maatwebsite/excel": "^3.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
