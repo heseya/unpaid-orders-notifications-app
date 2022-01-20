@@ -67,6 +67,24 @@ class OrdersTest extends TestCase
         );
     }
 
+    public function testApiOrdersDefaultFormat(): void
+    {
+        $this->mockApiOrders();
+
+        $response = $this->get("/orders?api={$this->api->url}");
+
+        $response
+            ->assertStatus(200)
+            ->assertDownload('orders.csv');
+
+        $this->assertEquals(
+            '"id","code","email","summary","shipping_price","summary_paid","paid","created_at","status","delivery_address.name","delivery_address.address","delivery_address.zip","delivery_address.city","delivery_address.country_name","delivery_address.phone","shipping_method"
+"1","H5N1","email@email.com","1943.99 PLN","17.99 PLN","303 PLN","","2022-01-18T12:06:27.000000Z","Nowe","Address name","Address 17","89-464","City","Poland","123 456 789","dpd"
+',
+            $response->getFile()->getContent(),
+        );
+    }
+
     private function mockApiNoOrders(): void
     {
         Http::fake([
