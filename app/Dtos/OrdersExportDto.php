@@ -6,7 +6,7 @@ use App\Http\Requests\ExportRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 
-class ProductsExportDto extends ExportDto
+class OrdersExportDto extends ExportDto
 {
     public static function fromFormRequest(ExportRequest $request): self
     {
@@ -16,7 +16,6 @@ class ProductsExportDto extends ExportDto
             params: Collection::make($request->except([
                 'api',
                 'format',
-                'public',
             ])),
         );
     }

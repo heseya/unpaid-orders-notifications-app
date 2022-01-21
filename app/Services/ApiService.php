@@ -10,6 +10,7 @@ use App\Exceptions\ApiServerErrorException;
 use App\Models\Api;
 use App\Services\Contracts\ApiServiceContract;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Throwable;
 
@@ -29,6 +30,26 @@ class ApiService implements ApiServiceContract
         bool $tryRefreshing = true,
     ): Response {
         return $this->send($api, 'get', $url, null, $headers, $tryRefreshing);
+    }
+
+    public function getAll(Api $api, string $url, string $params, bool $with_currency = false): Collection
+    {
+        $collection = Collection::make([]);
+
+        $lastPage = 1; // Get at least once
+        for ($page = 1; $page <= $lastPage; $page++) {
+            $response = $this->get($api, "/${url}?limit=500&page=${page}${params}");
+            $collection = $collection->concat($response->json('data'));
+
+            $lastPage = $response->json('meta.last_page');
+        }
+
+        if ($with_currency) {
+            $currency = $response->json('meta.currency.symbol');
+            $collection = $collection->map(fn ($item) => $item + ['currency' => $currency]);
+        }
+
+        return $collection;
     }
 
     /**

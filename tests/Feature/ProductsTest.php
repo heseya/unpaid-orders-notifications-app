@@ -59,7 +59,7 @@ class ProductsTest extends TestCase
     /**
      * @dataProvider productHiddenProvider
      */
-    public function testApiNoProductInvalidFormat($report, $param)
+    public function testApiInvalidFormat($report, $param)
     {
         $this->get("/{$report}?api={$this->api->url}&format=png")
             ->assertStatus(422);
@@ -128,7 +128,7 @@ class ProductsTest extends TestCase
 
     private function mockApiNoProducts($param) {
         Http::fake([
-            "{$this->api->url}/products?limit=500&full&page=1{$param}" => Http::response([
+            "{$this->api->url}/products?limit=500&page=1&full{$param}" => Http::response([
                 'data' => [],
                 'meta' => [
                     'last_page' => 1,
@@ -142,7 +142,7 @@ class ProductsTest extends TestCase
 
     private function mockApiProducts($param) {
         Http::fake([
-            "{$this->api->url}/products?limit=500&full&page=1{$param}" => Http::response([
+            "{$this->api->url}/products?limit=500&page=1&full{$param}" => Http::response([
                 'data' => [
                     [
                         'id' => 1,

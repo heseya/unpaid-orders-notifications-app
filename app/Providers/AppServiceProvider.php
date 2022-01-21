@@ -7,8 +7,10 @@ use App\Services\ConfigService;
 use App\Services\Contracts\ApiServiceContract;
 use App\Services\Contracts\ConfigServiceContract;
 use App\Services\Contracts\InfoServiceContract;
+use App\Services\Contracts\OrdersServiceContract;
 use App\Services\Contracts\ProductsServiceContract;
 use App\Services\InfoService;
+use App\Services\OrdersService;
 use App\Services\ProductsService;
 use Illuminate\Support\ServiceProvider;
 
@@ -25,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ProductsServiceContract::class, ProductsService::class);
         $this->app->bind(InfoServiceContract::class, InfoService::class);
         $this->app->bind(ConfigServiceContract::class, ConfigService::class);
+        $this->app->bind(OrdersServiceContract::class, OrdersService::class);
     }
 
     /**

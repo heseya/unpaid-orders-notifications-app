@@ -18,29 +18,17 @@ class ProductsService implements ProductsServiceContract
     ) {
     }
 
-    public function getAll(Api $api, bool $public = true): Collection
+    public function getAll(Api $api, string $params = ''): Collection
     {
-        $products = Collection::make([]);
-        $public = $public ? '&public=1' : '';
-
-        $lastPage = 1; // Get products at least once
-        for ($page = 1; $page <= $lastPage; $page++) {
-            $response = $this->apiService->get($api, "/products?limit=500&full&page=${page}${public}");
-            $products = $products->concat($response->json('data'));
-
-            $lastPage = $response->json('meta.last_page');
-        }
-
-        $currency = $response->json('meta.currency.symbol');
-
-        return $products->map(fn ($product) => $product + ['currency' => $currency]);
+        return $this->apiService->getAll($api, 'products', "&full${params}", true);
     }
 
     public function exportProducts(ProductsExportDto $dto, bool $public = true): BinaryFileResponse
     {
         $api = Api::where('url', $dto->getApi())->firstOrFail();
+        $params = ($public ? '&public=1' : '') . $dto->getParamsToUrl();
 
-        $products = $this->productsWithCoverAndDescriptions($this->getAll($api, $public));
+        $products = $this->productsWithCoverAndDescriptions($this->getAll($api, $params));
 
         $setting = $api->settings()->firstOrFail();
 

@@ -3,6 +3,7 @@
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\InfoController;
 use App\Http\Controllers\InstallationController;
+use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ProductsController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,5 @@ Route::post('/config', [ConfigController::class, 'store'])
 
 Route::get('/products', [ProductsController::class, 'show']);
 Route::get('/products-private', [ProductsController::class, 'showPrivate']);
+
+Route::get('/orders', [OrdersController::class, 'show']);
