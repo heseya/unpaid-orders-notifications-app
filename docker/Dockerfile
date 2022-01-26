@@ -6,8 +6,16 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 RUN a2enmod rewrite
 
-RUN apt-get update && apt-get install -y zip unzip
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libzip-dev \
+    zip \
+    unzip
+
 RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install gd
+RUN docker-php-ext-install zip
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
