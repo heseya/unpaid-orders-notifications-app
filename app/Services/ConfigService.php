@@ -56,7 +56,7 @@ class ConfigService implements ConfigServiceContract
     {
         $result = [
             'key' => $report . '_' . $format .'_url',
-            'label' => Str::upper($format) . ' formatted Super Exporter url',
+            'label' => Str::upper($format) . ' formatted ' . $report,
             'placeholder' => Config::get('app.url') . '/' . $report .'?api=api_url',
             'type' => 'text',
             'default_value' => null,
