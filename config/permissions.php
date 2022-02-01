@@ -26,7 +26,7 @@ return [
         [
             "name" => "config",
             "description" => "Allows to configure the app",
-            "display_name" => "Super Exporter configuration",
+            "display_name" => env("APP_NAME") . " configuration",
         ],
     ],
 
