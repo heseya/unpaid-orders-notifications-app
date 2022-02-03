@@ -23,7 +23,7 @@ class ConfigController extends Controller
     {
         $with_values = false;
 
-        if (Gate::allows('config')) {
+        if (Gate::allows('configure')) {
             $with_values = true;
         }
 

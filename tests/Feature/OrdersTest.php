@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Api;
+use App\Models\StoreUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -13,6 +14,7 @@ class OrdersTest extends TestCase
     use RefreshDatabase;
 
     private Api $api;
+    private StoreUser $user;
 
     protected function setUp(): void
     {
@@ -26,17 +28,25 @@ class OrdersTest extends TestCase
             'refresh_token' => Str::random(),
             'uninstall_token' => Str::random(),
         ]);
+
+        $this->user = new StoreUser(1, 'User', '', ['show_orders']);
+    }
+
+    public function testApiUnauthorized(): void
+    {
+        $this->get('/orders?api=https://missing.com&format=csv')
+            ->assertForbidden();
     }
 
     public function testApiMissing(): void
     {
-        $this->get('/orders?api=https://missing.com&format=csv')
+        $this->actingAs($this->user)->get('/orders?api=https://missing.com&format=csv')
             ->assertStatus(404);
     }
 
     public function testApiOrdersInvalidFormat(): void
     {
-        $this->get("/orders?api={$this->api->url}&format=png")
+        $this->actingAs($this->user)->get("/orders?api={$this->api->url}&format=png")
             ->assertStatus(422);
     }
 
@@ -44,7 +54,7 @@ class OrdersTest extends TestCase
     {
         $this->mockApiNoOrders();
 
-        $this->get("/orders?api={$this->api->url}&format=csv")
+        $this->actingAs($this->user)->get("/orders?api={$this->api->url}&format=csv")
             ->assertStatus(200)
             ->assertSeeText('');
     }
@@ -53,7 +63,7 @@ class OrdersTest extends TestCase
     {
         $this->mockApiOrders();
 
-        $response = $this->get("/orders?api={$this->api->url}&format=csv");
+        $response = $this->actingAs($this->user)->get("/orders?api={$this->api->url}&format=csv");
 
         $response
             ->assertStatus(200)
@@ -71,7 +81,7 @@ class OrdersTest extends TestCase
     {
         $this->mockApiOrders();
 
-        $response = $this->get("/orders?api={$this->api->url}");
+        $response = $this->actingAs($this->user)->get("/orders?api={$this->api->url}");
 
         $response
             ->assertStatus(200)
