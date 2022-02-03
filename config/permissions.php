@@ -23,10 +23,25 @@ return [
     ],
 
     "internal" => [
-        [
-            "name" => "config",
-            "description" => "Allows to configure the app",
-            "display_name" => "Super Exporter configuration",
+        'configure' => [
+            "name" => "configure",
+            "display_name" => "Możliwość zmiany ustawień " . env("APP_NAME"),
+        ],
+        'products' => [
+            "name" => "show_products",
+            "display_name" => "Możliwość wyświetlania raportu publicznych produktów",
+        ],
+        'products-private' => [
+            "name" => "show_products_private",
+            "display_name" => "Możliwość wyświetlania raportu wszystkich produktów",
+        ],
+        'orders' => [
+            "name" => "show_orders",
+            "display_name" => "Możliwość wyświetlania raportu zamówień",
+        ],
+        'items' => [
+            "name" => "show_items",
+            "display_name" => "Możliwość wyświetlania raportu magazynowego",
         ],
     ],
 

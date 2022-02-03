@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Api;
+use App\Models\StoreUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -13,6 +14,7 @@ class ProductsTest extends TestCase
     use RefreshDatabase;
 
     private Api $api;
+    private StoreUser $user;
 
     protected function setUp(): void
     {
@@ -26,6 +28,8 @@ class ProductsTest extends TestCase
             'refresh_token' => Str::random(),
             'uninstall_token' => Str::random(),
         ]);
+
+        $this->user = new StoreUser(1, 'User', '', ['show_products', 'show_products_private']);
     }
 
     public function productHiddenProvider(): array
@@ -39,9 +43,18 @@ class ProductsTest extends TestCase
     /**
      * @dataProvider productHiddenProvider
      */
-    public function testApiMissing($report, $param)
+    public function testApiUnauthorized($report, $param): void
     {
         $this->get("/{$report}?api=https://missing.com&format=csv")
+            ->assertForbidden();
+    }
+
+    /**
+     * @dataProvider productHiddenProvider
+     */
+    public function testApiMissing($report, $param)
+    {
+        $this->actingAs($this->user)->get("/{$report}?api=https://missing.com&format=csv")
             ->assertStatus(404);
     }
 
@@ -52,7 +65,7 @@ class ProductsTest extends TestCase
     {
         $this->mockApiNoProducts($param);
 
-        $this->get("/{$report}?api={$this->api->url}&format=csv")
+        $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}&format=csv")
             ->assertStatus(404);
     }
 
@@ -61,7 +74,7 @@ class ProductsTest extends TestCase
      */
     public function testApiInvalidFormat($report, $param)
     {
-        $this->get("/{$report}?api={$this->api->url}&format=png")
+        $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}&format=png")
             ->assertStatus(422);
     }
 
@@ -73,7 +86,7 @@ class ProductsTest extends TestCase
         $this->setApiProductsUrl();
         $this->mockApiNoProducts($param);
 
-        $this->get("/{$report}?api={$this->api->url}&format=csv")
+        $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}&format=csv")
             ->assertStatus(200)
             ->assertSeeText(
                 '',
@@ -88,7 +101,7 @@ class ProductsTest extends TestCase
         $this->setApiProductsUrl();
         $this->mockApiProducts($param);
 
-        $response = $this->get("/{$report}?api={$this->api->url}&format=csv");
+        $response = $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}&format=csv");
 
         $response->assertStatus(200);
         $response->assertDownload("{$report}.csv");
@@ -108,7 +121,7 @@ class ProductsTest extends TestCase
         $this->setApiProductsUrl();
         $this->mockApiProducts($param);
 
-        $response = $this->get("/{$report}?api={$this->api->url}");
+        $response = $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}");
 
         $response->assertStatus(200);
         $response->assertDownload("{$report}.csv");
