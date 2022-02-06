@@ -66,7 +66,8 @@ class ProductsTest extends TestCase
         $this->mockApiNoProducts($param);
 
         $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}&format=csv")
-            ->assertStatus(404);
+            ->assertStatus(422)
+            ->assertJsonFragment(['message' => 'Storefront URL is not configured']);
     }
 
     /**

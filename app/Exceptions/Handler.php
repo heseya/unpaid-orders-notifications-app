@@ -60,6 +60,9 @@ class Handler extends ExceptionHandler
         InvalidTokenException::class => [
             'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
         ],
+        SettingNotFoundException::class => [
+            'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+        ],
     ];
 
     /**
