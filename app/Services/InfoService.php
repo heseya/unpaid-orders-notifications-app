@@ -22,7 +22,7 @@ class InfoService implements InfoServiceContract
             'icon' => Config::get('app.icon'),
             'licence_required' => false,
             'required_permissions' => $this->getRequiredPermissions()->flatten(),
-            'internal_permissions' => Config::get('permissions.internal'),
+            'internal_permissions' => $this->getInternalPermissions(),
         ]);
     }
 
@@ -37,5 +37,19 @@ class InfoService implements InfoServiceContract
         }
 
         return $result->unique();
+    }
+
+    public function getInternalPermissions(): Collection
+    {
+        $reports = Config::get('export.reports');
+        $permissions = Config::get('permissions.internal');
+        $result = Collection::make();
+
+        $result->add($permissions['configure']);
+        foreach ($reports as $report) {
+            $result->add($permissions[$report]);
+        }
+
+        return $result;
     }
 }

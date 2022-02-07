@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Dtos\ProductsExportDto;
+use App\Exceptions\SettingNotFoundException;
 use App\Exports\ProductsExport;
 use App\Models\Api;
 use App\Services\Contracts\ApiServiceContract;
@@ -26,11 +27,16 @@ class ProductsService implements ProductsServiceContract
     public function exportProducts(ProductsExportDto $dto, bool $public = true): BinaryFileResponse
     {
         $api = Api::where('url', $dto->getApi())->firstOrFail();
+
+        $setting = $api->settings()->first();
+
+        if ($setting === null) {
+            throw new SettingNotFoundException('Storefront URL is not configured');
+        }
+
         $params = ($public ? '&public=1' : '') . $dto->getParamsToUrl();
 
         $products = $this->productsWithCoverAndDescriptions($this->getAll($api, $params));
-
-        $setting = $api->settings()->firstOrFail();
 
         return Excel::download(
             new ProductsExport($products, $setting->store_front_url),
