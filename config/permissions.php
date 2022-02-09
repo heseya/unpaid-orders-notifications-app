@@ -1,5 +1,8 @@
 <?php
 
+$app_name = strlen(env("APP_NAME", 'Exporter')) > 0
+    ? env("APP_NAME", 'Exporter') : 'Exporter';
+
 return [
 
     "required" => [
@@ -25,7 +28,7 @@ return [
     "internal" => [
         'configure' => [
             "name" => "configure",
-            "display_name" => "Możliwość zmiany ustawień " . env("APP_NAME"),
+            "display_name" => "Możliwość zmiany ustawień " . $app_name,
         ],
         'products' => [
             "name" => "show_products",

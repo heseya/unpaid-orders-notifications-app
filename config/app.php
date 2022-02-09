@@ -7,6 +7,9 @@ $appUrl = Str::endsWith($appUrl, '/')
     ? Str::substr($appUrl, 0, Str::length($appUrl) - 1)
     : $appUrl;
 
+$app_name = strlen(env("APP_NAME", 'Exporter')) > 0
+    ? env("APP_NAME", 'Exporter') : 'Exporter';
+
 return [
 
     /*
@@ -20,7 +23,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => $app_name,
 
     /*
     |--------------------------------------------------------------------------
