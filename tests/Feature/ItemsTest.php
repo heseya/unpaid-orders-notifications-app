@@ -32,10 +32,37 @@ class ItemsTest extends TestCase
         $this->user = new StoreUser(1, 'User', '', ['show_items']);
     }
 
-    public function testApiUnauthorized(): void
+    public function testApiUnregistered(): void
     {
         $this->get('/items?api=https://missing.com&format=csv')
+            ->assertStatus(422);
+    }
+
+    public function testApiUnauthorized(): void
+    {
+        $this->mockApiUnauthorized();
+
+        $this->get("/items?api={$this->api->url}&format=csv")
             ->assertForbidden();
+    }
+
+    public function testApiUnauthenticated(): void
+    {
+        $this->mockApiUnauthorizedWithPermission();
+        $this->mockApiItems();
+
+        $response = $this->get("/items?api={$this->api->url}&format=csv");
+
+        $response
+            ->assertStatus(200)
+            ->assertDownload('items.csv');
+
+        $this->assertEquals(
+            '"id","name","sku","quantity"
+"1","Name","Sku","123"
+',
+            $response->getFile()->getContent(),
+        );
     }
 
     public function testApiMissing(): void
@@ -126,6 +153,36 @@ class ItemsTest extends TestCase
                     'last_page' => 1,
                     'currency' => [
                         'symbol' => 'PLN',
+                    ],
+                ],
+            ])
+        ]);
+    }
+
+    private function mockApiUnauthorized(): void
+    {
+        Http::fake([
+            "{$this->api->url}/auth/check/" => Http::response([
+                'data' => [
+                    'id' => null,
+                    'name' => 'Unauthenticated',
+                    'avatar' => '',
+                    'permissions' => [],
+                ],
+            ])
+        ]);
+    }
+
+    private function mockApiUnauthorizedWithPermission(): void
+    {
+        Http::fake([
+            "{$this->api->url}/auth/check/" => Http::response([
+                'data' => [
+                    'id' => null,
+                    'name' => 'Unauthenticated',
+                    'avatar' => '',
+                    'permissions' => [
+                        'show_items',
                     ],
                 ],
             ])

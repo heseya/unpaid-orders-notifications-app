@@ -32,10 +32,37 @@ class OrdersTest extends TestCase
         $this->user = new StoreUser(1, 'User', '', ['show_orders']);
     }
 
-    public function testApiUnauthorized(): void
+    public function testApiUnregistered(): void
     {
         $this->get('/orders?api=https://missing.com&format=csv')
+            ->assertStatus(422);
+    }
+
+    public function testApiUnauthorized(): void
+    {
+        $this->mockApiUnauthorized();
+
+        $this->get("/orders?api={$this->api->url}&format=csv")
             ->assertForbidden();
+    }
+
+    public function testApiUnauthenticated(): void
+    {
+        $this->mockApiUnauthorizedWithPermission();
+        $this->mockApiOrders();
+
+        $response = $this->actingAs($this->user)->get("/orders?api={$this->api->url}&format=csv");
+
+        $response
+            ->assertStatus(200)
+            ->assertDownload('orders.csv');
+
+        $this->assertEquals(
+            '"id","code","email","summary","shipping_price","summary_paid","paid","created_at","status","delivery_address.name","delivery_address.address","delivery_address.zip","delivery_address.city","delivery_address.country_name","delivery_address.phone","shipping_method"
+"1","H5N1","email@email.com","1943.99 PLN","17.99 PLN","303 PLN","","2022-01-18T12:06:27.000000Z","Nowe","Address name","Address 17","89-464","City","Poland","123 456 789","dpd"
+',
+            $response->getFile()->getContent(),
+        );
     }
 
     public function testApiMissing(): void
@@ -148,6 +175,36 @@ class OrdersTest extends TestCase
                     'last_page' => 1,
                     'currency' => [
                         'symbol' => 'PLN',
+                    ],
+                ],
+            ])
+        ]);
+    }
+
+    private function mockApiUnauthorized(): void
+    {
+        Http::fake([
+            "{$this->api->url}/auth/check/" => Http::response([
+                'data' => [
+                    'id' => null,
+                    'name' => 'Unauthenticated',
+                    'avatar' => '',
+                    'permissions' => [],
+                ],
+            ])
+        ]);
+    }
+
+    private function mockApiUnauthorizedWithPermission(): void
+    {
+        Http::fake([
+            "{$this->api->url}/auth/check/" => Http::response([
+                'data' => [
+                    'id' => null,
+                    'name' => 'Unauthenticated',
+                    'avatar' => '',
+                    'permissions' => [
+                        'show_orders',
                     ],
                 ],
             ])

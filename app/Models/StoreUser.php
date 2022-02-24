@@ -13,7 +13,7 @@ class StoreUser implements AuthenticatableContract, AuthorizableContract
     use Authenticatable, Authorizable;
 
     public function __construct(
-        public string $id,
+        public string | null $id,
         public string $name,
         public string $avatar,
         public array $permissions,
