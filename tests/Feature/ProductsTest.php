@@ -43,10 +43,42 @@ class ProductsTest extends TestCase
     /**
      * @dataProvider productHiddenProvider
      */
-    public function testApiUnauthorized($report, $param): void
+    public function testApiUnregistered($report, $param): void
     {
         $this->get("/{$report}?api=https://missing.com&format=csv")
+            ->assertStatus(422);
+    }
+
+    /**
+     * @dataProvider productHiddenProvider
+     */
+    public function testApiUnauthorized($report, $param): void
+    {
+        $this->mockApiUnauthorized();
+
+        $this->get("/{$report}?api={$this->api->url}&format=csv")
             ->assertForbidden();
+    }
+
+    /**
+     * @dataProvider productHiddenProvider
+     */
+    public function testApiUnauthenticated($report, $param)
+    {
+        $this->mockApiUnauthorizedWithPermission();
+        $this->setApiProductsUrl();
+        $this->mockApiProducts($param);
+
+        $response = $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}&format=csv");
+
+        $response->assertStatus(200);
+        $response->assertDownload("{$report}.csv");
+        $this->assertEquals(
+            '"id","title","description","availability","condition","price","link","image_link","brand"
+"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Brak"
+',
+            $response->getFile()->getContent(),
+        );
     }
 
     /**
@@ -177,6 +209,37 @@ class ProductsTest extends TestCase
                     ],
                 ],
             ]),
+        ]);
+    }
+
+    private function mockApiUnauthorized(): void
+    {
+        Http::fake([
+            "{$this->api->url}/auth/check/" => Http::response([
+                'data' => [
+                    'id' => null,
+                    'name' => 'Unauthenticated',
+                    'avatar' => '',
+                    'permissions' => [],
+                ],
+            ])
+        ]);
+    }
+
+    private function mockApiUnauthorizedWithPermission(): void
+    {
+        Http::fake([
+            "{$this->api->url}/auth/check/" => Http::response([
+                'data' => [
+                    'id' => null,
+                    'name' => 'Unauthenticated',
+                    'avatar' => '',
+                    'permissions' => [
+                        'show_products',
+                        'show_products_private',
+                    ],
+                ],
+            ])
         ]);
     }
 }
