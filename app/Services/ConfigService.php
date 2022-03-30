@@ -6,24 +6,20 @@ use App\Models\Api;
 use App\Services\Contracts\ConfigServiceContract;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 
 class ConfigService implements ConfigServiceContract
 {
-    public function getConfigs(bool $with_values): Collection
+    public function getConfigs(bool $with_values, string|null $api_url): Collection
     {
         $store_front_url = null;
-        $api_url = null;
 
         if ($with_values) {
-            $payload = Auth::getTokenPayload();
-            $api = Api::where('url', $payload['iss'])->firstOrFail();
+            $api = Api::where('url', $api_url)->firstOrFail();
             $settings = $api->settings;
 
             $store_front_url = $settings?->first()->store_front_url;
-            $api_url = $api->url;
         }
 
         $configs = Collection::make([]);

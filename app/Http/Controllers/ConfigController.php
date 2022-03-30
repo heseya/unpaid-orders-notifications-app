@@ -7,6 +7,7 @@ use App\Models\Api;
 use App\Models\Settings;
 use App\Services\Contracts\ConfigServiceContract;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Response;
@@ -19,21 +20,25 @@ class ConfigController extends Controller
     ) {
     }
 
-    public function show(): JsonResponse
+    public function show(Request $request): JsonResponse
     {
         $with_values = false;
+        $api_url = null;
 
         if (Gate::allows('configure')) {
             $with_values = true;
+            $payload = Auth::getTokenPayload();
+            $api_url = $payload ? $payload['iss'] : $request->header('X-Core-Url');
         }
 
-        return Response::json($this->configService->getConfigs($with_values));
+        return Response::json($this->configService->getConfigs($with_values, $api_url));
     }
 
     public function store(ConfigStoreRequest $request)
     {
         $payload = Auth::getTokenPayload();
-        $api = Api::where('url', $payload['iss'])->firstOrFail();
+        $api_url = $payload ? $payload['iss'] : $request->header('X-Core-Url');
+        $api = Api::where('url', $api_url)->firstOrFail();
 
         $productsUrl = $request->input('store_front_url');
 
@@ -41,6 +46,6 @@ class ConfigController extends Controller
             'store_front_url' => Str::endsWith($productsUrl, '/') ? $productsUrl : "${productsUrl}/",
         ]);
 
-        return Response::json($this->configService->getConfigs(true));
+        return Response::json($this->configService->getConfigs(true, $api_url));
     }
 }
