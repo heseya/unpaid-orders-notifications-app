@@ -68,9 +68,10 @@ class HeseyaStoreGuard implements Guard
         $apiUrl = $this->request->get('api');
         $token = $this->getToken();
 
-        if ($apiUrl === null || ($headerApiUrl !== null && $headerApiUrl !== $apiUrl)) {
+        if ($apiUrl !== null && ($headerApiUrl !== null && $headerApiUrl !== $apiUrl)) {
             return null;
         }
+        $apiUrl = $apiUrl ?? $headerApiUrl;
 
         if (($apiUrl === $this->apiUrl && $token === $this->token) || ($token !== null && $headerApiUrl === null)) {
             return null;
