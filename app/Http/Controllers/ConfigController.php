@@ -5,58 +5,47 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ConfigStoreRequest;
 use App\Models\Api;
 use App\Models\Settings;
+use App\Services\Contracts\ConfigServiceContract;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 
 class ConfigController extends Controller
 {
-    public function show(): JsonResponse
+    public function __construct(
+        private ConfigServiceContract $configService,
+    ) {
+    }
+
+    public function show(Request $request): JsonResponse
     {
-        $fields = Collection::make(
-            Config::get('settings.fields'),
-        );
+        $with_values = false;
+        $api_url = null;
 
-        if (Gate::allows('config')) {
+        if (Gate::allows('configure')) {
+            $with_values = true;
             $payload = Auth::getTokenPayload();
-            $api = Api::where('url', $payload['iss'])->firstOrFail();
-            $settings = $api->settings;
-
-            $fields = $fields->map(fn ($setting) => $setting + [
-                'value' => match ($setting['key']) {
-                    'csv_url' => Config::get('app.url') . '/products?api=' . $api->url,
-                    default => $settings[$setting['key']] ?? null,
-                }
-            ]);
+            $api_url = $payload ? $payload['iss'] : $request->header('X-Core-Url');
         }
 
-        return Response::json($fields);
+        return Response::json($this->configService->getConfigs($with_values, $api_url));
     }
 
     public function store(ConfigStoreRequest $request)
     {
         $payload = Auth::getTokenPayload();
-        $api = Api::where('url', $payload['iss'])->firstOrFail();
+        $api_url = $payload ? $payload['iss'] : $request->header('X-Core-Url');
+        $api = Api::where('url', $api_url)->firstOrFail();
 
-        $productsUrl = $request->input('products_url');
+        $productsUrl = $request->input('store_front_url');
 
-        $settings = Settings::updateOrCreate(['api_id' => $api->getKey()], [
-           'products_url' => Str::endsWith($productsUrl, '/') ? $productsUrl : "$productsUrl/",
+        Settings::updateOrCreate(['api_id' => $api->getKey()], [
+            'store_front_url' => Str::endsWith($productsUrl, '/') ? $productsUrl : "${productsUrl}/",
         ]);
 
-        $fields = Collection::make(
-            Config::get('settings.fields'),
-        )->map(fn ($setting) => $setting + [
-            'value' => match ($setting['key']) {
-                'csv_url' => Config::get('app.url') . '/products?api=' . $api->url,
-                default => $settings[$setting['key']] ?? null,
-            }
-        ]);
-
-        return Response::json($fields);
+        return Response::json($this->configService->getConfigs(true, $api_url));
     }
 }

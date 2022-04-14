@@ -1,11 +1,11 @@
 <?php
 
-namespace Heseya\Dto;
+namespace App\Exceptions;
 
 use Exception;
 use Throwable;
 
-class DtoException extends Exception
+class SettingNotFoundException extends Exception
 {
     public function __construct(
         string $message = '',

@@ -2,28 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Api;
-use App\Services\Contracts\CsvServiceContract;
+use App\Dtos\ProductsExportDto;
+use App\Http\Requests\ProductsExportRequest;
 use App\Services\Contracts\ProductsServiceContract;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
+use App\Traits\ReportAvailable;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ProductsController extends Controller
 {
+    use ReportAvailable;
+
     public function __construct(
-        private CsvServiceContract $csvService,
         private ProductsServiceContract $productsService,
     ) {
     }
 
-    public function show(Request $request)
+    public function show(ProductsExportRequest $request): BinaryFileResponse
     {
-        $api = Api::where('url', $request->input('api'))->firstOrFail();
+        $this->reportAvailable('products');
+        return $this->productsService->exportProducts(ProductsExportDto::fromFormRequest($request));
+    }
 
-        $products = $this->productsService->getAll($api);
-
-        return Response::make(
-            $this->csvService->productsToCsv($products, $api),
-        );
+    public function showPrivate(ProductsExportRequest $request): BinaryFileResponse
+    {
+        $this->reportAvailable('products-private');
+        return $this->productsService->exportProducts(ProductsExportDto::fromFormRequest($request), false);
     }
 }

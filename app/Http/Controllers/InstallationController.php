@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\InstallRequest;
 use App\Models\Api;
+use App\Services\Contracts\InfoServiceContract;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
@@ -16,6 +15,11 @@ use Throwable;
 
 class InstallationController extends Controller
 {
+    public function __construct(
+        private InfoServiceContract $infoService,
+    ) {
+    }
+
     /**
      * @throws Exception
      */
@@ -30,7 +34,7 @@ class InstallationController extends Controller
         $token = $request->input('integration_token');
 
         try {
-            $response = Http::withToken($token)->get("$storeUrl/auth/profile");
+            $response = Http::withToken($token)->get("${storeUrl}/auth/profile");
         } catch (Throwable) {
             throw new Exception('Failed to connect to the API');
         }
@@ -39,12 +43,12 @@ class InstallationController extends Controller
             throw new Exception('Failed to verify assigned permissions');
         }
 
-        if ($response->json('data.url') == null) {
+        if ($response->json('data.url') === null) {
             throw new Exception('Integration token validation failed');
         }
 
         $permissions = $response->json('data.permissions');
-        $requiredPermissions = Collection::make(Config::get('permissions.required'));
+        $requiredPermissions = $this->infoService->getRequiredPermissions();
 
         if ($requiredPermissions->diff($permissions)->isNotEmpty()) {
             throw new Exception('App doesn\'t have all required permissions');
@@ -52,7 +56,7 @@ class InstallationController extends Controller
 
         do {
             $uninstallToken = Str::random(128);
-        } while(Api::where('uninstall_token', $uninstallToken)->exists());
+        } while (Api::where('uninstall_token', $uninstallToken)->exists());
 
         Api::create([
             'url' => $request->input('api_url'),

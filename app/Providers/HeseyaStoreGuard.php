@@ -21,10 +21,9 @@ class HeseyaStoreGuard implements Guard
     private ?string $token = null;
     private ?string $apiUrl = null;
 
-
     public function __construct(
-      private ApiServiceContract $apiService,
-      private Request $request,
+        private ApiServiceContract $apiService,
+        private Request $request,
     ) {
         Gate::before(function ($user, $ability) {
             if ($user instanceof StoreUser && $user->getPermissions()->contains($ability)) {
@@ -65,10 +64,16 @@ class HeseyaStoreGuard implements Guard
 
     public function fetchUser(): ?Authenticatable
     {
-        $apiUrl = $this->request->header('X-Core-Url');
+        $headerApiUrl = $this->request->header('X-Core-Url');
+        $apiUrl = $this->request->get('api');
         $token = $this->getToken();
 
-        if ($apiUrl === null || ($apiUrl === $this->apiUrl && $token === $this->token)) {
+        if ($apiUrl !== null && ($headerApiUrl !== null && $headerApiUrl !== $apiUrl)) {
+            return null;
+        }
+        $apiUrl = $apiUrl ?? $headerApiUrl;
+
+        if (($apiUrl === $this->apiUrl && $token === $this->token) || ($token !== null && $headerApiUrl === null)) {
             return null;
         }
 
@@ -81,7 +86,7 @@ class HeseyaStoreGuard implements Guard
         }
 
         $payload = $this->getTokenPayload();
-        if (rtrim($apiUrl, '/') !== rtrim($payload['iss'], '/')) {
+        if ($payload !== null && rtrim($apiUrl, '/') !== rtrim($payload['iss'], '/')) {
             throw new InvalidTokenException("Token doesn't match the X-Core-Url API");
         }
 
@@ -109,7 +114,7 @@ class HeseyaStoreGuard implements Guard
             return null;
         }
 
-        $payloadEncoded = Str::between($token, ".", ".");
+        $payloadEncoded = Str::between($token, '.', '.');
 
         return json_decode(base64_decode($payloadEncoded), true);
     }
