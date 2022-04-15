@@ -2,6 +2,7 @@
 
 $app_name = strlen(env("APP_NAME", 'Exporter')) > 0
     ? env("APP_NAME", 'Exporter') : 'Exporter';
+$unauthenticated_permissions = explode(',', env('UNAUTHENTICATED_PERMISSIONS'));
 
 return [
 
@@ -33,18 +34,22 @@ return [
         'products' => [
             "name" => "show_products",
             "display_name" => "Możliwość wyświetlania raportu publicznych produktów",
+            'unauthenticated' => in_array('products', $unauthenticated_permissions),
         ],
         'products-private' => [
             "name" => "show_products_private",
             "display_name" => "Możliwość wyświetlania raportu wszystkich produktów",
+            'unauthenticated' => in_array('products-private', $unauthenticated_permissions),
         ],
         'orders' => [
             "name" => "show_orders",
             "display_name" => "Możliwość wyświetlania raportu zamówień",
+            'unauthenticated' => in_array('orders', $unauthenticated_permissions),
         ],
         'items' => [
             "name" => "show_items",
             "display_name" => "Możliwość wyświetlania raportu magazynowego",
+            'unauthenticated' => in_array('items', $unauthenticated_permissions),
         ],
     ],
 
