@@ -74,8 +74,8 @@ class ProductsTest extends TestCase
         $response->assertStatus(200);
         $response->assertDownload("{$report}.csv");
         $this->assertEquals(
-            '"id","title","description","availability","condition","price","link","image_link","brand"
-"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Brak"
+            '"id","title","description","availability","condition","price","link","image_link","brand","google_product_category"
+"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Brak","123"
 ',
             $response->getFile()->getContent(),
         );
@@ -139,8 +139,8 @@ class ProductsTest extends TestCase
         $response->assertStatus(200);
         $response->assertDownload("{$report}.csv");
         $this->assertEquals(
-            '"id","title","description","availability","condition","price","link","image_link","brand"
-"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Brak"
+            '"id","title","description","availability","condition","price","link","image_link","brand","google_product_category"
+"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Brak","123"
 ',
             $response->getFile()->getContent(),
         );
@@ -159,8 +159,8 @@ class ProductsTest extends TestCase
         $response->assertStatus(200);
         $response->assertDownload("{$report}.csv");
         $this->assertEquals(
-            '"id","title","description","availability","condition","price","link","image_link","brand"
-"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Brak"
+            '"id","title","description","availability","condition","price","link","image_link","brand","google_product_category"
+"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Brak","123"
 ',
             $response->getFile()->getContent(),
         );
@@ -200,6 +200,7 @@ class ProductsTest extends TestCase
                         'cover' => [
                             'url' => 'https://store.com/cover-1.png',
                         ],
+                        'google_product_category' => 123,
                     ],
                 ],
                 'meta' => [
