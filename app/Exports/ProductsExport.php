@@ -32,6 +32,7 @@ class ProductsExport implements FromCollection, WithHeadings, WithMapping
             'price',
             'link',
             'image_link',
+            'additional_image_link',
             'brand',
             'google_product_category',
         ];
@@ -48,6 +49,7 @@ class ProductsExport implements FromCollection, WithHeadings, WithMapping
             "{$row['price']} {$row['currency']}",
             "{$this->store_front_url}products/{$row['slug']}",
             $row['cover'] ? $row['cover']['url'] : '',
+            $row['gallery'][1] ? $row['gallery'][1]['url'] : '',
             "{$this->store_name}",
             $row['google_product_category'],
         ];
