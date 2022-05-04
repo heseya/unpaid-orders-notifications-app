@@ -75,7 +75,7 @@ class ProductsTest extends TestCase
         $response->assertDownload("{$report}.csv");
         $this->assertEquals(
             '"id","title","description","availability","condition","price","link","image_link","brand","google_product_category"
-"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Brak","123"
+"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Exists","123"
 ',
             $response->getFile()->getContent(),
         );
@@ -140,7 +140,7 @@ class ProductsTest extends TestCase
         $response->assertDownload("{$report}.csv");
         $this->assertEquals(
             '"id","title","description","availability","condition","price","link","image_link","brand","google_product_category"
-"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Brak","123"
+"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Exists","123"
 ',
             $response->getFile()->getContent(),
         );
@@ -160,7 +160,7 @@ class ProductsTest extends TestCase
         $response->assertDownload("{$report}.csv");
         $this->assertEquals(
             '"id","title","description","availability","condition","price","link","image_link","brand","google_product_category"
-"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Brak","123"
+"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Exists","123"
 ',
             $response->getFile()->getContent(),
         );

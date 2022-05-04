@@ -39,7 +39,7 @@ class ProductsService implements ProductsServiceContract
         $products = $this->productsWithCoverAndDescriptions($this->getAll($api, $params));
 
         return Excel::download(
-            new ProductsExport($products, $setting->store_front_url),
+            new ProductsExport($products, $setting->store_front_url, $api->name),
             ($public ? 'products.' : 'products-private.') . $dto->getFormat()
         );
     }

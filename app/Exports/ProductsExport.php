@@ -12,6 +12,7 @@ class ProductsExport implements FromCollection, WithHeadings, WithMapping
     public function __construct(
         protected $products,
         protected $store_front_url,
+        protected $store_name
     ) {
     }
 
@@ -47,7 +48,7 @@ class ProductsExport implements FromCollection, WithHeadings, WithMapping
             "{$row['price']} {$row['currency']}",
             "{$this->store_front_url}products/{$row['slug']}",
             $row['cover'] ? $row['cover']['url'] : '',
-            'Brak',
+            "{$this->store_name}",
             $row['google_product_category'],
         ];
     }
