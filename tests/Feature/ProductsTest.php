@@ -15,6 +15,7 @@ class ProductsTest extends TestCase
 
     private Api $api;
     private StoreUser $user;
+    private string $expectedFileContent;
 
     protected function setUp(): void
     {
@@ -30,6 +31,10 @@ class ProductsTest extends TestCase
         ]);
 
         $this->user = new StoreUser(1, 'User', '', ['show_products', 'show_products_private']);
+
+        $this->expectedFileContent = '"id","title","description","availability","condition","price","link","image_link","additional_image_link","brand","google_product_category"
+"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","https://store.com/cover-2.png","Exists","123"
+';
     }
 
     public function productHiddenProvider(): array
@@ -74,9 +79,7 @@ class ProductsTest extends TestCase
         $response->assertStatus(200);
         $response->assertDownload("{$report}.csv");
         $this->assertEquals(
-            '"id","title","description","availability","condition","price","link","image_link","brand","google_product_category"
-"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Exists","123"
-',
+            $this->expectedFileContent,
             $response->getFile()->getContent(),
         );
     }
@@ -139,9 +142,7 @@ class ProductsTest extends TestCase
         $response->assertStatus(200);
         $response->assertDownload("{$report}.csv");
         $this->assertEquals(
-            '"id","title","description","availability","condition","price","link","image_link","brand","google_product_category"
-"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Exists","123"
-',
+            $this->expectedFileContent,
             $response->getFile()->getContent(),
         );
     }
@@ -159,9 +160,7 @@ class ProductsTest extends TestCase
         $response->assertStatus(200);
         $response->assertDownload("{$report}.csv");
         $this->assertEquals(
-            '"id","title","description","availability","condition","price","link","image_link","brand","google_product_category"
-"1","Name","Description","in stock","new","11.49 PLN","http://store.com/products/name","https://store.com/cover-1.png","Exists","123"
-',
+            $this->expectedFileContent,
             $response->getFile()->getContent(),
         );
     }
@@ -199,6 +198,10 @@ class ProductsTest extends TestCase
                         'slug' => 'name',
                         'cover' => [
                             'url' => 'https://store.com/cover-1.png',
+                        ],
+                        'gallery' => [
+                            ['url' => 'https://store.com/cover-1.png'],
+                            ['url' => 'https://store.com/cover-2.png'],
                         ],
                         'google_product_category' => 123,
                     ],
