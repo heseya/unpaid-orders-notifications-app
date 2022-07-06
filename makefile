@@ -5,4 +5,4 @@ down:
 	- docker-compose down
 
 bash:
-	- docker exec -it exporter_app_1 bash
+	- docker exec -it exporter-app-1 bash
