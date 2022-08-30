@@ -6,6 +6,9 @@ use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @mixin IdeHelperSettings
+ */
 class Settings extends Model
 {
     use HasUuid;

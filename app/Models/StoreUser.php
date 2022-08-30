@@ -25,9 +25,6 @@ class StoreUser implements AuthenticatableContract, AuthorizableContract
         return 'id';
     }
 
-    /**
-     * @return Collection
-     */
     public function getPermissions(): Collection
     {
         return Collection::make($this->permissions);

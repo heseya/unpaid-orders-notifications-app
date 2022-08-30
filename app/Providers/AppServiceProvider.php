@@ -18,27 +18,30 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->app->bind(ApiServiceContract::class, ApiService::class);
-        $this->app->bind(ProductsServiceContract::class, ProductsService::class);
-        $this->app->bind(InfoServiceContract::class, InfoService::class);
-        $this->app->bind(ConfigServiceContract::class, ConfigService::class);
-        $this->app->bind(OrdersServiceContract::class, OrdersService::class);
-        $this->app->bind(ItemsServiceContract::class, ItemsService::class);
-    }
+    const CONTRACTS = [
+        ApiServiceContract::class => ApiService::class,
+        ProductsServiceContract::class => ProductsService::class,
+        InfoServiceContract::class => InfoService::class,
+        ConfigServiceContract::class => ConfigService::class,
+        OrdersServiceContract::class => OrdersService::class,
+        ItemsServiceContract::class => ItemsService::class,
+    ];
 
     /**
-     * Bootstrap any application services.
-     *
-     * @return void
+     * Register any application services.
      */
-    public function boot()
+    public function register(): void
     {
+        foreach (self::CONTRACTS as $abstract => $concrete) {
+            $this->app->bind($abstract, $concrete);
+        }
+
+        /**
+         * Local register of ide helper.
+         * Needs to be full path.
+         */
+        if ($this->app->isLocal()) {
+            $this->app->register('\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider');
+        }
     }
 }
