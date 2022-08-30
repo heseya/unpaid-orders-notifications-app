@@ -9,8 +9,9 @@ use App\Models\Api;
 use App\Services\Contracts\ApiServiceContract;
 use App\Services\Contracts\ProductsServiceContract;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ProductsService implements ProductsServiceContract
 {
@@ -19,15 +20,21 @@ class ProductsService implements ProductsServiceContract
     ) {
     }
 
-    public function getAll(Api $api, string $params = ''): Collection
+    public function exportProducts(ProductsExportDto $dto, bool $public = true): StreamedResponse
     {
-        return $this->apiService->getAll($api, 'products', "&full${params}", true);
+        /** @var Api $api */
+        $api = Api::query()->where('url', $dto->getApi())->firstOrFail();
+        $path = $this->path($api, $dto, $public);
+
+        if (!Storage::exists($path)) {
+            $this->reloadProducts($api, $dto, $public);
+        }
+
+        return Storage::download($path);
     }
 
-    public function exportProducts(ProductsExportDto $dto, bool $public = true): BinaryFileResponse
+    public function reloadProducts(Api $api, ProductsExportDto $dto, bool $public = true): void
     {
-        $api = Api::where('url', $dto->getApi())->firstOrFail();
-
         $setting = $api->settings()->first();
 
         if ($setting === null) {
@@ -35,13 +42,22 @@ class ProductsService implements ProductsServiceContract
         }
 
         $params = ($public ? '&public=1' : '') . $dto->getParamsToUrl();
-
         $products = $this->productsWithCoverAndDescriptions($this->getAll($api, $params));
 
-        return Excel::download(
+        Excel::store(
             new ProductsExport($products, $setting->store_front_url, $api->name),
-            ($public ? 'products.' : 'products-private.') . $dto->getFormat()
+            $this->path($api, $dto, $public),
         );
+    }
+
+    private function path(Api $api, ProductsExportDto $dto, bool $public = true): string
+    {
+        return $api->getKey() . '/' . ($public ? 'products.' : 'products-private.') . $dto->getFormat();
+    }
+
+    private function getAll(Api $api, string $params = ''): Collection
+    {
+        return $this->apiService->getAll($api, 'products', "&full${params}", true);
     }
 
     private function productsWithCoverAndDescriptions(Collection $products): Collection
