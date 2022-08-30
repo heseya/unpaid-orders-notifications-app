@@ -18,7 +18,7 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    const CONTRACTS = [
+    private const CONTRACTS = [
         ApiServiceContract::class => ApiService::class,
         ProductsServiceContract::class => ProductsService::class,
         InfoServiceContract::class => InfoService::class,

@@ -150,8 +150,8 @@ return [
     */
 
     'requirements' => [
-        'min-quality' => 95,
-        'min-complexity' => 75,
+        'min-quality' => 100,
+        'min-complexity' => 80,
         'min-architecture' => 100,
         'min-style' => 100,
         'disable-security-check' => false,
