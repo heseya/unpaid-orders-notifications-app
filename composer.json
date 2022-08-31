@@ -1,9 +1,7 @@
 {
     "name": "heseya/exporter",
     "type": "project",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
-    "license": "MIT",
+    "description": "Universal file exporter",
     "require": {
         "php": "^8.0",
         "doctrine/dbal": "^3.2",
@@ -15,14 +13,16 @@
         "maatwebsite/excel": "^3.1"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^2.12",
         "facade/ignition": "^2.5",
+        "laravel/tinker": "^2.7",
         "fakerphp/faker": "^1.9.1",
-        "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^5.10",
         "phpunit/phpunit": "^9.5.8",
         "heseya/insights": "^1.0",
-        "nunomaduro/phpinsights": "^2.1"
+        "nunomaduro/phpinsights": "^2.4",
+        "friendsofphp/php-cs-fixer": "3.9.5"
     },
     "autoload": {
         "psr-4": {
@@ -51,6 +51,9 @@
             "@php artisan key:generate --ansi"
         ],
         "style": [
+            "@php artisan ide-helper:generate -M",
+            "@php artisan ide-helper:models -M",
+            "@php artisan ide-helper:meta",
             "@php artisan insights --fix --no-interaction"
         ]
     },

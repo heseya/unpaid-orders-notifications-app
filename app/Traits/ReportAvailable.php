@@ -7,7 +7,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 trait ReportAvailable
 {
-    public function reportAvailable(string $report)
+    public function reportAvailable(string $report): void
     {
         if (!in_array($report, Config::get('export.reports'))) {
             throw new NotFoundHttpException();
