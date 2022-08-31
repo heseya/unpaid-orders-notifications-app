@@ -86,7 +86,7 @@ class RefreshProductsFeed extends Command
 
     private function filePath(Api $api): string
     {
-        return storage_path('app/' . $api->getKey() . '/products.csv');
+        return storage_path('app/' . $api->getKey() . '-products.csv');
     }
 
     private function headers(): string

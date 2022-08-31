@@ -55,7 +55,7 @@ class ProductsService implements ProductsServiceContract
 
     private function path(Api $api, ProductsExportDto $dto, bool $public = true): string
     {
-        return $api->getKey() . '/' . ($public ? 'products.' : 'products-private.') . $dto->getFormat();
+        return $api->getKey() . '-' . ($public ? 'products.' : 'products-private.') . $dto->getFormat();
     }
 
     private function getAll(Api $api, string $params = ''): Collection
