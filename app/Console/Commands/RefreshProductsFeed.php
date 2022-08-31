@@ -110,8 +110,8 @@ class RefreshProductsFeed extends Command
     {
         return implode(',', [
             $product['id'],
-            $product['name'],
-            $product['description_short'] ?? '',
+            "\"{$product['name']}\"",
+            $product['description_short'] ? "\"{$product['description_short']}\"" : '',
             $product['available'] ? 'in stock' : 'out of stock',
             'new',
             "{$product['price']} {$currency}",
