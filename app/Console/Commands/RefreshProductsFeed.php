@@ -117,7 +117,7 @@ class RefreshProductsFeed extends Command
             "{$product['price']} {$currency}",
             "$storeFrontUrl/{$product['slug']}",
             $product['cover']['url'],
-            $product['gallery'][1] ? $product['gallery'][1]['url'] : '',
+            array_key_exists(1, $product['gallery']) ? $product['gallery'][1]['url'] : '',
             $storeName,
             $product['google_product_category'] ?? '',
         ]) . "\n";
