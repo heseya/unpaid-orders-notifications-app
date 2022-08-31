@@ -125,7 +125,7 @@ class OrdersTest extends TestCase
     private function mockApiNoOrders(): void
     {
         Http::fake([
-            "{$this->api->url}/orders?limit=500&page=1" => Http::response([
+            "{$this->api->url}/orders?limit=200&page=1" => Http::response([
                 'data' => [],
                 'meta' => [
                     'last_page' => 1,
@@ -140,7 +140,7 @@ class OrdersTest extends TestCase
     private function mockApiOrders(): void
     {
         Http::fake([
-            "{$this->api->url}/orders?limit=500&page=1" => Http::response([
+            "{$this->api->url}/orders?limit=200&page=1" => Http::response([
                 'data' => [
                     [
                         'id' => 1,

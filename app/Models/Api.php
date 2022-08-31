@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $integration_token;
  * @property string $refresh_token;
  * @property string $uninstall_token;
+ *
+ * @mixin IdeHelperApi
  */
 class Api extends Model
 {

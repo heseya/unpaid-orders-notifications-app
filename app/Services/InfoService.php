@@ -15,7 +15,7 @@ class InfoService implements InfoServiceContract
         return Response::json([
             'name' => Config::get('app.name'),
             'author' => Config::get('app.author'),
-            'version' => '2.0.0',
+            'version' => '2.1.0',
             'api_version' => '^3.0.0',
             'description' => Config::get('app.description'),
             'microfrontend_url' => Config::get('app.microfrontend'),
@@ -30,7 +30,7 @@ class InfoService implements InfoServiceContract
     {
         $reports = Config::get('export.reports');
         $permissions = Config::get('permissions.required');
-        $result = Collection::make();
+        $result = Collection::make(Config::get('permissions.base'));
 
         foreach ($reports as $report) {
             $result = $result->merge($permissions[$report]);
