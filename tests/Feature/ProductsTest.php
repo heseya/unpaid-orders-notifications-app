@@ -68,19 +68,21 @@ class ProductsTest extends TestCase
     /**
      * @dataProvider productHiddenProvider
      */
-    public function testApiUnauthenticated($report, $param)
+    public function testApiUnauthenticated($report, $param): void
     {
         $this->mockApiUnauthorizedWithPermission();
         $this->setApiProductsUrl();
         $this->mockApiProducts($param);
 
-        $response = $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}&format=csv");
+        $response = $this
+            ->actingAs($this->user)
+            ->json('GET', $report, ['api' => $this->api->url, 'format' => 'csv']);
 
         $response->assertStatus(200);
         $response->assertDownload("{$report}.csv");
         $this->assertEquals(
             $this->expectedFileContent,
-            $response->getFile()->getContent(),
+            $response->streamedContent(),
         );
     }
 
@@ -143,7 +145,7 @@ class ProductsTest extends TestCase
         $response->assertDownload("{$report}.csv");
         $this->assertEquals(
             $this->expectedFileContent,
-            $response->getFile()->getContent(),
+            $response->streamedContent(),
         );
     }
 
@@ -161,7 +163,7 @@ class ProductsTest extends TestCase
         $response->assertDownload("{$report}.csv");
         $this->assertEquals(
             $this->expectedFileContent,
-            $response->getFile()->getContent(),
+            $response->streamedContent(),
         );
     }
 

@@ -20,11 +20,11 @@ class AppServiceProvider extends ServiceProvider
 {
     private const CONTRACTS = [
         ApiServiceContract::class => ApiService::class,
-        ProductsServiceContract::class => ProductsService::class,
-        InfoServiceContract::class => InfoService::class,
         ConfigServiceContract::class => ConfigService::class,
-        OrdersServiceContract::class => OrdersService::class,
+        InfoServiceContract::class => InfoService::class,
         ItemsServiceContract::class => ItemsService::class,
+        OrdersServiceContract::class => OrdersService::class,
+        ProductsServiceContract::class => ProductsService::class,
     ];
 
     /**
