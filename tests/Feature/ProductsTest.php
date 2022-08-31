@@ -82,7 +82,7 @@ class ProductsTest extends TestCase
             ->json('GET', $report, ['api' => $this->api->url, 'format' => 'csv']);
 
         $response->assertStatus(200);
-        $response->assertDownload("{$report}.csv");
+        $response->assertDownload($this->api->getKey() . "-{$report}.csv");
         $this->assertEquals(
             $this->expectedFileContent,
             $response->streamedContent(),
@@ -152,7 +152,7 @@ class ProductsTest extends TestCase
         $response = $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}&format=csv");
 
         $response->assertStatus(200);
-        $response->assertDownload("{$report}.csv");
+        $response->assertDownload($this->api->getKey() . "-{$report}.csv");
         $this->assertEquals(
             $this->expectedFileContent,
             $response->streamedContent(),
@@ -170,7 +170,7 @@ class ProductsTest extends TestCase
         $response = $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}");
 
         $response->assertStatus(200);
-        $response->assertDownload("{$report}.csv");
+        $response->assertDownload($this->api->getKey() . "-{$report}.csv");
         $this->assertEquals(
             $this->expectedFileContent,
             $response->streamedContent(),
