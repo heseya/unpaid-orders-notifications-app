@@ -88,7 +88,7 @@ class ProductsTest extends TestCase
             $response->streamedContent(),
         );
 
-        Storage::assertExists($this->api->getKey() . "/$report.csv");
+        Storage::assertExists($this->api->getKey() . "-$report.csv");
 
         // check if another request not request any data form api
         Http::fake();
