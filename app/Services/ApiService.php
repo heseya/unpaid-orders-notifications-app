@@ -12,6 +12,7 @@ use App\Services\Contracts\ApiServiceContract;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class ApiService implements ApiServiceContract
@@ -38,7 +39,10 @@ class ApiService implements ApiServiceContract
 
         $lastPage = 1; // Get at least once
         for ($page = 1; $page <= $lastPage; $page++) {
-            $response = $this->get($api, "/${url}?limit=500&page=${page}${params}");
+            $fullUrl = "/${url}?limit=200&page=${page}${params}";
+            Log::info('Getting ' . $api->url . '/' . $fullUrl);
+
+            $response = $this->get($api, $fullUrl);
             $collection = $collection->concat($response->json('data'));
 
             $lastPage = $response->json('meta.last_page');

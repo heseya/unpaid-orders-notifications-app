@@ -9,6 +9,7 @@ use App\Models\Api;
 use App\Services\Contracts\ApiServiceContract;
 use App\Services\Contracts\ProductsServiceContract;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -27,6 +28,8 @@ class ProductsService implements ProductsServiceContract
         $path = $this->path($api, $dto, $public);
 
         if (!Storage::exists($path)) {
+            Log::info('File not found for ' . $api->url);
+
             $this->reloadProducts($api, $dto, $public);
         }
 
