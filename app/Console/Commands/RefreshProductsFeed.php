@@ -68,7 +68,7 @@ class RefreshProductsFeed extends Command
             $file = fopen($path, 'a');
 
             foreach ($response->json('data') as $product) {
-                if ($product['cover'] === null || $product['description_short'] === null) {
+                if ($product['cover'] === null) {
                     continue;
                 }
 
@@ -86,7 +86,7 @@ class RefreshProductsFeed extends Command
 
     private function filePath(Api $api): string
     {
-        return storage_path($api->getKey() . '/products.csv');
+        return storage_path('app/' . $api->getKey() . '/products.csv');
     }
 
     private function headers(): string
@@ -111,15 +111,15 @@ class RefreshProductsFeed extends Command
         return implode(',', [
             $product['id'],
             $product['name'],
-            $product['description_short'],
+            $product['description_short'] ?? '',
             $product['available'] ? 'in stock' : 'out of stock',
             'new',
             "{$product['price']} {$currency}",
             "$storeFrontUrl/{$product['slug']}",
-            $product['cover'] ? $product['cover']['url'] : '',
+            $product['cover']['url'],
             $product['gallery'][1] ? $product['gallery'][1]['url'] : '',
-            "$storeName",
-            $product['google_product_category'],
+            $storeName,
+            $product['google_product_category'] ?? '',
         ]) . "\n";
     }
 }
