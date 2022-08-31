@@ -1,11 +1,22 @@
 FROM php:8.0-apache
+WORKDIR /usr/src/app
+ENV APACHE_DOCUMENT_ROOT /usr/src/app/public
+
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+RUN a2enmod rewrite
 
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libzip-dev \
     zip \
-    unzip
+    unzip \
+    cron
+
+RUN echo "* * * * *  php /usr/src/app/artisan schedule:run" > mycron
+RUN crontab mycron
+RUN service cron start
 
 RUN docker-php-ext-install pdo_mysql
 
@@ -15,12 +26,3 @@ RUN docker-php-ext-install gd
 RUN docker-php-ext-install zip
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
-
-RUN a2enmod rewrite
-
-ENV APACHE_DOCUMENT_ROOT /usr/src/app/public
-
-WORKDIR /usr/src/app
-
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
