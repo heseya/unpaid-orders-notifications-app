@@ -185,7 +185,7 @@ class ProductsTest extends TestCase
 
     private function mockApiNoProducts($param) {
         Http::fake([
-            "{$this->api->url}/products?limit=500&page=1&full{$param}" => Http::response([
+            "{$this->api->url}/products?limit=200&page=1&full{$param}" => Http::response([
                 'data' => [],
                 'meta' => [
                     'last_page' => 1,
@@ -199,7 +199,7 @@ class ProductsTest extends TestCase
 
     private function mockApiProducts($param) {
         Http::fake([
-            "{$this->api->url}/products?limit=500&page=1&full{$param}" => Http::response([
+            "{$this->api->url}/products?limit=200&page=1&full{$param}" => Http::response([
                 'data' => [
                     [
                         'id' => 1,

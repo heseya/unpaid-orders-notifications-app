@@ -125,7 +125,7 @@ class ItemsTest extends TestCase
     private function mockApiNoItems(): void
     {
         Http::fake([
-            "{$this->api->url}/items?limit=500&page=1" => Http::response([
+            "{$this->api->url}/items?limit=200&page=1" => Http::response([
                 'data' => [],
                 'meta' => [
                     'last_page' => 1,
@@ -140,7 +140,7 @@ class ItemsTest extends TestCase
     private function mockApiItems(): void
     {
         Http::fake([
-            "{$this->api->url}/items?limit=500&page=1" => Http::response([
+            "{$this->api->url}/items?limit=200&page=1" => Http::response([
                 'data' => [
                     [
                         'id' => 1,
