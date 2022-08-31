@@ -6,6 +6,7 @@ use App\Models\Api;
 use App\Models\StoreUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -70,6 +71,8 @@ class ProductsTest extends TestCase
      */
     public function testApiUnauthenticated($report, $param): void
     {
+        Storage::fake();
+
         $this->mockApiUnauthorizedWithPermission();
         $this->setApiProductsUrl();
         $this->mockApiProducts($param);
@@ -84,6 +87,13 @@ class ProductsTest extends TestCase
             $this->expectedFileContent,
             $response->streamedContent(),
         );
+
+        Storage::assertExists($this->api->getKey() . "/$report.csv");
+
+        // check if another request not request any data form api
+        Http::fake();
+        $this->json('GET', $report, ['api' => $this->api->url, 'format' => 'csv']);
+        Http::assertNothingSent();
     }
 
     /**
