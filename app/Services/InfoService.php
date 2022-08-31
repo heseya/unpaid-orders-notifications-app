@@ -30,7 +30,7 @@ class InfoService implements InfoServiceContract
     {
         $reports = Config::get('export.reports');
         $permissions = Config::get('permissions.required');
-        $result = Collection::make();
+        $result = Collection::make(Config::get('permissions.base'));
 
         foreach ($reports as $report) {
             $result = $result->merge($permissions[$report]);
