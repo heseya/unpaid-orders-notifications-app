@@ -7,10 +7,12 @@ $appUrl = Str::endsWith($appUrl, '/')
     ? Str::substr($appUrl, 0, Str::length($appUrl) - 1)
     : $appUrl;
 
-$app_name = strlen(env("APP_NAME", 'Exporter')) > 0
-    ? env("APP_NAME", 'Exporter') : 'Exporter';
-
 return [
+
+    'author' => env('APP_AUTHOR', 'Heseya'),
+    'icon' => env('APP_ICON'),
+    'description' => env('APP_DESCRIPTION'),
+    'microfrontend' => env('APP_MICROFRONTEND'),
 
     /*
     |--------------------------------------------------------------------------
@@ -23,7 +25,7 @@ return [
     |
     */
 
-    'name' => $app_name,
+    'name' => strlen(env('APP_NAME', 'Exporter')) > 0 ? env('APP_NAME') : 'Exporter',
 
     /*
     |--------------------------------------------------------------------------
@@ -181,7 +183,6 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
@@ -240,10 +241,5 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
-
-    'author' => env('APP_AUTHOR', 'Heseya'),
-    'icon' => env('APP_ICON'),
-    'description' => env('APP_DESCRIPTION'),
-    'microfrontend' => env('APP_MICROFRONTEND'),
 
 ];

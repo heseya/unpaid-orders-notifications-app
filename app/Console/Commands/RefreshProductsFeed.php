@@ -60,8 +60,8 @@ class RefreshProductsFeed extends Command
 
         $lastPage = 1; // Get at least once
         for ($page = 1; $page <= $lastPage; $page++) {
-            $fullUrl = "/products?full&limit=200&page=${page}";
-            $this->info("Getting page ${page} of {$lastPage}");
+            $fullUrl = "/products?full&limit=250&page=${page}&public=1";
+            $this->info("[$url] Getting page ${page} of {$lastPage}");
 
             $response = $this->apiService->get($api, $fullUrl);
             $lastPage = $response->json('meta.last_page');
@@ -114,7 +114,7 @@ class RefreshProductsFeed extends Command
 
     private function product(array $product, string $storeFrontUrl, string $storeName, string $currency): string
     {
-        $description = '"' . strip_tags($product['description']) . '"';
+        $description = '"' . strip_tags($product['description_html']) . '"';
         $attributes = Collection::make($product['attributes']);
 
         return implode(',', [
