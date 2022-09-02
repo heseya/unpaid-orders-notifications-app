@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\Models\Api;
 use App\Services\Contracts\ApiServiceContract;
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 class RefreshProductsFeed extends Command
 {
@@ -58,8 +60,8 @@ class RefreshProductsFeed extends Command
 
         $lastPage = 1; // Get at least once
         for ($page = 1; $page <= $lastPage; $page++) {
-            $fullUrl = "/products?full&limit=200&page=${page}";
-            $this->info("Getting page ${page} of {$lastPage}");
+            $fullUrl = "/products?full&limit=250&page=${page}&public=1";
+            $this->info("[$url] Getting page ${page} of {$lastPage}");
 
             $response = $this->apiService->get($api, $fullUrl);
             $lastPage = $response->json('meta.last_page');
@@ -93,33 +95,44 @@ class RefreshProductsFeed extends Command
     {
         return implode(',', [
             'id',
+            'gtin13',
             'title',
             'description',
             'availability',
             'condition',
             'price',
+            'sale_price',
             'link',
             'image_link',
             'additional_image_link',
             'brand',
             'google_product_category',
+            'shipping',
+            'ships_from_country',
         ]) . "\n";
     }
 
     private function product(array $product, string $storeFrontUrl, string $storeName, string $currency): string
     {
+        $description = '"' . strip_tags($product['description_html']) . '"';
+        $attributes = Collection::make($product['attributes']);
+
         return implode(',', [
             $product['id'],
+            Arr::get($attributes->firstWhere('slug', 'ean'), 'selected_options.0.name', ''),
             "\"{$product['name']}\"",
-            $product['description_short'] ? "\"{$product['description_short']}\"" : '',
+            $description,
             $product['available'] ? 'in stock' : 'out of stock',
             'new',
-            "{$product['price']} {$currency}",
+            "{$product['price_min_initial']} {$currency}",
+            "{$product['price_min']} {$currency}",
             "$storeFrontUrl/{$product['slug']}",
-            $product['cover']['url'],
-            array_key_exists(1, $product['gallery']) ? $product['gallery'][1]['url'] : '',
+            Arr::get($product, 'cover.url', ''),
+            Arr::get($product, 'gallery.1.url', ''),
             $storeName,
             $product['google_product_category'] ?? '',
+            'PL:7.99 PLN',
+            'PL',
         ]) . "\n";
     }
 }
