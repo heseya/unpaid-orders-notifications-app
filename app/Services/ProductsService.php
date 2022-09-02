@@ -28,7 +28,7 @@ class ProductsService implements ProductsServiceContract
         $path = $this->path($api, $dto, $public);
 
         if (!Storage::exists($path)) {
-            Log::info('File not found for ' . $api->url);
+            Log::info("File not found for {$api->url}");
 
             $this->reloadProducts($api, $dto, $public);
         }

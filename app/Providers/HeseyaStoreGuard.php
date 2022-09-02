@@ -68,7 +68,7 @@ class HeseyaStoreGuard implements Guard
         $apiUrl = $this->request->get('api');
         $token = $this->getToken();
 
-        if ($apiUrl !== null && ($headerApiUrl !== null && $headerApiUrl !== $apiUrl)) {
+        if (($apiUrl !== null && ($headerApiUrl !== null && $headerApiUrl !== $apiUrl)) || $token === null) {
             return null;
         }
         $apiUrl = $apiUrl ?? $headerApiUrl;
@@ -91,7 +91,7 @@ class HeseyaStoreGuard implements Guard
         }
 
         try {
-            $response = $this->apiService->get($api, '/auth/check/' . $token);
+            $response = $this->apiService->get($api, "/auth/check/{$token}");
         } catch (ApiClientErrorException) {
             throw new AuthenticationException('Invalid identity_token');
         }
