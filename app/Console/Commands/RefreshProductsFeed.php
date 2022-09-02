@@ -7,6 +7,7 @@ use App\Services\Contracts\ApiServiceContract;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class RefreshProductsFeed extends Command
 {
@@ -114,8 +115,10 @@ class RefreshProductsFeed extends Command
 
     private function product(array $product, string $storeFrontUrl, string $storeName, string $currency): string
     {
-        $description = '"' . strip_tags($product['description_html']) . '"';
         $attributes = Collection::make($product['attributes']);
+        $description = Str::of($product['description_html'])
+            ->replace([',', "\n", '"', "'"], ' ')
+            ->stripTags();
 
         return implode(',', [
             $product['id'],
