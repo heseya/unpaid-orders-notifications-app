@@ -134,7 +134,7 @@ class RefreshProductsFeed extends Command
             Arr::get($product, 'gallery.1.url', ''),
             $storeName,
             $product['google_product_category'] ?? '',
-            'PL:7.99 PLN',
+            'PL',
             'PL',
         ]) . "\n";
     }
