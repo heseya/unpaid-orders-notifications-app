@@ -54,10 +54,26 @@ class RefreshProductsFeed extends Command
         $path = $this->filePath($api);
         $this->info("[$url] Processing");
 
+        if ($api->settings?->store_front_url === null) {
+            $this->info("[$url] Api store url not configured, skipping");
+            return;
+        }
+
         // create / overwrite file
         $file = fopen($path, 'w');
         fwrite($file, $this->headers());
         fclose($file);
+
+        $fullUrl = "/shipping-methods";
+        $this->info("[$url] Getting shipping price");
+        $response = $this->apiService->get($api, $fullUrl);
+        $shippingMethods = $response->json('data');
+
+        $minShippingPrice = array_reduce(
+            $shippingMethods,
+            fn ($carry, $item) => $carry === null || $item['price'] < $carry ? $item['price'] : $carry,
+            null,
+        ) ?? 0;
 
         $lastPage = 1; // Get at least once
         for ($page = 1; $page <= $lastPage; $page++) {
@@ -77,9 +93,10 @@ class RefreshProductsFeed extends Command
 
                 fwrite($file, $this->product(
                     $product,
-                    'https://api.***REMOVED***.pl/products',
-                    'Ksiazki.pl',
+                    $api->settings->store_front_url,
+                    $api->name,
                     $response->json('meta.currency.symbol'),
+                    $minShippingPrice,
                 ));
             }
 
@@ -109,12 +126,16 @@ class RefreshProductsFeed extends Command
             'brand',
             'google_product_category',
             'shipping',
-            'ships_from_country',
         ]) . "\n";
     }
 
-    private function product(array $product, string $storeFrontUrl, string $storeName, string $currency): string
-    {
+    private function product(
+        array $product,
+        string $storeFrontUrl,
+        string $storeName,
+        string $currency,
+        float $shippingPrice,
+    ): string {
         $attributes = Collection::make($product['attributes']);
         $description = Str::of($product['description_html'])
             ->replace([',', "\n", '"', "'"], ' ')
@@ -129,13 +150,12 @@ class RefreshProductsFeed extends Command
             'new',
             "{$product['price_min_initial']} {$currency}",
             "{$product['price_min']} {$currency}",
-            "$storeFrontUrl/{$product['slug']}",
+            $storeFrontUrl . (Str::endsWith($storeFrontUrl, '/') ? '' : '/') . $product['slug'],
             Arr::get($product, 'cover.url', ''),
             Arr::get($product, 'gallery.1.url', ''),
             $storeName,
             $product['google_product_category'] ?? '',
-            'PL',
-            'PL',
+            "PL:{$shippingPrice} {$currency}",
         ]) . "\n";
     }
 }

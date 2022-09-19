@@ -14,11 +14,13 @@ return [
         'products' => [
             'products.show',
             'products.show_details',
+            'shipping_methods.show',
         ],
         'products-private' => [
             'products.show',
             'products.show_details',
             'products.show_hidden',
+            'shipping_methods.show',
         ],
         'orders' => [
             'orders.show',
