@@ -231,7 +231,7 @@ class ProductsTest extends TestCase
     private function mockApiUnauthorized(): void
     {
         Http::fake([
-            "{$this->api->url}/auth/check/" => Http::response([
+            "{$this->api->url}/auth/check" => Http::response([
                 'data' => [
                     'id' => null,
                     'name' => 'Unauthenticated',
@@ -245,7 +245,7 @@ class ProductsTest extends TestCase
     private function mockApiUnauthorizedWithPermission(): void
     {
         Http::fake([
-            "{$this->api->url}/auth/check/" => Http::response([
+            "{$this->api->url}/auth/check" => Http::response([
                 'data' => [
                     'id' => null,
                     'name' => 'Unauthenticated',

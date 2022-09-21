@@ -107,7 +107,7 @@ class ConfigTest extends TestCase
     private function mockApiUser(): void
     {
         Http::fake([
-            "{$this->api->url}/auth/check/" => Http::response([
+            "{$this->api->url}/auth/check" => Http::response([
                 'data' => [
                     'id' => null,
                     'name' => 'Unauthenticated',
