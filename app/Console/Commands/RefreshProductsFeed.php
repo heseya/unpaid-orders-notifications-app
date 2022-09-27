@@ -167,7 +167,7 @@ class RefreshProductsFeed extends Command
         string $productType,
         string $customLabel,
     ): string {
-        $attributes = Collection::make($product['attributes']);
+        $attributes = Collection::make($product['attributes'] ?? []);
         $description = Str::of($product['description_html'])
             ->replace([',', "\n", '"', "'"], ' ')
             ->stripTags();
@@ -179,7 +179,7 @@ class RefreshProductsFeed extends Command
             $description,
             $product['available'] ? 'in stock' : 'out of stock',
             'new',
-            "{$product['price_min_initial']} {$currency}",
+            ($product['price_min_initial'] ?? $product['price_min']) . " {$currency}",
             "{$product['price_min']} {$currency}",
             $storeFrontUrl . (Str::endsWith($storeFrontUrl, '/') ? '' : '/') . $product['slug'],
             Arr::get($product, 'cover.url', ''),
