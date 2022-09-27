@@ -15,7 +15,7 @@ class InfoService implements InfoServiceContract
         return Response::json([
             'name' => Config::get('app.name'),
             'author' => Config::get('app.author'),
-            'version' => '2.1.0',
+            'version' => '2.2.1',
             'api_version' => '^3.0.0',
             'description' => Config::get('app.description'),
             'microfrontend_url' => Config::get('app.microfrontend'),

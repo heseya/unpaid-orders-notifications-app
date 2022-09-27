@@ -105,6 +105,7 @@ class RefreshProductsFeed extends Command
                 $sets = $product['sets'];
 
                 $hasCustomLabel = fn ($set) => $customLabelMetatag !== null
+                    && array_key_exists('metadata', $set)
                     && array_key_exists($customLabelMetatag, $set['metadata'])
                     && $set['metadata'][$customLabelMetatag] === true;
 
