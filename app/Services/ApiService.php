@@ -155,11 +155,13 @@ class ApiService implements ApiServiceContract
                 $request = $request->withToken($api->integration_token);
             }
 
+            $fullUrl = rtrim($api->url . $url, '/');
+
             $response = match ($method) {
-                'post' => $request->post($api->url . $url, $data),
-                'patch' => $request->patch($api->url . $url, $data),
-                'delete' => $request->delete($api->url . $url, $data),
-                default => $request->get($api->url . $url, $data),
+                'post' => $request->post($fullUrl, $data),
+                'patch' => $request->patch($fullUrl, $data),
+                'delete' => $request->delete($fullUrl, $data),
+                default => $request->get($fullUrl, $data),
             };
         } catch (Throwable) {
             throw new ApiConnectionException('Cannot reach the API');

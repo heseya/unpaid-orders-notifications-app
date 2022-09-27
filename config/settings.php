@@ -18,4 +18,35 @@ return [
         'required' => true,
         'options' => [],
     ],
+
+    'product_type_set_parent_filter' => [
+        'key' => 'product_type_set_parent_filter',
+        'label' => 'Product type set parent id filter',
+        'placeholder' => 'e7a4486f-1ee0-49d7-91b8-41d409a8f37d',
+        'type' => 'text',
+        'default_value' => null,
+        'required' => false,
+        'options' => [],
+    ],
+
+    'product_type_set_no_parent_filter' => [
+        'key' => 'product_type_set_no_parent_filter',
+        'label' => 'Product type set no parent filter',
+        'placeholder' => false,
+        'type' => 'checkbox',
+        'default_value' => false,
+        'required' => false,
+        'options' => [],
+    ],
+
+    'google_custom_label_metatag' => [
+        'key' => 'google_custom_label_metatag',
+        'label' => 'Google custom label metatag',
+        'placeholder' => 'https://example.store/product/',
+        'type' => 'text',
+        'default_value' => null,
+        'required' => false,
+        'options' => [],
+    ],
+
 ];
