@@ -13,17 +13,35 @@ class ConfigService implements ConfigServiceContract
 {
     public function getConfigs(bool $with_values, string|null $api_url): Collection
     {
-        $store_front_url = null;
-
         if ($with_values) {
             $api = Api::where('url', $api_url)->firstOrFail();
-            $settings = $api->settings;
+            $settings = $api->settings()->first();
 
-            $store_front_url = $settings?->first()->store_front_url;
+            $store_front_url = $settings?->store_front_url;
+            $product_type_set_parent_filter = $settings?->product_type_set_parent_filter;
+            $product_type_set_no_parent_filter = $settings?->product_type_set_no_parent_filter;
+            $google_custom_label_metatag = $settings?->google_custom_label_metatag;
         }
 
         $configs = Collection::make([]);
-        $configs->push($this->getStoreFrontUrl($with_values, $store_front_url));
+        $configs->push($this->getConfigField(
+            'store_front_url', $with_values, $store_front_url ?? null,
+        ));
+        $configs->push($this->getConfigField(
+            'product_type_set_parent_filter',
+            $with_values,
+            $product_type_set_parent_filter ?? null,
+        ));
+        $configs->push($this->getConfigField(
+            'product_type_set_no_parent_filter',
+            $with_values,
+            $product_type_set_no_parent_filter ?? false,
+        ));
+        $configs->push($this->getConfigField(
+            'google_custom_label_metatag',
+            $with_values,
+            $google_custom_label_metatag ?? null,
+        ));
 
         $reports = Config::get('export.reports');
         $formats = Config::get('export.formats');
@@ -37,12 +55,12 @@ class ConfigService implements ConfigServiceContract
         return $configs;
     }
 
-    private function getStoreFrontUrl(bool $with_values, string|null $url): array
+    private function getConfigField(string $setting, bool $with_values, $value): array
     {
-        $result = Config::get('settings.store_front_url');
+        $result = Config::get("settings.{$setting}");
 
         if ($with_values) {
-            $result = Arr::add($result, 'value', $url);
+            $result = Arr::add($result, 'value', $value);
         }
 
         return $result;
