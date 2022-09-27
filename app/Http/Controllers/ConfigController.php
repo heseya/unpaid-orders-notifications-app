@@ -44,6 +44,9 @@ class ConfigController extends Controller
 
         Settings::updateOrCreate(['api_id' => $api->getKey()], [
             'store_front_url' => Str::endsWith($productsUrl, '/') ? $productsUrl : "${productsUrl}/",
+            'product_type_set_parent_filter' => $request->input('product_type_set_parent_filter'),
+            'product_type_set_no_parent_filter' => $request->boolean('product_type_set_no_parent_filter'),
+            'google_custom_label_metatag' => $request->input('google_custom_label_metatag'),
         ]);
 
         return Response::json($this->configService->getConfigs(true, $api_url));

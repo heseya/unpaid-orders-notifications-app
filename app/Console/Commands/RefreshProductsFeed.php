@@ -59,6 +59,17 @@ class RefreshProductsFeed extends Command
             return;
         }
 
+        $filteredParentIds = [];
+        if ($api->settings?->product_type_set_parent_filter) {
+            $filteredParentIds[] = $api->settings->product_type_set_parent_filter;
+        }
+
+        if ($api->settings?->product_type_set_no_parent_filter) {
+            $filteredParentIds[] = null;
+        }
+
+        $customLabelMetatag = $api->settings?->google_custom_label_metatag;
+
         // create / overwrite file
         $file = fopen($path, 'w');
         fwrite($file, $this->headers());
@@ -91,12 +102,27 @@ class RefreshProductsFeed extends Command
                     continue;
                 }
 
+                $sets = $product['sets'];
+
+                $hasCustomLabel = fn ($set) => $customLabelMetatag !== null
+                    && array_key_exists($customLabelMetatag, $set['metadata'])
+                    && $set['metadata'][$customLabelMetatag] === true;
+
+                $customLabelSets = array_values(array_filter($sets, $hasCustomLabel));
+                $productTypeSets = array_values(array_filter(
+                    $sets,
+                    fn ($set) => !$hasCustomLabel($set)
+                        && !in_array($set['parent_id'], $filteredParentIds),
+                ));
+
                 fwrite($file, $this->product(
                     $product,
                     $api->settings->store_front_url,
                     $api->name,
                     $response->json('meta.currency.symbol'),
                     $minShippingPrice,
+                    $productTypeSets[0]['name'] ?? '',
+                    $customLabelSets[0]['name'] ?? '',
                 ));
             }
 
@@ -125,7 +151,9 @@ class RefreshProductsFeed extends Command
             'additional_image_link',
             'brand',
             'google_product_category',
-            'shipping',
+            'shipping(country:price)',
+            'product_type',
+            'custom_label_0',
         ]) . "\n";
     }
 
@@ -135,6 +163,8 @@ class RefreshProductsFeed extends Command
         string $storeName,
         string $currency,
         float $shippingPrice,
+        string $productType,
+        string $customLabel,
     ): string {
         $attributes = Collection::make($product['attributes']);
         $description = Str::of($product['description_html'])
@@ -156,6 +186,8 @@ class RefreshProductsFeed extends Command
             $storeName,
             $product['google_product_category'] ?? '',
             "PL:{$shippingPrice} {$currency}",
+            "\"{$productType}\"",
+            "\"{$customLabel}\"",
         ]) . "\n";
     }
 }
