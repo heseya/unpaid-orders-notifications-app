@@ -4,13 +4,18 @@ namespace App\Console\Commands;
 
 use App\Models\Api;
 use App\Services\Contracts\ApiServiceContract;
+use App\Traits\ReportAvailable;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 
 class RefreshProductsFeed extends Command
 {
+    use ReportAvailable;
+
     /**
      * The name and signature of the console command.
      *
@@ -41,18 +46,37 @@ class RefreshProductsFeed extends Command
      */
     public function handle(): int
     {
-        $apis = Api::all()->each(fn (Api $api) => $this->processApi($api))->count();
+        // try catch
+        $apis = Api::all();//->each(fn (Api $api) => $this->processApi($api))->count();
 
-        $this->info("Processed $apis apis");
+        $processedCounter = 0;
+        foreach ($apis as $api) {
+            try {
+//                if ($this->reportAvailable('products')) {
+                    $this->processApi($api);
+//                }
+//                if ($this->reportAvailable('products-private')) {
+                    $this->processApi($api, false);
+//                }
+
+                $processedCounter++;
+            } catch (Exception $e) {
+                $this->info("[{$api->url}] Failed processing. Skipping!");
+            }
+        }
+
+        $totalCount = $apis->count();
+
+        $this->info("Processed {$processedCounter}/{$totalCount} apis");
 
         return 1;
     }
 
-    private function processApi(Api $api): void
+    private function processApi(Api $api, bool $public = true): void
     {
         $url = $api->url;
-        $path = $this->filePath($api);
-        $this->info("[$url] Processing");
+        $path = $this->filePath($api, $public);
+        $this->info("[$url] Processing " . ($public ? 'public products' : 'private products'));
 
         if ($api->settings?->store_front_url === null) {
             $this->info("[$url] Api store url not configured, skipping");
@@ -88,7 +112,7 @@ class RefreshProductsFeed extends Command
 
         $lastPage = 1; // Get at least once
         for ($page = 1; $page <= $lastPage; $page++) {
-            $fullUrl = "/products?full&limit=250&page=${page}&public=1";
+            $fullUrl = "/products?full&limit=250&page=${page}" . ($public ? '&public=1' : '');
             $this->info("[$url] Getting page ${page} of {$lastPage}");
 
             $response = $this->apiService->get($api, $fullUrl);
@@ -131,9 +155,11 @@ class RefreshProductsFeed extends Command
         }
     }
 
-    private function filePath(Api $api): string
+    private function filePath(Api $api, bool $public = true): string
     {
-        return storage_path('app/' . $api->getKey() . '-products.csv');
+        return storage_path(
+            'app/' . $api->getKey() . '-' . ($public ? 'products' : 'products-private') . '.csv'
+        );
     }
 
     private function headers(): string

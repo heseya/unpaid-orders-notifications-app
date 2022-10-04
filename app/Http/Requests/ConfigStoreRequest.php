@@ -10,9 +10,9 @@ class ConfigStoreRequest extends FormRequest
     {
         return [
             'store_front_url' => ['required', 'url'],
-            'product_type_set_parent_filter' => ['string'],
-            'product_type_set_no_parent_filter' => ['boolean'],
-            'google_custom_label_metatag' => ['string'],
+            'product_type_set_parent_filter' => ['nullable', 'string'],
+            'product_type_set_no_parent_filter' => ['nullable', 'boolean'],
+            'google_custom_label_metatag' => ['nullable', 'string'],
         ];
     }
 }
