@@ -88,7 +88,7 @@ class RefreshProductsFeed extends Command
 
         $lastPage = 1; // Get at least once
         for ($page = 1; $page <= $lastPage; $page++) {
-            $fullUrl = "/products?full&limit=100&page=${page}&public=1";
+            $fullUrl = "/products?full&limit=40&page=${page}&public=1";
             $this->info("[$url] Getting page ${page} of {$lastPage}");
 
             $response = $this->apiService->get($api, $fullUrl);
