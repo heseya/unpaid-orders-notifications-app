@@ -19,8 +19,6 @@ class ProductsController extends Controller
 
     public function show(ProductsExportRequest $request): StreamedResponse
     {
-        $this->reportAvailable('products');
-
         return $this->productsService->exportProducts(
             ProductsExportDto::fromFormRequest($request),
         );
@@ -28,8 +26,6 @@ class ProductsController extends Controller
 
     public function showPrivate(ProductsExportRequest $request): StreamedResponse
     {
-        $this->reportAvailable('products-private');
-
         return $this->productsService->exportProducts(
             ProductsExportDto::fromFormRequest($request),
             false,
