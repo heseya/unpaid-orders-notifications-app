@@ -117,6 +117,7 @@ class RefreshProductsFeed extends Command
         // clear memory
         $response = null;
         $shippingMethods = null;
+        unset($shippingMethods);
 
         $lastPage = 1; // Get at least once
         for ($page = 1; $page <= $lastPage; $page++) {

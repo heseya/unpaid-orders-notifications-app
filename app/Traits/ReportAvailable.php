@@ -17,5 +17,5 @@ trait ReportAvailable
     public function isReportAvailable(string $report): bool
     {
         return in_array($report, Config::get('export.reports'));
-}
+    }
 }

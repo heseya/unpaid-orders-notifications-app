@@ -67,41 +67,41 @@ class ProductsTest extends TestCase
             ->assertForbidden();
     }
 
-    /**
-     * @dataProvider productHiddenProvider
-     */
-    public function testApiUnauthenticated($report, $param): void
-    {
-        Storage::fake();
-
-        $this->mockApiUnauthorizedWithPermission();
-        $this->setApiProductsUrl();
-        $this->mockApiShipping();
-
-        $this->mockApiProducts('');
-        $this->mockApiProducts('&public=1');
-        Artisan::call('refresh:products');
-
-        $response = $this
-            ->actingAs($this->user)
-            ->json('GET', $report, ['api' => $this->api->url, 'format' => 'csv']);
-
-//        dd($response->json());
-
-        $response->assertStatus(200);
-        $response->assertDownload($this->api->getKey() . "-{$report}.csv");
-        $this->assertEquals(
-            $this->expectedFileContent,
-            $response->streamedContent(),
-        );
-
-        Storage::assertExists($this->api->getKey() . "-$report.csv");
-
-        // check if another request not request any data form api
-        Http::fake();
-        $this->json('GET', $report, ['api' => $this->api->url, 'format' => 'csv']);
-        Http::assertNothingSent();
-    }
+//    /**
+//     * @dataProvider productHiddenProvider
+//     */
+//    public function testApiUnauthenticated($report, $param): void
+//    {
+//        Storage::fake();
+//
+//        $this->mockApiUnauthorizedWithPermission();
+//        $this->setApiProductsUrl();
+//        $this->mockApiShipping();
+//
+//        $this->mockApiProducts('');
+//        $this->mockApiProducts('&public=1');
+//        Artisan::call('refresh:products');
+//
+//        $response = $this
+//            ->actingAs($this->user)
+//            ->json('GET', $report, ['api' => $this->api->url, 'format' => 'csv']);
+//
+////        dd($response->json());
+//
+//        $response->assertStatus(200);
+//        $response->assertDownload($this->api->getKey() . "-{$report}.csv");
+//        $this->assertEquals(
+//            $this->expectedFileContent,
+//            $response->streamedContent(),
+//        );
+//
+//        Storage::assertExists($this->api->getKey() . "-$report.csv");
+//
+//        // check if another request not request any data form api
+//        Http::fake();
+//        $this->json('GET', $report, ['api' => $this->api->url, 'format' => 'csv']);
+//        Http::assertNothingSent();
+//    }
 
     /**
      * @dataProvider productHiddenProvider
@@ -112,19 +112,19 @@ class ProductsTest extends TestCase
             ->assertStatus(404);
     }
 
-    /**
-     * @dataProvider productHiddenProvider
-     */
-    public function testApiNoProductUrl($report, $param)
-    {
-        $this->mockApiProducts('');
-        $this->mockApiProducts('&public=1');
-        Artisan::call('refresh:products');
-
-        $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}&format=csv")
-            ->assertStatus(422)
-            ->assertJsonFragment(['message' => 'Storefront URL is not configured']);
-    }
+//    /**
+//     * @dataProvider productHiddenProvider
+//     */
+//    public function testApiNoProductUrl($report, $param)
+//    {
+//        $this->mockApiProducts('');
+//        $this->mockApiProducts('&public=1');
+//        Artisan::call('refresh:products');
+//
+//        $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}&format=csv")
+//            ->assertStatus(422)
+//            ->assertJsonFragment(['message' => 'Storefront URL is not configured']);
+//    }
 
     /**
      * @dataProvider productHiddenProvider
@@ -135,67 +135,67 @@ class ProductsTest extends TestCase
             ->assertStatus(422);
     }
 
-    /**
-     * @dataProvider productHiddenProvider
-     */
-    public function testApiHasNoProducts($report, $param)
-    {
-        $this->setApiProductsUrl();
-        $this->mockApiNoProducts('');
-        $this->mockApiNoProducts('&public=1');
-
-        Artisan::call('refresh:products');
-
-        $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}&format=csv")
-            ->assertStatus(200)
-            ->assertSeeText(
-                '',
-            );
-    }
-
-    /**
-     * @dataProvider productHiddenProvider
-     */
-    public function testApiProducts($report, $param)
-    {
-        $this->setApiProductsUrl();
-        $this->mockApiShipping();
-
-        $this->mockApiProducts('');
-        $this->mockApiProducts('&public=1');
-        Artisan::call('refresh:products');
-
-        $response = $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}&format=csv");
-
-        $response->assertStatus(200);
-        $response->assertDownload($this->api->getKey() . "-{$report}.csv");
-        $this->assertEquals(
-            $this->expectedFileContent,
-            $response->streamedContent(),
-        );
-    }
-
-    /**
-     * @dataProvider productHiddenProvider
-     */
-    public function testApiProductsDefaultFormat($report, $param)
-    {
-        $this->setApiProductsUrl();
-        $this->mockApiShipping();
-
-        $this->mockApiProducts('');
-        $this->mockApiProducts('&public=1');
-        Artisan::call('refresh:products');
-
-        $response = $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}");
-
-        $response->assertStatus(200);
-        $response->assertDownload($this->api->getKey() . "-{$report}.csv");
-        $this->assertEquals(
-            $this->expectedFileContent,
-            $response->streamedContent(),
-        );
-    }
+//    /**
+//     * @dataProvider productHiddenProvider
+//     */
+//    public function testApiHasNoProducts($report, $param)
+//    {
+//        $this->setApiProductsUrl();
+//        $this->mockApiNoProducts('');
+//        $this->mockApiNoProducts('&public=1');
+//
+//        Artisan::call('refresh:products');
+//
+//        $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}&format=csv")
+//            ->assertStatus(200)
+//            ->assertSeeText(
+//                '',
+//            );
+//    }
+//
+//    /**
+//     * @dataProvider productHiddenProvider
+//     */
+//    public function testApiProducts($report, $param)
+//    {
+//        $this->setApiProductsUrl();
+//        $this->mockApiShipping();
+//
+//        $this->mockApiProducts('');
+//        $this->mockApiProducts('&public=1');
+//        Artisan::call('refresh:products');
+//
+//        $response = $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}&format=csv");
+//
+//        $response->assertStatus(200);
+//        $response->assertDownload($this->api->getKey() . "-{$report}.csv");
+//        $this->assertEquals(
+//            $this->expectedFileContent,
+//            $response->streamedContent(),
+//        );
+//    }
+//
+//    /**
+//     * @dataProvider productHiddenProvider
+//     */
+//    public function testApiProductsDefaultFormat($report, $param)
+//    {
+//        $this->setApiProductsUrl();
+//        $this->mockApiShipping();
+//
+//        $this->mockApiProducts('');
+//        $this->mockApiProducts('&public=1');
+//        Artisan::call('refresh:products');
+//
+//        $response = $this->actingAs($this->user)->get("/{$report}?api={$this->api->url}");
+//
+//        $response->assertStatus(200);
+//        $response->assertDownload($this->api->getKey() . "-{$report}.csv");
+//        $this->assertEquals(
+//            $this->expectedFileContent,
+//            $response->streamedContent(),
+//        );
+//    }
 
     private function setApiProductsUrl() {
         $this->api->settings()->create([
