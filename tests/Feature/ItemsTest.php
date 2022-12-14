@@ -133,7 +133,7 @@ class ItemsTest extends TestCase
                         'symbol' => 'PLN',
                     ],
                 ],
-            ])
+            ]),
         ]);
     }
 
@@ -147,7 +147,7 @@ class ItemsTest extends TestCase
                         'name' => 'Name',
                         'sku' => 'Sku',
                         'quantity' => 123,
-                    ]
+                    ],
                 ],
                 'meta' => [
                     'last_page' => 1,
@@ -155,7 +155,7 @@ class ItemsTest extends TestCase
                         'symbol' => 'PLN',
                     ],
                 ],
-            ])
+            ]),
         ]);
     }
 
@@ -169,7 +169,7 @@ class ItemsTest extends TestCase
                     'avatar' => '',
                     'permissions' => [],
                 ],
-            ])
+            ]),
         ]);
     }
 
@@ -185,7 +185,7 @@ class ItemsTest extends TestCase
                         'show_items',
                     ],
                 ],
-            ])
+            ]),
         ]);
     }
 }
