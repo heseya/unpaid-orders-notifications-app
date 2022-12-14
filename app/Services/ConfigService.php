@@ -14,18 +14,21 @@ class ConfigService implements ConfigServiceContract
     public function getConfigs(bool $with_values, string|null $api_url): Collection
     {
         if ($with_values) {
-            $api = Api::where('url', $api_url)->firstOrFail();
+            $api = Api::query()->where('url', $api_url)->firstOrFail();
             $settings = $api->settings()->first();
 
             $store_front_url = $settings?->store_front_url;
             $product_type_set_parent_filter = $settings?->product_type_set_parent_filter;
             $product_type_set_no_parent_filter = $settings?->product_type_set_no_parent_filter;
             $google_custom_label_metatag = $settings?->google_custom_label_metatag;
+            $products_limit = $settings?->products_limit;
         }
 
         $configs = Collection::make([]);
         $configs->push($this->getConfigField(
-            'store_front_url', $with_values, $store_front_url ?? null,
+            'store_front_url',
+            $with_values,
+            $store_front_url ?? null,
         ));
         $configs->push($this->getConfigField(
             'product_type_set_parent_filter',
@@ -42,6 +45,11 @@ class ConfigService implements ConfigServiceContract
             $with_values,
             $google_custom_label_metatag ?? null,
         ));
+        $configs->push($this->getConfigField(
+            'products_limit',
+            $with_values,
+            $products_limit ?? null,
+        ));
 
         $reports = Config::get('export.reports');
         $formats = Config::get('export.formats');
@@ -49,10 +57,32 @@ class ConfigService implements ConfigServiceContract
         foreach ($reports as $report) {
             foreach ($formats as $format) {
                 $configs->push($this->generateField($report, $format, $api_url));
+
+                if ($with_values) {
+                    $key = "{$format}_updated_at";
+                    $configs->push($this->getUpdateField(
+                        "{$format}_updated_at",
+                        "Last update of {$format}",
+                        $api->$key,
+                    ));
+                }
             }
         }
 
         return $configs;
+    }
+
+    private function getUpdateField(string $key, string $label, mixed $value): array
+    {
+        return [
+            'key' => $key,
+            'label' => $label,
+            'placeholder' => $value,
+            'type' => 'datetime-local',
+            'default_value' => null,
+            'required' => false,
+            'value' => $value,
+        ];
     }
 
     private function getConfigField(string $setting, bool $with_values, $value): array

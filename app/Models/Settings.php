@@ -19,6 +19,7 @@ class Settings extends Model
         'product_type_set_parent_filter',
         'product_type_set_no_parent_filter',
         'google_custom_label_metatag',
+        'products_limit',
     ];
 
     protected $casts = [

@@ -34,21 +34,24 @@ class ConfigController extends Controller
         return Response::json($this->configService->getConfigs($with_values, $api_url));
     }
 
-    public function store(ConfigStoreRequest $request)
+    public function store(ConfigStoreRequest $request): JsonResponse
     {
         $payload = Auth::getTokenPayload();
         $api_url = $payload ? $payload['iss'] : $request->header('X-Core-Url');
-        $api = Api::where('url', $api_url)->firstOrFail();
+        $api = Api::query()->where('url', $api_url)->firstOrFail();
 
         $productsUrl = $request->input('store_front_url');
 
-        Settings::updateOrCreate(['api_id' => $api->getKey()], [
+        Settings::query()->updateOrCreate(['api_id' => $api->getKey()], [
             'store_front_url' => Str::endsWith($productsUrl, '/') ? $productsUrl : "${productsUrl}/",
             'product_type_set_parent_filter' => $request->input('product_type_set_parent_filter'),
             'product_type_set_no_parent_filter' => $request->boolean('product_type_set_no_parent_filter'),
             'google_custom_label_metatag' => $request->input('google_custom_label_metatag'),
+            'products_limit' => $request->input('products_limit'),
         ]);
 
-        return Response::json($this->configService->getConfigs(true, $api_url));
+        return Response::json(
+            $this->configService->getConfigs(true, $api_url),
+        );
     }
 }
