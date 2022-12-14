@@ -14,7 +14,8 @@ class ConfigService implements ConfigServiceContract
     public function getConfigs(bool $with_values, string|null $api_url): Collection
     {
         if ($with_values) {
-            $api = Api::where('url', $api_url)->firstOrFail();
+            /** @var Api $api */
+            $api = Api::query()->where('url', $api_url)->firstOrFail();
             $settings = $api->settings()->first();
 
             $store_front_url = $settings?->store_front_url;
@@ -25,7 +26,9 @@ class ConfigService implements ConfigServiceContract
 
         $configs = Collection::make([]);
         $configs->push($this->getConfigField(
-            'store_front_url', $with_values, $store_front_url ?? null,
+            'store_front_url',
+            $with_values,
+            $store_front_url ?? null,
         ));
         $configs->push($this->getConfigField(
             'product_type_set_parent_filter',
@@ -50,9 +53,31 @@ class ConfigService implements ConfigServiceContract
             foreach ($formats as $format) {
                 $configs->push($this->generateField($report, $format, $api_url));
             }
+
+            if ($with_values) {
+                $key = (string) Str::of($report)->append('_updated_at')->snake();
+                $configs->push($this->getUpdateField(
+                    $key,
+                    "Last update of {$report}",
+                    $api->$key,
+                ));
+            }
         }
 
         return $configs;
+    }
+
+    private function getUpdateField(string $key, string $label, mixed $value): array
+    {
+        return [
+            'key' => $key,
+            'label' => $label,
+            'placeholder' => $value,
+            'type' => 'datetime-local',
+            'default_value' => null,
+            'required' => false,
+            'value' => $value,
+        ];
     }
 
     private function getConfigField(string $setting, bool $with_values, $value): array

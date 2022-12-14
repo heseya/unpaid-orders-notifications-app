@@ -8,14 +8,14 @@ use App\Traits\ReportAvailable;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 
 class RefreshProductsFeed extends Command
 {
     use ReportAvailable;
-
-    protected const PRODUCTS_LIMIT = 40;
 
     /**
      * The name and signature of the console command.
@@ -38,7 +38,7 @@ class RefreshProductsFeed extends Command
      */
     public function __construct(
         private ApiServiceContract $apiService,
-    ){
+    ) {
         parent::__construct();
     }
 
@@ -47,42 +47,52 @@ class RefreshProductsFeed extends Command
      */
     public function handle(): int
     {
-        // try catch
-        $apis = Api::all();//->each(fn (Api $api) => $this->processApi($api))->count();
+        $limit = Config::get('app.products_limit');
+
+        $apis = Api::all();
 
         $processedCounter = 0;
+        $totalCount = $apis->count();
+
         foreach ($apis as $api) {
             try {
                 if ($this->isReportAvailable('products')) {
-                    $this->processApi($api);
+                    $this->processApi($api, $limit);
+                    $api->update(['products_updated_at' => Carbon::now()]);
                 }
+
                 if ($this->isReportAvailable('products-private')) {
-                    $this->processApi($api, false);
+                    $this->processApi($api, $limit, false);
+                    $api->update(['products_private_updated_at' => Carbon::now()]);
                 }
 
                 $processedCounter++;
-            } catch (Exception $e) {
+
+                $this->info("Processed {$processedCounter}/{$totalCount} apis");
+            } catch (Exception $exception) {
                 $this->info("[{$api->url}] Failed processing. Skipping!");
+
+                if (app()->bound('sentry')) {
+                    app('sentry')->captureException($exception);
+                }
             }
         }
 
-        $totalCount = $apis->count();
-
-        $this->info("Processed {$processedCounter}/{$totalCount} apis");
+        $this->info('Processing ended.');
 
         return 1;
     }
 
-    private function processApi(Api $api, bool $public = true): void
+    private function processApi(Api $api, int $limit, bool $public = true): void
     {
         $url = $api->url;
         $path = $this->filePath($api, $public);
         $tempPath = $this->filePath($api, $public, true);
 
-        $this->info("[$url] Processing " . ($public ? 'public products' : 'private products'));
+        $this->info("[{$url}] Processing " . ($public ? 'public products' : 'private products'));
 
         if ($api->settings?->store_front_url === null) {
-            $this->info("[$url] Api store url not configured, skipping");
+            $this->info("[{$url}] Api store url not configured, skipping");
             return;
         }
 
@@ -103,8 +113,8 @@ class RefreshProductsFeed extends Command
         fclose($file);
         $file = null;
 
-        $fullUrl = "/shipping-methods";
-        $this->info("[$url] Getting shipping price");
+        $fullUrl = '/shipping-methods';
+        $this->info("[{$url}] Getting shipping price");
         $response = $this->apiService->get($api, $fullUrl);
         $shippingMethods = $response->json('data');
 
@@ -121,8 +131,8 @@ class RefreshProductsFeed extends Command
 
         $lastPage = 1; // Get at least once
         for ($page = 1; $page <= $lastPage; $page++) {
-            $fullUrl = "/products?full&page=${page}&limit=" . self::PRODUCTS_LIMIT . ($public ? '&public=1' : '');
-            $this->info("[$url] Getting page ${page} of {$lastPage}");
+            $fullUrl = "/products?full&page=${page}&limit=${limit}" . ($public ? '&public=1' : '');
+            $this->info("[{$url}] Getting page ${page} of {$lastPage}");
 
             $response = $this->apiService->get($api, $fullUrl);
             $lastPage = $response->json('meta.last_page');

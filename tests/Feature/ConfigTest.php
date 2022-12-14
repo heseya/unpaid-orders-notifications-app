@@ -48,17 +48,18 @@ class ConfigTest extends TestCase
         $this->json('GET', '/config')
             ->assertOk()
             ->assertJsonStructure([
-                $this->excepted
+                $this->excepted,
             ]);
     }
 
     public function testConfigUserNoPermissions(): void
     {
         $user = new StoreUser(1, 'User', '', []);
-        $this->actingAs($user)->json('GET', '/config', [], ['X-Core-Url' => 'https://exists.com'])
+        $this->actingAs($user)
+            ->json('GET', '/config', [], ['X-Core-Url' => 'https://exists.com'])
             ->assertOk()
             ->assertJsonStructure([
-                $this->excepted
+                $this->excepted,
             ]);
     }
 
@@ -69,16 +70,17 @@ class ConfigTest extends TestCase
         $this->json('GET', '/config', [], ['X-Core-Url' => 'https://exists.com'])
             ->assertOk()
             ->assertJsonStructure([
-                $this->excepted + ['value']
+                $this->excepted + ['value'],
             ]);
     }
 
     public function testConfigUser(): void
     {
-        $this->actingAs($this->user)->json('GET', '/config', [], ['X-Core-Url' => 'https://exists.com'])
+        $this->actingAs($this->user)
+            ->json('GET', '/config', [], ['X-Core-Url' => 'https://exists.com'])
             ->assertOk()
             ->assertJsonStructure([
-                $this->excepted + ['value']
+                $this->excepted + ['value'],
             ]);
     }
 
@@ -96,7 +98,7 @@ class ConfigTest extends TestCase
         ], ['X-Core-Url' => 'https://exists.com'])
             ->assertOk()
             ->assertJsonStructure([
-                $this->excepted + ['value']
+                $this->excepted + ['value'],
             ])
             ->assertJsonFragment([
                 'key' => 'store_front_url',
@@ -116,7 +118,7 @@ class ConfigTest extends TestCase
                         'configure',
                     ],
                 ],
-            ])
+            ]),
         ]);
     }
 }

@@ -3,18 +3,9 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * @property string $url;
- * @property ?string $name;
- * @property string $version;
- * @property ?string $licence_key;
- * @property string $integration_token;
- * @property string $refresh_token;
- * @property string $uninstall_token;
- *
  * @mixin IdeHelperApi
  */
 class Api extends Model
@@ -29,6 +20,17 @@ class Api extends Model
         'integration_token',
         'refresh_token',
         'uninstall_token',
+        'products_updated_at',
+        'products_private_updated_at',
+        'orders_updated_at',
+        'items_updated_at',
+    ];
+
+    protected $dates = [
+        'products_updated_at',
+        'products_private_updated_at',
+        'orders_updated_at',
+        'items_updated_at',
     ];
 
     public function settings(): HasOne

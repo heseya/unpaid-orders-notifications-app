@@ -33,7 +33,7 @@ abstract class ExportDto extends Dto
     {
         $result = '';
 
-        $this->params->each(function ($item, $key) use (&$result) {
+        $this->params->each(function ($item, $key) use (&$result): void {
             $result .= "&${key}=${item}";
         });
 
