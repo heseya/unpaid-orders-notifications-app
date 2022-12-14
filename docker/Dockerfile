@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     cron
 
-RUN echo "* * * * * /usr/local/bin/php /usr/src/app/artisan schedule:run" > mycron
+RUN echo "*/5 * * * * /usr/local/bin/php /usr/src/app/artisan refresh:products" > mycron
 RUN crontab mycron
 RUN service cron start
 
