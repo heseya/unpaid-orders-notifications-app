@@ -22,6 +22,3 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 COPY . ./
 RUN composer i
-
-RUN crontab -l | { cat; echo "* * * * * php /usr/src/app/artisan schedule:run"; } | crontab -
-CMD cron
