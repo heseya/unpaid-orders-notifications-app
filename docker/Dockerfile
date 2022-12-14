@@ -11,12 +11,7 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libzip-dev \
     zip \
-    unzip \
-    cron
-
-RUN echo "*/5 * * * * /usr/local/bin/php /usr/src/app/artisan refresh:products" > mycron
-RUN crontab mycron
-RUN service cron start
+    unzip
 
 RUN docker-php-ext-install pdo_mysql
 RUN docker-php-ext-install gd
