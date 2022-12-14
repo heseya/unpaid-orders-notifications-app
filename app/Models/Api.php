@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -21,6 +20,13 @@ class Api extends Model
         'integration_token',
         'refresh_token',
         'uninstall_token',
+        'products_updated_at',
+        'products_private_updated_at',
+        'orders_updated_at',
+        'items_updated_at',
+    ];
+
+    protected $dates = [
         'products_updated_at',
         'products_private_updated_at',
         'orders_updated_at',
