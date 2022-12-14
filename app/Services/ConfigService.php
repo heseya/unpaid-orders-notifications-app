@@ -55,7 +55,7 @@ class ConfigService implements ConfigServiceContract
             }
 
             if ($with_values) {
-                $key = "{$report}_updated_at";
+                $key = (string) Str::of($report)->append('_updated_at')->snake();
                 $configs->push($this->getUpdateField(
                     $key,
                     "Last update of {$report}",
