@@ -52,12 +52,12 @@ class HeseyaStoreGuard implements Guard
         return $this->user->getAuthIdentifier();
     }
 
-    public function validate(array $credentials = [])
+    public function validate(array $credentials = []): void
     {
         // TODO: Implement validate() method.
     }
 
-    public function setUser(Authenticatable $user)
+    public function setUser(Authenticatable $user): void
     {
         $this->user = $user;
     }

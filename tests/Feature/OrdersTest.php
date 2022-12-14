@@ -133,7 +133,7 @@ class OrdersTest extends TestCase
                         'symbol' => 'PLN',
                     ],
                 ],
-            ])
+            ]),
         ]);
     }
 
@@ -167,7 +167,7 @@ class OrdersTest extends TestCase
                             'phone' => '123 456 789',
                         ],
                         'shipping_method' => [
-                            'name' => 'dpd'
+                            'name' => 'dpd',
                         ],
                     ],
                 ],
@@ -177,7 +177,7 @@ class OrdersTest extends TestCase
                         'symbol' => 'PLN',
                     ],
                 ],
-            ])
+            ]),
         ]);
     }
 
@@ -191,7 +191,7 @@ class OrdersTest extends TestCase
                     'avatar' => '',
                     'permissions' => [],
                 ],
-            ])
+            ]),
         ]);
     }
 
@@ -207,7 +207,7 @@ class OrdersTest extends TestCase
                         'show_orders',
                     ],
                 ],
-            ])
+            ]),
         ]);
     }
 }

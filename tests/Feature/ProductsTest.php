@@ -5,9 +5,7 @@ namespace Tests\Feature;
 use App\Models\Api;
 use App\Models\StoreUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -281,7 +279,7 @@ class ProductsTest extends TestCase
                     'avatar' => '',
                     'permissions' => [],
                 ],
-            ])
+            ]),
         ]);
     }
 
@@ -298,7 +296,7 @@ class ProductsTest extends TestCase
                         'show_products_private',
                     ],
                 ],
-            ])
+            ]),
         ]);
     }
 }

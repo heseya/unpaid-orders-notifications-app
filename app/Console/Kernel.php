@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command(RefreshProductsFeed::class)->everySixHours();
+        $schedule->command(RefreshProductsFeed::class)->hourly();
     }
 
     /**
