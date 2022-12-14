@@ -63,6 +63,9 @@ class Handler extends ExceptionHandler
         SettingNotFoundException::class => [
             'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
         ],
+        ProductsNotFoundException::class => [
+            'code' => Response::HTTP_NOT_FOUND,
+        ],
     ];
 
     /**

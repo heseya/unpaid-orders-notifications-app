@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\Api;
 use App\Services\Contracts\ApiServiceContract;
+use App\Traits\ReportAvailable;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -11,6 +13,10 @@ use Illuminate\Support\Str;
 
 class RefreshProductsFeed extends Command
 {
+    use ReportAvailable;
+
+    protected const PRODUCTS_LIMIT = 40;
+
     /**
      * The name and signature of the console command.
      *
@@ -41,18 +47,39 @@ class RefreshProductsFeed extends Command
      */
     public function handle(): int
     {
-        $apis = Api::all()->each(fn (Api $api) => $this->processApi($api))->count();
+        // try catch
+        $apis = Api::all();//->each(fn (Api $api) => $this->processApi($api))->count();
 
-        $this->info("Processed $apis apis");
+        $processedCounter = 0;
+        foreach ($apis as $api) {
+            try {
+                if ($this->isReportAvailable('products')) {
+                    $this->processApi($api);
+                }
+                if ($this->isReportAvailable('products-private')) {
+                    $this->processApi($api, false);
+                }
+
+                $processedCounter++;
+            } catch (Exception $e) {
+                $this->info("[{$api->url}] Failed processing. Skipping!");
+            }
+        }
+
+        $totalCount = $apis->count();
+
+        $this->info("Processed {$processedCounter}/{$totalCount} apis");
 
         return 1;
     }
 
-    private function processApi(Api $api): void
+    private function processApi(Api $api, bool $public = true): void
     {
         $url = $api->url;
-        $path = $this->filePath($api);
-        $this->info("[$url] Processing");
+        $path = $this->filePath($api, $public);
+        $tempPath = $this->filePath($api, $public, true);
+
+        $this->info("[$url] Processing " . ($public ? 'public products' : 'private products'));
 
         if ($api->settings?->store_front_url === null) {
             $this->info("[$url] Api store url not configured, skipping");
@@ -71,9 +98,10 @@ class RefreshProductsFeed extends Command
         $customLabelMetatag = $api->settings?->google_custom_label_metatag;
 
         // create / overwrite file
-        $file = fopen($path, 'w');
+        $file = fopen($tempPath, 'w');
         fwrite($file, $this->headers());
         fclose($file);
+        $file = null;
 
         $fullUrl = "/shipping-methods";
         $this->info("[$url] Getting shipping price");
@@ -86,16 +114,21 @@ class RefreshProductsFeed extends Command
             null,
         ) ?? 0;
 
+        // clear memory
+        $response = null;
+        $shippingMethods = null;
+        unset($shippingMethods);
+
         $lastPage = 1; // Get at least once
         for ($page = 1; $page <= $lastPage; $page++) {
-            $fullUrl = "/products?full&limit=250&page=${page}&public=1";
+            $fullUrl = "/products?full&page=${page}&limit=" . self::PRODUCTS_LIMIT . ($public ? '&public=1' : '');
             $this->info("[$url] Getting page ${page} of {$lastPage}");
 
             $response = $this->apiService->get($api, $fullUrl);
             $lastPage = $response->json('meta.last_page');
 
             // append data
-            $file = fopen($path, 'a');
+            $file = fopen($tempPath, 'a');
 
             foreach ($response->json('data') as $product) {
                 if ($product['cover'] === null) {
@@ -116,6 +149,10 @@ class RefreshProductsFeed extends Command
                         && !in_array($set['parent_id'], $filteredParentIds),
                 ));
 
+                // clear memory
+                $sets = null;
+                $hasCustomLabel = null;
+
                 fwrite($file, $this->product(
                     $product,
                     $api->settings->store_front_url,
@@ -125,15 +162,29 @@ class RefreshProductsFeed extends Command
                     $productTypeSets[0]['name'] ?? '',
                     $customLabelSets[0]['name'] ?? '',
                 ));
+
+                // clear memory
+                $productTypeSets = null;
+                $customLabelSets = null;
             }
 
             fclose($file);
+
+            // clear memory
+            $file = null;
+            $response = null;
         }
+
+        rename($tempPath, $path);
     }
 
-    private function filePath(Api $api): string
+    private function filePath(Api $api, bool $public = true, bool $temp = false): string
     {
-        return storage_path('app/' . $api->getKey() . '-products.csv');
+        return storage_path(
+            'app/' . $api->getKey() . '-' .
+            ($public ? 'products' : 'products-private') .
+            ($temp ? '-temp' : '') . '.csv'
+        );
     }
 
     private function headers(): string
