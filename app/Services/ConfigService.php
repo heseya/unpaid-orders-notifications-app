@@ -52,15 +52,15 @@ class ConfigService implements ConfigServiceContract
         foreach ($reports as $report) {
             foreach ($formats as $format) {
                 $configs->push($this->generateField($report, $format, $api_url));
+            }
 
-                if ($with_values) {
-                    $key = "{$format}_updated_at";
-                    $configs->push($this->getUpdateField(
-                        "{$format}_updated_at",
-                        "Last update of {$format}",
-                        $api->$key,
-                    ));
-                }
+            if ($with_values) {
+                $key = "{$report}_updated_at";
+                $configs->push($this->getUpdateField(
+                    $key,
+                    "Last update of {$report}",
+                    $api->$key,
+                ));
             }
         }
 
