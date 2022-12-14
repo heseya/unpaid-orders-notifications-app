@@ -20,7 +20,6 @@ services:
         chmod -R 777 *
         php artisan migrate
         exec apache2-foreground
-        php artisan schedule:work
 volumes:
   database:
   storage:

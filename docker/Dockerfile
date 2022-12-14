@@ -14,6 +14,10 @@ RUN apt-get update && apt-get install -y \
     unzip \
     cron
 
+RUN echo "* * * * * php /usr/src/app/artisan schedule:run >> /dev/null 2>&1" > mycron
+RUN crontab mycron
+RUN service cron start
+
 RUN docker-php-ext-install pdo_mysql
 RUN docker-php-ext-install gd
 RUN docker-php-ext-install zip
