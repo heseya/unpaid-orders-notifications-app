@@ -11,10 +11,6 @@ class AddLimitSettings extends Migration
      */
     public function up(): void
     {
-        Schema::table('settings', function (Blueprint $table) {
-            $table->unsignedSmallInteger('products_limit')->default(50);
-        });
-
         Schema::table('apis', function (Blueprint $table) {
             $table->dateTime('products_updated_at')->nullable();
             $table->dateTime('products_private_updated_at')->nullable();
@@ -28,10 +24,6 @@ class AddLimitSettings extends Migration
      */
     public function down(): void
     {
-        Schema::table('settings', function (Blueprint $table) {
-            $table->dropColumn('products_limit');
-        });
-
         Schema::table('apis', function (Blueprint $table) {
             $table->dropColumn([
                 'products_updated_at',

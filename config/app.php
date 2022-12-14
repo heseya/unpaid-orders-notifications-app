@@ -14,6 +14,8 @@ return [
     'description' => env('APP_DESCRIPTION'),
     'microfrontend' => env('APP_MICROFRONTEND'),
 
+    'products_limit' => env('PRODUCTS_LIMIT', 50),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

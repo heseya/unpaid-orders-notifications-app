@@ -14,6 +14,7 @@ class ConfigService implements ConfigServiceContract
     public function getConfigs(bool $with_values, string|null $api_url): Collection
     {
         if ($with_values) {
+            /** @var Api $api */
             $api = Api::query()->where('url', $api_url)->firstOrFail();
             $settings = $api->settings()->first();
 
@@ -21,7 +22,6 @@ class ConfigService implements ConfigServiceContract
             $product_type_set_parent_filter = $settings?->product_type_set_parent_filter;
             $product_type_set_no_parent_filter = $settings?->product_type_set_no_parent_filter;
             $google_custom_label_metatag = $settings?->google_custom_label_metatag;
-            $products_limit = $settings?->products_limit;
         }
 
         $configs = Collection::make([]);
@@ -44,11 +44,6 @@ class ConfigService implements ConfigServiceContract
             'google_custom_label_metatag',
             $with_values,
             $google_custom_label_metatag ?? null,
-        ));
-        $configs->push($this->getConfigField(
-            'products_limit',
-            $with_values,
-            $products_limit ?? null,
         ));
 
         $reports = Config::get('export.reports');

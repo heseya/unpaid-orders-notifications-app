@@ -10,6 +10,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 
 class RefreshProductsFeed extends Command
@@ -46,6 +47,8 @@ class RefreshProductsFeed extends Command
      */
     public function handle(): int
     {
+        $limit = Config::get('app.products_limit');
+
         $apis = Api::all();
 
         $processedCounter = 0;
@@ -53,8 +56,6 @@ class RefreshProductsFeed extends Command
 
         foreach ($apis as $api) {
             try {
-                $limit = $api->settings->products_limit;
-
                 if ($this->isReportAvailable('products')) {
                     $this->processApi($api, $limit);
                     $api->update(['products_updated_at' => Carbon::now()]);

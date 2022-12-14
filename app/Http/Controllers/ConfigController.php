@@ -47,7 +47,6 @@ class ConfigController extends Controller
             'product_type_set_parent_filter' => $request->input('product_type_set_parent_filter'),
             'product_type_set_no_parent_filter' => $request->boolean('product_type_set_no_parent_filter'),
             'google_custom_label_metatag' => $request->input('google_custom_label_metatag'),
-            'products_limit' => $request->input('products_limit'),
         ]);
 
         return Response::json(
