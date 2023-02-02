@@ -131,7 +131,7 @@ class RefreshProductsFeed extends Command
 
         $lastPage = 1; // Get at least once
         for ($page = 1; $page <= $lastPage; $page++) {
-            $fullUrl = "/products?full&page=${page}&limit=${limit}" . ($public ? '&public=1' : '');
+            $fullUrl = "/products?full&page=${page}&limit=${limit}&has_cover=1" . ($public ? '&public=1' : '');
             $this->info("[{$url}] Getting page ${page} of {$lastPage}");
 
             $response = $this->apiService->get($api, $fullUrl);
@@ -141,6 +141,8 @@ class RefreshProductsFeed extends Command
             $file = fopen($tempPath, 'a');
 
             foreach ($response->json('data') as $product) {
+
+                // fallback remove products without cover
                 if ($product['cover'] === null) {
                     continue;
                 }
