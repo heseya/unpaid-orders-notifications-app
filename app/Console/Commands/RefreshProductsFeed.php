@@ -70,12 +70,15 @@ class RefreshProductsFeed extends Command
 
                 $this->info("Processed {$processedCounter}/{$totalCount} apis");
             } catch (Exception $exception) {
-                $this->info("[{$api->url}] Failed processing. Skipping!");
+                $this->error("[{$api->url}] {$exception->getMessage()}");
+                $this->error("[{$api->url}] Failed processing. Skipping!");
 
                 if (app()->bound('sentry')) {
                     app('sentry')->captureException($exception);
                 }
             }
+
+            $this->info("[{$api->url}] Processed successfully!");
         }
 
         $this->info('Processing ended.');
@@ -134,7 +137,14 @@ class RefreshProductsFeed extends Command
             $fullUrl = "/products?full&page=${page}&limit=${limit}&has_cover=1" . ($public ? '&public=1' : '');
             $this->info("[{$url}] Getting page ${page} of {$lastPage}");
 
-            $response = $this->apiService->get($api, $fullUrl);
+            try {
+                $response = $this->apiService->get($api, $fullUrl);
+            } catch (Exception $exception) {
+                $this->error("[{$url}] {$exception->getMessage()}");
+                $this->error("[{$url}] Getting page ${page} of {$lastPage} failed. Skipping...");
+                continue;
+            }
+
             $lastPage = $response->json('meta.last_page');
 
             // append data
@@ -203,7 +213,7 @@ class RefreshProductsFeed extends Command
     {
         return implode(',', [
             'id',
-            'gtin13',
+            'gtin',
             'title',
             'description',
             'availability',
