@@ -169,7 +169,7 @@ class ApiService implements ApiServiceContract
 
         if ($response->failed()) {
             if ($response->serverError()) {
-                throw new ApiServerErrorException('API responded with an Error');
+                throw new ApiServerErrorException('API responded with an Error ' . $response->status());
             }
 
             if ($response->status() === 403) {
@@ -177,7 +177,7 @@ class ApiService implements ApiServiceContract
             }
 
             if ($response->status() !== 401) {
-                throw new ApiClientErrorException('API responded with an Error');
+                throw new ApiClientErrorException('API responded with an Error 401');
             }
 
             if ($tryRefreshing === false) {
