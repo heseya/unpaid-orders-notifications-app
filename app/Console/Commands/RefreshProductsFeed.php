@@ -134,7 +134,8 @@ class RefreshProductsFeed extends Command
 
         $lastPage = 1; // Get at least once
         for ($page = 1; $page <= $lastPage; $page++) {
-            $fullUrl = "/products?full&page=${page}&limit=${limit}&has_cover=1" . ($public ? '&public=1' : '');
+            $fullUrl = "/products?full&page=${page}&limit=${limit}&has_cover=1&force_database_search=1" .
+                ($public ? '&public=1' : '');
             $this->info("[{$url}] Getting page ${page} of {$lastPage}");
 
             try {
