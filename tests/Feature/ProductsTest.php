@@ -195,13 +195,15 @@ class ProductsTest extends TestCase
 //        );
 //    }
 
-    private function setApiProductsUrl() {
+    private function setApiProductsUrl()
+    {
         $this->api->settings()->create([
             'store_front_url' => "http://store.com/products/",
         ]);
     }
 
-    private function mockApiShipping() {
+    private function mockApiShipping()
+    {
         Http::fake([
             "{$this->api->url}/shipping-methods" => Http::response([
                 'data' => [
@@ -217,7 +219,8 @@ class ProductsTest extends TestCase
         ]);
     }
 
-    private function mockApiNoProducts($param) {
+    private function mockApiNoProducts($param)
+    {
         Http::fake([
             "{$this->api->url}/products?full&limit=250&page=1{$param}" => Http::response([
                 'data' => [],
@@ -231,7 +234,8 @@ class ProductsTest extends TestCase
         ]);
     }
 
-    private function mockApiProducts($param) {
+    private function mockApiProducts($param)
+    {
         Http::fake([
             "{$this->api->url}/products?full&limit=250&page=1{$param}" => Http::response([
                 'data' => [

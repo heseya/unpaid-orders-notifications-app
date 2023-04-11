@@ -94,9 +94,9 @@ class ConfigService implements ConfigServiceContract
     private function generateField(string $report, string $format, string|null $api_url): array
     {
         $result = [
-            'key' => $report . '_' . $format .'_url',
+            'key' => $report . '_' . $format . '_url',
             'label' => Str::upper($format) . ' formatted ' . $report,
-            'placeholder' => Config::get('app.url') . '/' . $report .'?api=api_url',
+            'placeholder' => Config::get('app.url') . '/' . $report . '?api=api_url',
             'type' => 'text',
             'default_value' => null,
             'required' => false,

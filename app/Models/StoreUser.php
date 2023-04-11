@@ -10,10 +10,11 @@ use Illuminate\Support\Collection;
 
 class StoreUser implements AuthenticatableContract, AuthorizableContract
 {
-    use Authenticatable, Authorizable;
+    use Authenticatable;
+    use Authorizable;
 
     public function __construct(
-        public string | null $id,
+        public string|null $id,
         public string $name,
         public string $avatar,
         public array $permissions,
