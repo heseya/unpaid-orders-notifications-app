@@ -28,7 +28,7 @@ class ProductsService implements ProductsServiceContract
         $path = $this->path($api, $dto, $public);
 
         if (!Storage::exists($path)) {
-            throw new ProductsNotFoundException('Products not found for this api');
+            throw new ProductsNotFoundException('Products feed not found for this api');
         }
 
         return Storage::download($path);

@@ -123,4 +123,9 @@ class HeseyaStoreGuard implements Guard
     {
         return $this->request->bearerToken();
     }
+
+    public function hasUser(): bool
+    {
+        return $this->user() instanceof Authenticatable;
+    }
 }
