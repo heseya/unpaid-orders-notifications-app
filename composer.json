@@ -4,18 +4,17 @@
     "description": "Universal file exporter",
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^9.0",
+        "laravel/framework": "^10.0",
         "doctrine/dbal": "^3.2",
-        "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "heseya/dto": "^1.0",
+        "heseya/dto": "^1.0.1",
         "league/csv": "^9.7",
         "maatwebsite/excel": "^3.1",
         "sentry/sentry-laravel": "^3.2"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.12",
-        "spatie/laravel-ignition": "^1.0",
+        "spatie/laravel-ignition": "^2.0",
         "laravel/tinker": "^2.7",
         "fakerphp/faker": "^1.9.1",
         "mockery/mockery": "^1.4.4",
@@ -70,6 +69,6 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }

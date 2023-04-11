@@ -26,11 +26,11 @@ class Api extends Model
         'items_updated_at',
     ];
 
-    protected $dates = [
-        'products_updated_at',
-        'products_private_updated_at',
-        'orders_updated_at',
-        'items_updated_at',
+    protected $casts = [
+        'products_updated_at' => 'datetime',
+        'products_private_updated_at' => 'datetime',
+        'orders_updated_at' => 'datetime',
+        'items_updated_at' => 'datetime',
     ];
 
     public function settings(): HasOne
