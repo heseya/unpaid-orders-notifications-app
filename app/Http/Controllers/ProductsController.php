@@ -13,7 +13,7 @@ class ProductsController extends Controller
     use ReportAvailable;
 
     public function __construct(
-        private ProductsServiceContract $productsService,
+        private readonly ProductsServiceContract $productsService,
     ) {
     }
 
@@ -21,6 +21,7 @@ class ProductsController extends Controller
     {
         return $this->productsService->exportProducts(
             ProductsExportDto::fromFormRequest($request),
+            true,
         );
     }
 

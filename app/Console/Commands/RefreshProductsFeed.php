@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Api;
 use App\Services\Contracts\ApiServiceContract;
+use App\Services\Contracts\ProductsServiceContract;
 use App\Traits\ReportAvailable;
 use Exception;
 use Illuminate\Console\Command;
@@ -37,7 +38,8 @@ class RefreshProductsFeed extends Command
      * @return void
      */
     public function __construct(
-        private ApiServiceContract $apiService,
+        private readonly ApiServiceContract $apiService,
+        private readonly ProductsServiceContract $productsService,
     ) {
         parent::__construct();
     }
@@ -240,6 +242,8 @@ class RefreshProductsFeed extends Command
             ->replace([',', "\n", '"', "'"], ' ')
             ->stripTags();
 
+        [$cover, $additionalImage] = $this->productsService->getMedia($product);
+
         return implode(',', [
             $product['id'],
             Arr::get($attributes->firstWhere('slug', 'ean'), 'selected_options.0.name', ''),
@@ -250,8 +254,8 @@ class RefreshProductsFeed extends Command
             ($product['price_min_initial'] ?? $product['price_min']) . " {$currency}",
             "{$product['price_min']} {$currency}",
             $storeFrontUrl . (Str::endsWith($storeFrontUrl, '/') ? '' : '/') . $product['slug'],
-            Arr::get($product, 'cover.url', ''),
-            Arr::get($product, 'gallery.1.url', ''),
+            $cover ?? '',
+            $additionalImage ?? '',
             $storeName,
             $product['google_product_category'] ?? '',
             "PL:{$shippingPrice} {$currency}",

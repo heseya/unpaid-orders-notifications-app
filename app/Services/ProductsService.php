@@ -4,24 +4,15 @@ namespace App\Services;
 
 use App\Dtos\ProductsExportDto;
 use App\Exceptions\ProductsNotFoundException;
-use App\Exceptions\SettingNotFoundException;
-use App\Exports\ProductsExport;
 use App\Models\Api;
-use App\Services\Contracts\ApiServiceContract;
 use App\Services\Contracts\ProductsServiceContract;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
-use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class ProductsService implements ProductsServiceContract
+readonly class ProductsService implements ProductsServiceContract
 {
-    public function __construct(
-        private ApiServiceContract $apiService,
-    ) {
-    }
-
-    public function exportProducts(ProductsExportDto $dto, bool $public = true): StreamedResponse
+    public function exportProducts(ProductsExportDto $dto, bool $public): StreamedResponse
     {
         /** @var Api $api */
         $api = Api::query()->where('url', $dto->getApi())->firstOrFail();
@@ -34,37 +25,32 @@ class ProductsService implements ProductsServiceContract
         return Storage::download($path);
     }
 
-    public function reloadProducts(Api $api, ProductsExportDto $dto, bool $public = true): void
+    public function getMedia(array $product): array
     {
-        $setting = $api->settings()->first();
+        $cover = null;
+        $additionalImage = null;
 
-        if ($setting === null) {
-            throw new SettingNotFoundException('Storefront URL is not configured');
+        foreach (Arr::get($product, 'gallery', []) as $media) {
+            if (Arr::get($media, 'type') !== 'photo') {
+                continue;
+            }
+
+            if ($cover === null) {
+                $cover = Arr::get($media, 'url');
+            }
+
+            $additionalImage = Arr::get($media, 'url');
+            break;
         }
 
-        $params = ($public ? '&public=1' : '') . $dto->getParamsToUrl();
-        $products = $this->productsWithCoverAndDescriptions($this->getAll($api, $params));
-
-        Excel::store(
-            new ProductsExport($products, $setting->store_front_url, $api->name),
-            $this->path($api, $dto, $public),
-        );
+        return [
+            $cover,
+            $additionalImage,
+        ];
     }
 
     private function path(Api $api, ProductsExportDto $dto, bool $public = true): string
     {
         return $api->getKey() . '-' . ($public ? 'products.' : 'products-private.') . $dto->getFormat();
-    }
-
-    private function getAll(Api $api, string $params = ''): Collection
-    {
-        return $this->apiService->getAll($api, 'products', "&full${params}", true);
-    }
-
-    private function productsWithCoverAndDescriptions(Collection $products): Collection
-    {
-        return $products->filter(
-            fn ($product) => $product['cover'] !== null && $product['description_short'] !== null,
-        );
     }
 }
