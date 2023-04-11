@@ -19,7 +19,7 @@ services:
       chmod -R 777 *
       php artisan migrate
       exec apache2-foreground
-  mysql_service:
+  mysql:
     image: mariadb:10.5
     restart: unless-stopped
     environment:
