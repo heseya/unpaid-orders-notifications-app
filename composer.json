@@ -10,7 +10,8 @@
         "heseya/dto": "^1.0.1",
         "league/csv": "^9.7",
         "maatwebsite/excel": "^3.1",
-        "sentry/sentry-laravel": "^3.2"
+        "sentry/sentry-laravel": "^3.2",
+        "heseya/app-helper": "dev-main"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.12",

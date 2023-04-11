@@ -136,15 +136,15 @@ class RefreshProductsFeed extends Command
 
         $lastPage = 1; // Get at least once
         for ($page = 1; $page <= $lastPage; $page++) {
-            $fullUrl = "/products?full&page=${page}&limit=${limit}&force_database_search=1" .
+            $fullUrl = "/products?full&page={$page}&limit={$limit}&force_database_search=1" .
                 ($public ? '&public=1' : '');
-            $this->info("[{$url}] Getting page ${page} of {$lastPage}");
+            $this->info("[{$url}] Getting page {$page} of {$lastPage}");
 
             try {
                 $response = $this->apiService->get($api, $fullUrl);
             } catch (Exception $exception) {
                 $this->error("[{$url}] {$exception->getMessage()}");
-                $this->error("[{$url}] Getting page ${page} of {$lastPage} failed. Skipping...");
+                $this->error("[{$url}] Getting page {$page} of {$lastPage} failed. Skipping...");
                 continue;
             }
 

@@ -9,11 +9,6 @@ $appUrl = Str::endsWith($appUrl, '/')
 
 return [
 
-    'author' => env('APP_AUTHOR', 'Heseya'),
-    'icon' => env('APP_ICON'),
-    'description' => env('APP_DESCRIPTION'),
-    'microfrontend' => env('APP_MICROFRONTEND'),
-
     'products_limit' => env('PRODUCTS_LIMIT', 50),
 
     /*

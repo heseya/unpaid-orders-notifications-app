@@ -1,14 +1,11 @@
 <?php
 
 use App\Http\Controllers\ConfigController;
-use App\Http\Controllers\InfoController;
 use App\Http\Controllers\InstallationController;
 use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ProductsController;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', [InfoController::class, 'index']);
 
 Route::post('/install', [InstallationController::class, 'install']);
 Route::post('/uninstall', [InstallationController::class, 'uninstall']);

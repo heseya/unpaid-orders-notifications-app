@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "77f8e9cfd54540e78de92ace13ef2715",
+    "content-hash": "22d42b7f29d4ffc2085e80530b25b2aa",
     "packages": [
         {
             "name": "brick/math",
@@ -1527,6 +1527,55 @@
                 }
             ],
             "time": "2021-10-07T12:57:01+00:00"
+        },
+        {
+            "name": "heseya/app-helper",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/heseya/app-helper.git",
+                "reference": "9539f946886d6d8cfe6c1f39d1a0af9b7b2bf297"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/heseya/app-helper/zipball/9539f946886d6d8cfe6c1f39d1a0af9b7b2bf297",
+                "reference": "9539f946886d6d8cfe6c1f39d1a0af9b7b2bf297",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^9.0|^10.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.6"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Heseya\\AppHelper\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Heseya\\AppHelper\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Jędrzej Buliński",
+                    "email": "jedrzej@heseya.com"
+                }
+            ],
+            "description": "Heseya app helper for Laravel",
+            "support": {
+                "issues": "https://github.com/heseya/app-helper/issues",
+                "source": "https://github.com/heseya/app-helper/tree/develop"
+            },
+            "time": "2023-02-27T21:56:53+00:00"
         },
         {
             "name": "heseya/dto",
@@ -10683,7 +10732,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "heseya/app-helper": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
