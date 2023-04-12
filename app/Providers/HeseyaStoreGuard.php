@@ -101,6 +101,7 @@ class HeseyaStoreGuard implements Guard
             $response->json('data.name'),
             $response->json('data.avatar'),
             $response->json('data.permissions'),
+            $api,
         );
 
         return $this->user;

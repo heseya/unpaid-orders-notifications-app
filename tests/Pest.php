@@ -1,5 +1,11 @@
 <?php
 
+use App\Models\Api;
+use App\Models\StoreUser;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
+use Tests\TestCase;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -11,7 +17,8 @@
 |
 */
 
-// uses(Tests\TestCase::class)->in('Feature');
+
+uses(TestCase::class, RefreshDatabase::class)->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +46,39 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function mockApi(): Api
 {
-    // ..
+    return Api::create([
+        'url' => 'http://localhost',
+        'version' => '3.0.0',
+        'integration_token' => Str::random(),
+        'refresh_token' => Str::random(),
+        'uninstall_token' => Str::random(),
+    ]);
+}
+
+function mockUser(Api $api): StoreUser
+{
+    Http::fake([
+        "{$api->url}/auth/check" => Http::response([
+            'data' => [
+                'id' => $id = Illuminate\Support\Str::uuid(),
+                'name' => 'Unauthenticated',
+                'avatar' => '',
+                'permissions' => [
+                    'configure',
+                ],
+            ],
+        ]),
+    ]);
+
+    return new StoreUser(
+        $id,
+        'Test User',
+        '',
+        [
+            'configure',
+        ],
+        $api,
+    );
 }

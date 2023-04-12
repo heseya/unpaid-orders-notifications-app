@@ -16,7 +16,7 @@ use Throwable;
 class InstallationController extends Controller
 {
     public function __construct(
-        private InfoServiceContract $infoService,
+        private readonly InfoServiceContract $infoService,
     ) {
     }
 

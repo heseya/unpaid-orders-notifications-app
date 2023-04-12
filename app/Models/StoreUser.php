@@ -18,6 +18,7 @@ class StoreUser implements AuthenticatableContract, AuthorizableContract
         public string $name,
         public string $avatar,
         public array $permissions,
+        public Api $api,
     ) {
     }
 

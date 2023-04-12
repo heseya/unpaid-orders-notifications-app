@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -14,7 +15,6 @@ class Api extends Model
 
     protected $fillable = [
         'url',
-        'name',
         'version',
         'licence_key',
         'integration_token',
@@ -36,5 +36,10 @@ class Api extends Model
     public function settings(): HasOne
     {
         return $this->hasOne(Settings::class, 'api_id');
+    }
+
+    public function feeds(): HasMany
+    {
+        return $this->hasMany(Feed::class);
     }
 }
