@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Dtos\FeedStoreDto;
+use App\Dtos\FeedDto;
 use App\Exceptions\ApiAuthorizationException;
 use App\Models\Api;
 use App\Models\Feed;
@@ -13,20 +13,32 @@ class FeedService implements FeedServiceContract
 {
     public function get(Api $api): Collection
     {
-        return Feed::query()->where('api_id', $api->getKey())->get();
+        return $api->feeds;
     }
 
-    public function create(FeedStoreDto $dto, Api $api): Feed
+    public function create(FeedDto $dto, Api $api): Feed
     {
         return $api->feeds()->create($dto->toArray());
     }
 
+    public function update(FeedDto $dto, Feed $feed, Api $api): Feed
+    {
+        $this->checkFeedOwner($feed, $api);
+        $feed->update($dto->toArray());
+
+        return $feed;
+    }
+
     public function delete(Feed $feed, Api $api): void
+    {
+        $this->checkFeedOwner($feed, $api);
+        $feed->delete();
+    }
+
+    private function checkFeedOwner(Feed $feed, Api $api): void
     {
         if ($feed->api_id !== $api->getKey()) {
             throw new ApiAuthorizationException();
         }
-
-        $feed->delete();
     }
 }

@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Dtos\FeedStoreDto;
+use App\Dtos\FeedDto;
 use App\Http\Requests\FeedStoreRequest;
+use App\Http\Requests\FeedUpdateRequest;
 use App\Http\Resources\FeedResource;
 use App\Models\Feed;
 use App\Services\Contracts\FeedServiceContract;
@@ -29,7 +30,16 @@ class FeedController extends Controller
     public function store(FeedStoreRequest $request): JsonResource
     {
         return FeedResource::make($this->feedService->create(
-            FeedStoreDto::fromRequest($request),
+            FeedDto::fromRequest($request),
+            $request->user()->api,
+        ));
+    }
+
+    public function update(FeedUpdateRequest $request, Feed $feed): JsonResource
+    {
+        return FeedResource::make($this->feedService->update(
+            FeedDto::fromRequest($request),
+            $feed,
             $request->user()->api,
         ));
     }
