@@ -49,7 +49,7 @@ expect()->extend('toBeOne', function () {
 function mockApi(): Api
 {
     return Api::create([
-        'url' => 'http://localhost',
+        'url' => fake()->url(),
         'version' => '3.0.0',
         'integration_token' => Str::random(),
         'refresh_token' => Str::random(),

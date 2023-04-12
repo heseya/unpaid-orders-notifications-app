@@ -16,6 +16,7 @@ class FeedResource extends JsonResource
         return [
             'id' => $this->resource->getKey(),
             'name' => $this->resource->name,
+            'query' => $this->resource->query,
             'refreshed_at' => $this->resource->refreshed_at,
             'updated_at' => $this->resource->updated_at,
             'created_at' => $this->resource->created_at,

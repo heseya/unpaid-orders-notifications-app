@@ -16,7 +16,9 @@ class Feed extends Model
     use HasUuid;
 
     protected $fillable = [
+        'api_id',
         'name',
+        'query',
         'refreshed_at',
         'fields',
     ];
