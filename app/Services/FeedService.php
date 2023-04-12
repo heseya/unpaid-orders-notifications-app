@@ -9,7 +9,7 @@ use App\Models\Feed;
 use App\Services\Contracts\FeedServiceContract;
 use Illuminate\Support\Collection;
 
-class FeedService implements FeedServiceContract
+final readonly class FeedService implements FeedServiceContract
 {
     public function get(Api $api): Collection
     {

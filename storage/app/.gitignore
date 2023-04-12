@@ -1,3 +1,5 @@
 *
 !public/
+!feeds/
+!feeds-temp/
 !.gitignore

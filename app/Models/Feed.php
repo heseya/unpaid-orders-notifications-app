@@ -32,4 +32,14 @@ class Feed extends Model
     {
         return $this->belongsTo(Api::class);
     }
+
+    public function path(): string
+    {
+        return "feeds/{$this->getKey()}.csv";
+    }
+
+    public function tempPath(): string
+    {
+        return "feeds-temp/{$this->getKey()}.csv";
+    }
 }
