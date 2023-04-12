@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Dtos\FeedStoreDto;
 use App\Http\Requests\FeedStoreRequest;
 use App\Http\Resources\FeedResource;
+use App\Models\Feed;
 use App\Services\Contracts\FeedServiceContract;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Response;
 
 class FeedController extends Controller
 {
@@ -30,5 +32,12 @@ class FeedController extends Controller
             FeedStoreDto::fromRequest($request),
             $request->user()->api,
         ));
+    }
+
+    public function destroy(Request $request, Feed $feed): \Illuminate\Http\Response
+    {
+        $this->feedService->delete($feed, $request->user()->api);
+
+        return Response::noContent();
     }
 }
