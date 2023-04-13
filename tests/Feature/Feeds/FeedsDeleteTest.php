@@ -2,7 +2,7 @@
 
 use App\Models\Feed;
 
-use function Pest\Laravel\{actingAs, assertDatabaseHas, assertDatabaseMissing, deleteJson};
+use function Pest\Laravel\{actingAs, assertDatabaseMissing, deleteJson};
 
 it('doesn\'t allow delete when unauthorized', function () {
     $feed = Feed::factory()->create(['api_id' => mockApi()->getKey()]);
@@ -17,7 +17,6 @@ it('doesn\'t allow delete not owned feed', function () {
 
     deleteJson("/feeds/{$feed->getKey()}")->assertForbidden();
 });
-
 
 it('deletes feeds', function () {
     $api = mockApi();
