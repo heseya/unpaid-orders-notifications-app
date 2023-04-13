@@ -7,9 +7,11 @@ use App\Services\Contracts\ApiServiceContract;
 use App\Services\Contracts\FeedServiceContract;
 use App\Services\Contracts\FileServiceContract;
 use App\Services\Contracts\RefreshServiceContract;
+use App\Services\Contracts\VariableServiceContract;
 use App\Services\FeedService;
 use App\Services\FileService;
 use App\Services\RefreshService;
+use App\Services\VariableService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
         FeedServiceContract::class => FeedService::class,
         FileServiceContract::class => FileService::class,
         RefreshServiceContract::class => RefreshService::class,
+        VariableServiceContract::class => VariableService::class,
     ];
 
     /**

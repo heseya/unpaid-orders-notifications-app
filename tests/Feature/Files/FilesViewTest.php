@@ -6,11 +6,11 @@ use function Pest\Laravel\get;
 
 const UUID = '27861b54-0b64-4d35-8263-fd7af26c8254';
 
-it('can\'t download file when file doesn\t exist', function () {
+it('can\'t download file when file doesn\'t exist', function () {
     get('/file/{UUID}' . UUID . '.csv')->assertNotFound();
 });
 
-it('can\'t download file when doesn\t own file', function () {
+it('can\'t download file when doesn\'t own file', function () {
     Storage::fake();
     Storage::write('feeds/' . UUID, 'test');
 

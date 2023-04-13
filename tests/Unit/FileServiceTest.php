@@ -3,8 +3,9 @@
 use App\Models\Feed;
 use App\Services\FileService;
 
-it('generates file headers', function () {
-    $service = new FileService();
+$service = new FileService();
+
+it('generates file headers', function () use ($service) {
     $feed = new Feed(['fields' => [
         'test' => 'test-value',
         'test1' => 'test-value-1',
@@ -17,8 +18,7 @@ it('generates file headers', function () {
         ]);
 });
 
-it('generates file cell', function () {
-    $service = new FileService();
+it('generates file cell', function () use ($service) {
     $feed = new Feed(['fields' => [
         'test' => 'key',
         'test1' => 'key-1.key-1',
