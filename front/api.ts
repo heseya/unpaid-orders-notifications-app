@@ -12,7 +12,7 @@ declare module 'axios' {
 }
 
 // Inserted on build time
-const SERVICE_API_URL = import.meta.env.VITE_SERVICE_API_URL
+const SERVICE_API_URL = import.meta.env.VITE_APP_URL
 
 type OnRefreshFunction = (token: string | null) => void
 
@@ -48,10 +48,11 @@ export const createApiInstance = (baseURL: string) => {
 
     if (!isNull(token)) {
       config.headers.Authorization = `Bearer ${token}`
-      config.headers['X-Language'] = 'pl'
     }
 
-    config.headers['X-Core-Url'] = CORE_API_URL.value
+    config.headers['X-Core-Url'] = CORE_API_URL.value === 'http://localhost' ?
+        'http://host.docker.internal:80' :
+        CORE_API_URL.value
 
     return config
   })

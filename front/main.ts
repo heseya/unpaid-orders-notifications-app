@@ -9,7 +9,7 @@ import App from './App.vue'
 import 'ant-design-vue/dist/antd.css'
 import 'vue-toastification/dist/index.css'
 
-const APP_NAME = 'Reviews'
+const APP_NAME = 'Exporter'
 
 const appFactory = () => {
   return createApp(App)

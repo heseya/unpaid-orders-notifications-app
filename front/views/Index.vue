@@ -22,7 +22,6 @@ import { defineComponent, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { api } from '../api'
-import { formatCurrency } from '../utils/currency'
 import { Product } from '../interfaces/Product'
 
 export default defineComponent({
@@ -85,7 +84,6 @@ export default defineComponent({
       products,
       customRow,
       isLoading,
-      formatCurrency,
       pagination,
     }
   },

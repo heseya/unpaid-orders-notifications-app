@@ -1,8 +1,6 @@
 <template>
   <div id="micro-app">
     <router-view />
-
-    <debug-panel />
   </div>
 </template>
 
@@ -15,10 +13,8 @@ import { useIdentityToken } from './store/token'
 import { useCoreApiUrl } from './store/coreApiUrl'
 
 import { User } from './interfaces/User'
-import DebugPanel from './components/DebugPanel.vue'
 
 export default defineComponent({
-  components: { DebugPanel },
   name: 'App',
   setup() {
     const { setUser } = useUser()
