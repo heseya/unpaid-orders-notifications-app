@@ -2,6 +2,8 @@
 
 use App\Models\Feed;
 
+use Illuminate\Support\Facades\Storage;
+
 use function Pest\Laravel\get;
 
 const UUID = '27861b54-0b64-4d35-8263-fd7af26c8254';

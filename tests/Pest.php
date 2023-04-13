@@ -3,6 +3,7 @@
 use App\Models\Api;
 use App\Models\StoreUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 

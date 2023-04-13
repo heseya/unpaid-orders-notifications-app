@@ -2,6 +2,9 @@
 
 use App\Models\Feed;
 
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+
 use function Pest\Laravel\artisan;
 
 it('refresh feed', function () {
