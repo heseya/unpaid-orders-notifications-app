@@ -1,0 +1,4 @@
+{
+    "main.js": "bundle.umd.js",
+    "style.css": "style.css"
+}

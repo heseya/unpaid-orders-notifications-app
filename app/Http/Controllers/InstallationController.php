@@ -7,6 +7,7 @@ use App\Models\Api;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Response;
@@ -40,7 +41,7 @@ class InstallationController extends Controller
         }
 
         $permissions = $response->json('data.permissions');
-        $requiredPermissions = Config::get('heseya.required_permissions');
+        $requiredPermissions = Collection::make(Config::get('heseya.required_permissions'));
 
         if ($requiredPermissions->diff($permissions)->isNotEmpty()) {
             throw new Exception('App doesn\'t have all required permissions');
