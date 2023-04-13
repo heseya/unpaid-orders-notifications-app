@@ -6,7 +6,6 @@ use App\Enums\FieldType;
 use App\Exceptions\FileNotFoundException;
 use App\Models\Feed;
 use App\Services\Contracts\FileServiceContract;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
