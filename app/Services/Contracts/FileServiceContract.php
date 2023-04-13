@@ -3,6 +3,7 @@
 namespace App\Services\Contracts;
 
 use App\Models\Feed;
+use App\Models\Field;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 interface FileServiceContract
@@ -11,5 +12,8 @@ interface FileServiceContract
 
     public function buildHeaders(Feed $feed): array;
 
-    public function buildCell(Feed $feed, array $response): array;
+    /**
+     * @param Field[] $fields
+     */
+    public function buildCell(array $fields, array $response): array;
 }

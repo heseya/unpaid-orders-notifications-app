@@ -2,6 +2,7 @@
 
 use App\Models\Feed;
 use App\Services\FileService;
+use App\Services\VariableService;
 
 $service = new FileService();
 
@@ -24,6 +25,7 @@ it('generates file cell', function () use ($service) {
         'test1' => 'key-1.key-1',
         'test2' => 'key-2',
     ]]);
+    $fields = (new VariableService())->resolve($feed);
 
     $response = [
         'key' => 'value',
@@ -33,7 +35,7 @@ it('generates file cell', function () use ($service) {
         ],
     ];
 
-    expect($service->buildCell($feed, $response))
+    expect($service->buildCell($fields, $response))
         ->toEqual([
             '"value"',
             '"value-1"',

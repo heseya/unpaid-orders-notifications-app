@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\FieldType;
+use App\Models\Feed;
 use App\Models\Field;
 use App\Resolvers\AdditionalImageResolver;
 use App\Resolvers\AvailabilityResolver;
@@ -32,12 +33,13 @@ class VariableService implements VariableServiceContract
 //        '#product_url' => ProductUrlResolver::class,
     ];
 
-    public function resolve(array $keys): array
+    public function resolve(Feed $feed): array
     {
         $fields = [];
 
-        foreach ($keys as $key => $valueKey) {
+        foreach ($feed->fields as $key => $valueKey) {
             $fields[] = new Field(
+                $feed,
                 $key,
                 $valueKey,
                 $this->resolveType($valueKey),

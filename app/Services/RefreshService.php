@@ -12,6 +12,7 @@ final readonly class RefreshService implements RefreshServiceContract
     public function __construct(
         private ApiServiceContract $apiService,
         private FileServiceContract $fileService,
+        private VariableService $variableService,
     ) {
     }
 
@@ -28,6 +29,7 @@ final readonly class RefreshService implements RefreshServiceContract
         fwrite($tempFile, implode(',', $this->fileService->buildHeaders($feed)) . "\n");
         fclose($tempFile);
         $tempFile = null;
+        $fields = $this->variableService->resolve($feed);
 
         $lastPage = 1; // Get at least once
         for ($page = 1; $page <= $lastPage; $page++) {
@@ -39,7 +41,7 @@ final readonly class RefreshService implements RefreshServiceContract
 
             foreach ($response->json('data') as $responseObject) {
                 fwrite($tempFile, implode(',', $this->fileService->buildCell(
-                    $feed,
+                    $fields,
                     $responseObject,
                 )) . "\n");
             }

@@ -2,7 +2,9 @@
 
 namespace App\Services\Contracts;
 
+use App\Models\Feed;
+
 interface VariableServiceContract
 {
-    public function resolve(array $keys): array;
+    public function resolve(Feed $feed): array;
 }

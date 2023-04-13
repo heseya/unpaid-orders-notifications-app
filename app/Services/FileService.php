@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\FieldType;
 use App\Exceptions\FileNotFoundException;
 use App\Models\Feed;
 use App\Services\Contracts\FileServiceContract;
@@ -26,12 +27,17 @@ final readonly class FileService implements FileServiceContract
         return array_keys($feed->fields);
     }
 
-    public function buildCell(Feed $feed, array $response): array
+    public function buildCell(array $fields, array $response): array
     {
         $cells = [];
 
-        foreach ($feed->fields as $field) {
-            $cells[] = Str::of(Arr::get($response, $field))
+        foreach ($fields as $field) {
+            $value = match($field->type) {
+                FieldType::STANDARD, FieldType::VAR_LOCAL => $field->getLocalValue($response),
+                FieldType::VAR_GLOBAL => $field->getGlobalValue(),
+            };
+
+            $cells[] = Str::of($value)
                 ->replace([',', "\n", '"', "'"], ' ')
                 ->wrap('"', '"')
                 ->toString();
