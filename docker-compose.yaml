@@ -20,7 +20,7 @@ services:
       php artisan migrate
       exec apache2-foreground
   mysql:
-    image: mariadb:10.5
+    image: mariadb:10.7
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
