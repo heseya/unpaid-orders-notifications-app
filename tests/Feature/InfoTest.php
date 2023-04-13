@@ -10,6 +10,6 @@ it('shows app info', function () {
             'author' => 'Heseya',
             'description' => Config::get('app.description'),
             'microfrontend_url' => Config::get('app.microfrontend'),
-            'icon' => Config::get('app.icon'),
+            'icon' => 'http://localhost/logo.png',
         ]);
 });
