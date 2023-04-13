@@ -5,9 +5,13 @@ namespace App\Services;
 use App\Enums\FieldType;
 use App\Models\Field;
 use App\Resolvers\AdditionalImageResolver;
+use App\Resolvers\AvailabilityResolver;
 use App\Resolvers\CoverResolver;
+use App\Resolvers\EanResolver;
 use App\Resolvers\GlobalResolver;
 use App\Resolvers\LocalResolver;
+use App\Resolvers\PriceResolver;
+use App\Resolvers\SalePriceResolver;
 use App\Services\Contracts\VariableServiceContract;
 use Illuminate\Support\Str;
 
@@ -15,7 +19,12 @@ class VariableService implements VariableServiceContract
 {
     private const RESOLVERS = [
         '#cover' => CoverResolver::class,
-        '#additionalImage' => AdditionalImageResolver::class,
+        '#additional_image' => AdditionalImageResolver::class,
+        '#availability' => AvailabilityResolver::class,
+        '#price' => PriceResolver::class,
+        '#sale_price' => SalePriceResolver::class,
+//        '#product_url' => ProductUrlResolver::class,
+        '#ean' => EanResolver::class,
     ];
 
     public function resolve(array $keys): array

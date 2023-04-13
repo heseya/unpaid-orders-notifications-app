@@ -6,9 +6,6 @@ use App\Models\Feed;
 use App\Services\Contracts\RefreshServiceContract;
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 class Refresh extends Command
 {
@@ -69,41 +66,5 @@ class Refresh extends Command
         $this->info('Processing ended.');
 
         return 0;
-    }
-
-    private function product(
-        array $product,
-        string $storeFrontUrl,
-        string $storeName,
-        string $currency,
-        float $shippingPrice,
-        string $productType,
-        string $customLabel,
-    ): string {
-        $attributes = Collection::make($product['attributes'] ?? []);
-        $description = Str::of($product['description_html'])
-            ->replace([',', "\n", '"', "'"], ' ')
-            ->stripTags();
-
-        //        [$cover, $additionalImage] = $this->productsService->getMedia($product);
-
-        return implode(',', [
-            $product['id'],
-            Arr::get($attributes->firstWhere('slug', 'ean'), 'selected_options.0.name', ''),
-            "\"{$product['name']}\"",
-            $description,
-            $product['available'] ? 'in stock' : 'out of stock',
-            'new',
-            ($product['price_min_initial'] ?? $product['price_min']) . " {$currency}",
-            "{$product['price_min']} {$currency}",
-            $storeFrontUrl . (Str::endsWith($storeFrontUrl, '/') ? '' : '/') . $product['slug'],
-            $cover ?? '',
-            $additionalImage ?? '',
-            $storeName,
-            $product['google_product_category'] ?? '',
-            "PL:{$shippingPrice} {$currency}",
-            "\"{$productType}\"",
-            "\"{$customLabel}\"",
-        ]) . "\n";
     }
 }

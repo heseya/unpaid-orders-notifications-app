@@ -12,7 +12,7 @@ class GoogleProductsFeedTemplate implements FileTemplate
             'title' => 'name',
             'description' => 'short_description',
             'availability' => 'availability', // in stock | out of stock
-            'condition' => 'new', // in stock | out of stock
+            'condition' => 'new',
             'price' => 'price_min_initial',
             'sale_price' => 'price_min',
             'link' => 'url',
