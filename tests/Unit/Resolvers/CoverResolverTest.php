@@ -27,3 +27,7 @@ it('resolve cover field when first media is video', function () {
         ],
     ]))->toEqual('http://example.com/img.png');
 });
+
+it('resolve cover field when there is no image', function () {
+    expect(CoverResolver::resolve([]))->toEqual('');
+});

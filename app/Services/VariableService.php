@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\FieldType;
 use App\Models\Field;
+use App\Resolvers\AdditionalImageResolver;
 use App\Resolvers\CoverResolver;
 use App\Resolvers\GlobalResolver;
 use App\Resolvers\LocalResolver;
@@ -14,6 +15,7 @@ class VariableService implements VariableServiceContract
 {
     private const RESOLVERS = [
         '#cover' => CoverResolver::class,
+        '#additionalImage' => AdditionalImageResolver::class,
     ];
 
     public function resolve(array $keys): array
