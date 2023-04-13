@@ -7,7 +7,7 @@ return [
     'name' => Env::get('APP_NAME', 'Exporter'),
     'author' => 'Heseya',
     'description' => Env::get('APP_DESCRIPTION'),
-    'icon' => Env::get('APP_ICON'),
+    'icon' => Env::get('APP_URL') . '/logo.png',
     'version' => '3.0.0',
     'api_version' => '^2.0.0',
     'microfrontend_url' => Env::get('APP_MICROFRONTEND'),
