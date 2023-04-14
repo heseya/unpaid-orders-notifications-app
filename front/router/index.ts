@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 import Index from '../views/Index.vue'
-import Product from '../views/Product.vue'
+import Feed from '../views/Feed.vue'
 
 const routes = [
   {
@@ -10,9 +10,9 @@ const routes = [
     component: Index,
   },
   {
-    path: '/product/:id',
-    name: 'Product',
-    component: Product,
+    path: '/feed/:id',
+    name: 'Feed',
+    component: Feed,
   },
 ]
 const router = createRouter({

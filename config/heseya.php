@@ -4,7 +4,7 @@ use Illuminate\Support\Env;
 
 return [
 
-    'name' => Env::get('APP_NAME', 'Exporter'),
+    'name' => $appName = Env::get('APP_NAME', 'Exporter'),
     'author' => 'Heseya',
     'description' => Env::get('APP_DESCRIPTION'),
     'icon' => Env::get('APP_URL') . '/logo.png',
@@ -19,6 +19,12 @@ return [
         'products.show_hidden',
         'shipping_methods.show',
     ],
-    'internal_permissions' => [],
+    'internal_permissions' => [
+        [
+            'name' => 'configure',
+            'display_name' => "Permission to manage $appName",
+            'unauthenticated' => false,
+        ],
+    ],
 
 ];

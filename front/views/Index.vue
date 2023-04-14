@@ -1,64 +1,61 @@
 <template>
-  <h1>Feeds</h1>
+    <h1>Feeds</h1>
 
-  <a-table
-    :dataSource="products"
+    <a-table
+    :dataSource="feeds"
     rowKey="id"
-    :customRow="customRow"
     :pagination="pagination"
     :loading="isLoading"
     :locale="{ emptyText: 'No feeds to show' }"
-    class="products-table"
-  >
-    <a-table-column key="name" title="Name" data-index="name" #default="{ record }">
-      <span>{{ record.name }}</span>
-    </a-table-column>
-    <a-table-column key="reviews_count" title="Last refresh" data-index="reviews_count" />
-  </a-table>
+    >
+        <a-table-column key="name" title="Name" data-index="name" #default="{ record }">
+            <router-link :to="{ name: 'Feed', params: { id: record.id } }">
+                {{ record.name }}
+            </router-link>
+        </a-table-column>
+        <a-table-column key="refreshed_at" title="Last refresh" data-index="refreshed_at" #default="{ record }">
+            {{ record.refreshed_at ?? 'no avaiable yet' }}
+        </a-table-column>
+    </a-table>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
-
 import { api } from '../api'
-import { Product } from '../interfaces/Product'
 
 export default defineComponent({
   name: 'Index',
   setup() {
-    const router = useRouter()
-    const products = ref<Product[]>([])
+    const feeds = ref<[]>([])
     const isLoading = ref(false)
 
     // Pagination
     const page = ref(1)
     const pagination = reactive({
       value: page,
-      pageSize: 12,
+      pageSize: 24,
       total: 0,
       onChange: (current: number) => {
         page.value = current
       },
     })
 
-    const getProducts = async () => {
+    const getFeeds = async () => {
       isLoading.value = true
       try {
-      await api.post<{ data: Product[]; meta: { total: number } }>(
-          `/feeds`,
-          {
-              'name': 'test',
-              'query': '/products',
-              'feed': '{"test":"test"}',
+      // await api.post<{ data: Product[]; meta: { total: number } }>(
+      //     `/feeds`,
+      //     {
+      //         'name': 'test',
+      //         'query': '/products',
+      //         'fields': {"test":"test", "test1":"test2"},
+      //     }
+      // )
 
-          }
-      )
-
-        const response = await api.get<{ data: Product[]; meta: { total: number } }>(
+        const response = await api.get<{ data: []; meta: { total: number } }>(
           `/feeds`
         )
-        products.value = response.data.data
+        feeds.value = response.data.data
         pagination.total = response.data.meta.total
       } catch (e) {
         console.error(e)
@@ -66,41 +63,17 @@ export default defineComponent({
       isLoading.value = false
     }
 
-    const customRow = (record: any) => {
-      return {
-        onClick: () => {
-          router.push({ name: 'Product', params: { id: record.id } })
-        },
-      }
-    }
-
     watch(page, () => {
-      getProducts()
+      getFeeds()
     })
 
-    getProducts()
+    getFeeds()
 
     return {
-      products,
-      customRow,
+      feeds,
       isLoading,
       pagination,
     }
   },
 })
 </script>
-
-<style lang="scss" scoped>
-.product-cover-img {
-  width: 32px;
-  height: 32px;
-  object-fit: cover;
-  border-radius: 4px;
-  margin-right: 8px;
-  background-color: #eee;
-}
-
-.products-table:deep(.ant-table-row td) {
-  padding: 8px;
-}
-</style>

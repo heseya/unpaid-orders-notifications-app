@@ -1,6 +1,6 @@
 <template>
   <router-link class="product-return-link" to="/">
-    <i class="bx bx-arrow-back"></i> Wróć do listy produktów
+    <i class="bx bx-arrow-back"></i> Back to feeds list
   </router-link>
 
   <product-summary :product="product" />

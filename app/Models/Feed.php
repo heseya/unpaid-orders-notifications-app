@@ -6,6 +6,7 @@ use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Config;
 
 /**
  * @mixin IdeHelperFeed
@@ -41,5 +42,10 @@ class Feed extends Model
     public function tempPath(): string
     {
         return "feeds-temp/{$this->getKey()}.csv";
+    }
+
+    public function url(): string
+    {
+        return Config::get('app.url') . "/file/{$this->getKey()}";
     }
 }
