@@ -1,46 +1,43 @@
 <template>
-    <div class="loading" v-if="isLoading">
-        <a-spin />
-    </div>
+  <div class="loading" v-if="isLoading">
+      <a-spin />
+  </div>
 
-    <div v-if="!isLoading">
-        <a-page-header
-            :title="feed.name"
-            :sub-title="feed.refreshed_at ? `last refreshed: ` + feed.refreshed_at : 'not generated yet'"
-            @back="() => $router.go(-1)"
-        >
-            <template #tags>
-                <a-tag color="blue" v-if="feed.is_refreshing">Refresing</a-tag>
-            </template>
-            <template #extra>
-                <a-button @click="copy(feed.url)">Copy url</a-button>
-                <a-button :disabled="feed.is_refreshing">Refresh now</a-button>
-                <a-button type="danger">Delete</a-button>
-            </template>
-        </a-page-header>
+  <div v-if="!isLoading">
+    <a-page-header
+      :title="feed.name"
+      :sub-title="feed.refreshed_at ? `last refreshed: ` + feed.refreshed_at : 'not generated yet'"
+      @back="() => $router.push({ name: 'Index' })"
+    >
+      <template #extra>
+        <a-button v-if="feed.url" @click="copy(feed.url)">Copy url</a-button>
+        <a-button v-if="feed.id" @click="deleteFeed(feed.id)" type="danger">Delete</a-button>
+      </template>
+    </a-page-header>
 
-        <a-form :model="feed">
-            <a-form-item label="Name">
-                <a-input v-model:value="feed.name" />
-            </a-form-item>
-            <a-form-item label="Query">
-                <a-input v-model:value="feed.query" />
-            </a-form-item>
-            <a-form-item label="Fields">
-                <a-textarea v-model:value="feed.fields" :auto-size="{ minRows: 16 }" />
-            </a-form-item>
-            <a-form-item class="text-right">
-                <a-button type="primary" html-type="submit">Save</a-button>
-            </a-form-item>
-        </a-form>
-    </div>
+    <a-form :model="feed">
+      <a-form-item label="Name">
+        <a-input v-model:value="feed.name" />
+      </a-form-item>
+      <a-form-item label="Query">
+        <a-input v-model:value="feed.query" />
+      </a-form-item>
+      <a-form-item label="Fields">
+        <a-textarea v-model:value="feed.fields" :auto-size="{ minRows: 16 }" />
+      </a-form-item>
+      <a-form-item class="text-right">
+        <a-button type="primary" @click="submit(feed)">Save</a-button>
+      </a-form-item>
+    </a-form>
+  </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
+import {computed, defineComponent, ref} from 'vue'
 import { useRoute } from 'vue-router'
 import { api } from '../api'
-import {message} from "ant-design-vue";
+import { message, Modal } from "ant-design-vue";
+import router from "../router";
 
 export default defineComponent({
   name: 'Feed',
@@ -51,7 +48,6 @@ export default defineComponent({
     const feedId = computed(() => route.params.id as string)
 
     const getFeed = async () => {
-      isLoading.value = true
       const { data } = await api.get(`/feeds/${feedId.value}`)
       feed.value = data.data
       feed.value.fields = JSON.stringify(feed.value.fields, null, 4)
@@ -62,14 +58,50 @@ export default defineComponent({
     })
 
     return {
-      feed,
       isLoading,
+      feed,
     }
   },
   methods: {
-    copy($url: String): void {
-        navigator.clipboard.writeText($url);
-        message.success('Copied!');
+    copy(url: String): void {
+      navigator.clipboard.writeText(url)
+      message.success('Copied')
+    },
+    submit(feed): void {
+      let json = {}
+      const saveFeed = async (json: object) => {
+        await api.patch(`/feeds/${feed.id}`, {
+          name: feed.name,
+          query: feed.query,
+          fields: json,
+        })
+      }
+
+      try {
+        json = JSON.parse(feed.fields)
+      } catch {
+        message.error('JSON is not valid')
+        return
+      }
+
+      Promise.all([saveFeed(json)]).then(() => {
+        message.success('Saved')
+      })
+    },
+    deleteFeed(id: String): void {
+      Modal.confirm({
+        title: 'Do you Want to delete this feed?',
+        async onOk() {
+          const { status } = await api.delete(`/feeds/${id}`)
+
+          if (status === 204) {
+            message.success('Feed deleted')
+            await router.push({name: 'Index'})
+          } else {
+            message.error('Error')
+          }
+        },
+      })
     },
   },
 })

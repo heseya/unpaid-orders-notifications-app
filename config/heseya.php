@@ -22,7 +22,7 @@ return [
     'internal_permissions' => [
         [
             'name' => 'configure',
-            'display_name' => "Permission to manage $appName",
+            'display_name' => "Permission to manage {$appName}",
             'unauthenticated' => false,
         ],
     ],

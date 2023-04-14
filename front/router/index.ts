@@ -6,7 +6,7 @@ import Feed from '../views/Feed.vue'
 const routes = [
   {
     path: '/',
-    name: 'Home',
+    name: 'Index',
     component: Index,
   },
   {

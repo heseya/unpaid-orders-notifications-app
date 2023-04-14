@@ -8,7 +8,6 @@ use App\Models\Api;
 use App\Models\Feed;
 use App\Services\Contracts\FeedServiceContract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 
 final readonly class FeedService implements FeedServiceContract
