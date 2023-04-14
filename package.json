@@ -10,11 +10,9 @@
     "ant-design-vue": "^2.2.8",
     "axios": "^0.24.0",
     "bout": "^0.3.0",
-    "hes-gallery": "^1.5.1",
     "rollup-plugin-asset-manifest": "^0.1.1",
     "vue": "^3.1.2",
-    "vue-router": "4",
-    "vue-toastification": "^2.0.0-rc.5"
+    "vue-router": "4"
   },
   "devDependencies": {
     "@babel/types": "^7.16.0",

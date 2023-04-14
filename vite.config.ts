@@ -23,7 +23,4 @@ export default defineConfig({
       fileName: 'bundle',
     },
   },
-  optimizeDeps: {
-    include: ['vue-toastification', 'hes-gallery'],
-  },
 })

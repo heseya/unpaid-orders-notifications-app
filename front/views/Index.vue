@@ -1,6 +1,5 @@
 <template>
-    <h1>Feeds</h1>
-
+    <a-page-header title="Feeds" />
     <a-table
     :dataSource="feeds"
     rowKey="id"
@@ -14,7 +13,7 @@
             </router-link>
         </a-table-column>
         <a-table-column key="refreshed_at" title="Last refresh" data-index="refreshed_at" #default="{ record }">
-            {{ record.refreshed_at ?? 'no avaiable yet' }}
+            {{ record.refreshed_at ?? 'not generated yet' }}
         </a-table-column>
     </a-table>
 </template>
@@ -43,15 +42,6 @@ export default defineComponent({
     const getFeeds = async () => {
       isLoading.value = true
       try {
-      // await api.post<{ data: Product[]; meta: { total: number } }>(
-      //     `/feeds`,
-      //     {
-      //         'name': 'test',
-      //         'query': '/products',
-      //         'fields': {"test":"test", "test1":"test2"},
-      //     }
-      // )
-
         const response = await api.get<{ data: []; meta: { total: number } }>(
           `/feeds`
         )

@@ -803,11 +803,6 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
-hes-gallery@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/hes-gallery/-/hes-gallery-1.5.1.tgz#0b8f578b9b625e05107e10b2b96bb6871048bf33"
-  integrity sha512-WCWe1lKD7TBcNKruXQwIPeloZzC2CNyRIpyOKx4nNGR4jpvpukKu3zf0k5Kp6k/RRbkuWtc7kLxnn7JziHbKZw==
-
 htmlparser2@^7.1.2:
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/htmlparser2/-/htmlparser2-7.2.0.tgz#8817cdea38bbc324392a90b1990908e81a65f5a5"
@@ -1509,11 +1504,6 @@ vue-router@4:
   integrity sha512-sha6I8fx9HWtvTrFZfxZkiQQBpqSeT+UCwauYjkdOQYRvwsGwimlQQE2ayqUwuuXGzquFpCPoXzYKWlzL4OuXg==
   dependencies:
     "@vue/devtools-api" "^6.0.0-beta.14"
-
-vue-toastification@^2.0.0-rc.5:
-  version "2.0.0-rc.5"
-  resolved "https://registry.yarnpkg.com/vue-toastification/-/vue-toastification-2.0.0-rc.5.tgz#92798604d806ae473cfb76ed776fae294280f8f8"
-  integrity sha512-q73e5jy6gucEO/U+P48hqX+/qyXDozAGmaGgLFm5tXX4wJBcVsnGp4e/iJqlm9xzHETYOilUuwOUje2Qg1JdwA==
 
 vue-tsc@^0.30.1:
   version "0.30.1"

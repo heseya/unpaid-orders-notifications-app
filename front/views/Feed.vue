@@ -1,99 +1,88 @@
 <template>
-  <router-link class="product-return-link" to="/">
-    <i class="bx bx-arrow-back"></i> Back to feeds list
-  </router-link>
+    <div class="loading" v-if="isLoading">
+        <a-spin />
+    </div>
 
-  <product-summary :product="product" />
+    <div v-if="!isLoading">
+        <a-page-header
+            :title="feed.name"
+            :sub-title="feed.refreshed_at ? `last refreshed: ` + feed.refreshed_at : 'not generated yet'"
+            @back="() => $router.go(-1)"
+        >
+            <template #tags>
+                <a-tag color="blue" v-if="feed.is_refreshing">Refresing</a-tag>
+            </template>
+            <template #extra>
+                <a-button @click="copy(feed.url)">Copy url</a-button>
+                <a-button :disabled="feed.is_refreshing">Refresh now</a-button>
+                <a-button type="danger">Delete</a-button>
+            </template>
+        </a-page-header>
 
-  <reviews-table :reviews="reviews" :is-loading="isLoading" @delete="deleteReview" />
+        <a-form :model="feed">
+            <a-form-item label="Name">
+                <a-input v-model:value="feed.name" />
+            </a-form-item>
+            <a-form-item label="Query">
+                <a-input v-model:value="feed.query" />
+            </a-form-item>
+            <a-form-item label="Fields">
+                <a-textarea v-model:value="feed.fields" :auto-size="{ minRows: 16 }" />
+            </a-form-item>
+            <a-form-item class="text-right">
+                <a-button type="primary" html-type="submit">Save</a-button>
+            </a-form-item>
+        </a-form>
+    </div>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { useToast } from 'vue-toastification'
-
 import { api } from '../api'
-
-import { Review } from '../interfaces/Review'
-import { Product } from '../interfaces/Product'
-
-import ReviewAuthor from '../components/ReviewAuthor.vue'
-import ReviewsTable from '../components/ReviewsTable.vue'
+import {message} from "ant-design-vue";
 
 export default defineComponent({
-  name: 'Index',
-  components: {
-    ReviewAuthor,
-    ReviewsTable,
-  },
+  name: 'Feed',
   setup() {
-    const toast = useToast()
     const route = useRoute()
-    const reviews = ref<Review[]>([])
-    const editedReview = ref<Review | null>(null)
-
-    const product = ref<Product | null>(null)
+    const feed = ref(null)
     const isLoading = ref(false)
+    const feedId = computed(() => route.params.id as string)
 
-    const productId = computed(() => route.params.id as string)
-
-    const getProduct = async () => {
+    const getFeed = async () => {
       isLoading.value = true
-      const { data } = await api.get<Product>(`/products/${productId.value}`)
-      product.value = data
+      const { data } = await api.get(`/feeds/${feedId.value}`)
+      feed.value = data.data
+      feed.value.fields = JSON.stringify(feed.value.fields, null, 4)
     }
 
-    const getReviews = async () => {
-      isLoading.value = true
-      try {
-        // const response = await api.get<Review[]>('/reviews')
-        const response = await api.get<Review[]>(`/reviews?product_id=${productId.value}`)
-        reviews.value = response.data
-      } catch (e) {
-        console.error(e)
-        toast.error('Wystąpił błąd podczas pobierania recenzji')
-      }
-    }
-
-    const deleteReview = async (reviewId: string) => {
-      try {
-        await api.delete(`/reviews/${reviewId}`)
-        reviews.value = reviews.value.filter((r) => r.id !== reviewId)
-
-        toast.success('Recenzja została usunięta')
-      } catch (e) {
-        console.error(e)
-        toast.error('Wystąpił błąd podczas usuwania recenzji')
-      }
-    }
-
-    Promise.all([getProduct(), getReviews()]).then(() => {
+    Promise.all([getFeed()]).then(() => {
       isLoading.value = false
     })
 
-    product.value?.average_rating
-    product.value?.reviews_count
-
     return {
-      reviews,
-      editedReview,
-      deleteReview,
-      product,
+      feed,
       isLoading,
     }
+  },
+  methods: {
+    copy($url: String): void {
+        navigator.clipboard.writeText($url);
+        message.success('Copied!');
+    },
   },
 })
 </script>
 
-<style lang="scss" scoped>
-.product-return-link {
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
+<style scoped>
+.loading {
+    text-align: center;
+    width: 100%;
+    margin-top: 100px;
+}
 
-  i {
-    margin-right: 8px;
-  }
+.text-right {
+    text-align: right;
 }
 </style>

@@ -7,13 +7,15 @@ use App\Exceptions\ApiAuthorizationException;
 use App\Models\Api;
 use App\Models\Feed;
 use App\Services\Contracts\FeedServiceContract;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 
 final readonly class FeedService implements FeedServiceContract
 {
-    public function get(Api $api): Collection
+    public function get(Api $api): LengthAwarePaginator
     {
-        return $api->feeds;
+        return $api->feeds()->paginate(Config::get('pagination.per_page'));
     }
 
     public function create(FeedDto $dto, Api $api): Feed
@@ -35,7 +37,7 @@ final readonly class FeedService implements FeedServiceContract
         $feed->delete();
     }
 
-    private function checkFeedOwner(Feed $feed, Api $api): void
+    public function checkFeedOwner(Feed $feed, Api $api): void
     {
         if ($feed->api_id !== $api->getKey()) {
             throw new ApiAuthorizationException();

@@ -20,11 +20,18 @@ class FeedController extends Controller
     ) {
     }
 
-    public function show(Request $request): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
         return FeedResource::collection(
             $this->feedService->get($request->user()->api),
         );
+    }
+
+    public function show(Request $request, Feed $feed): FeedResource
+    {
+        $this->feedService->checkFeedOwner($feed, $request->user()->api);
+
+        return FeedResource::make($feed);
     }
 
     public function store(FeedStoreRequest $request): JsonResource
