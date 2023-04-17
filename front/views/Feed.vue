@@ -15,17 +15,29 @@
       </template>
     </a-page-header>
 
-    <a-form :model="feed">
+    <a-form :model="feed" :label-col="{ span: 2 }" :wrapper-col="{ span: 21 }">
       <a-form-item label="Name">
-        <a-input v-model:value="feed.name" />
+        <a-input v-model:value="feed.name" required />
+      </a-form-item>
+      <a-form-item label="Auth">
+        <a-radio-group v-model:value="feed.auth">
+          <a-radio-button value="no">No auth</a-radio-button>
+          <a-radio-button value="basic">Basic auth</a-radio-button>
+        </a-radio-group>
+      </a-form-item>
+      <a-form-item label="Username" v-if="feed.auth === 'basic'">
+        <a-input v-model:value="feed.username" />
+      </a-form-item>
+      <a-form-item label="Password" v-if="feed.auth === 'basic'">
+        <a-input v-model:value="feed.password" />
       </a-form-item>
       <a-form-item label="Query">
-        <a-input v-model:value="feed.query" />
+        <a-input v-model:value="feed.query" required />
       </a-form-item>
       <a-form-item label="Fields">
-        <a-textarea v-model:value="feed.fields" :auto-size="{ minRows: 16 }" />
+        <a-textarea v-model:value="feed.fields" :auto-size="{ minRows: 16 }" required />
       </a-form-item>
-      <a-form-item class="text-right">
+      <a-form-item label="Save">
         <a-button type="primary" @click="submit(feed)">Save</a-button>
       </a-form-item>
     </a-form>
@@ -44,7 +56,7 @@ export default defineComponent({
   setup() {
     const route = useRoute()
     const feed = ref(null)
-    const isLoading = ref(false)
+    const isLoading = ref(true)
     const feedId = computed(() => route.params.id as string)
 
     const getFeed = async () => {
@@ -73,6 +85,9 @@ export default defineComponent({
         await api.patch(`/feeds/${feed.id}`, {
           name: feed.name,
           query: feed.query,
+          auth: feed.auth,
+          username: feed.username,
+          password: feed.password,
           fields: json,
         })
       }
@@ -112,9 +127,5 @@ export default defineComponent({
     text-align: center;
     width: 100%;
     margin-top: 100px;
-}
-
-.text-right {
-    text-align: right;
 }
 </style>

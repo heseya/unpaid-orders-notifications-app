@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\AuthType;
+
 use function Pest\Laravel\{actingAs, assertDatabaseHas, postJson};
 
 it('doesn\'t allow create when unauthorized', function () {
@@ -12,6 +14,7 @@ it('creates feeds', function () {
 
     postJson('/feeds', [
         'name' => 'Sample Feed',
+        'auth' => AuthType::NO->value,
         'query' => '/products?public=1',
         'fields' => ['test' => 'test'],
     ])->assertCreated();
