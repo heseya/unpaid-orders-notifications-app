@@ -6,7 +6,7 @@
   <div v-if="!isLoading">
     <a-page-header
       :title="feed.name"
-      :sub-title="feed.refreshed_at ? `last refreshed: ` + feed.refreshed_at : 'not generated yet'"
+      :sub-title="feed.refreshed_at ? `last refreshed: ${feed.refreshed_at}` : 'not generated yet'"
       @back="() => $router.push({ name: 'Index' })"
     >
       <template #extra>
