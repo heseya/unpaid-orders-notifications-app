@@ -12,7 +12,7 @@ const user = computed(() => state.user)
 
 function checkPermission(permission: Permission) {
   // TODO: this should be better
-  const isInnerPermission = permission.includes('reviews')
+  const isInnerPermission = permission.includes('exporter')
   const escapedPermission = permission.replaceAll('.', '\\.')
   const regex = isInnerPermission ? new RegExp(`app\..+\.${escapedPermission}`) : escapedPermission
   return user.value?.permissions.some((p) => p.match(regex))
