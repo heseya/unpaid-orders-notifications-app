@@ -15,7 +15,7 @@
       </template>
     </a-page-header>
 
-    <a-form :model="feed" :label-col="{ span: 2 }" :wrapper-col="{ span: 21 }">
+    <a-form :model="feed" :label-col="{ span: 3 }" :wrapper-col="{ span: 21 }">
       <a-form-item label="Name">
         <a-input v-model:value="feed.name" :rules="[{ required: true }]" />
       </a-form-item>
@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, onBeforeMount, ref, watch} from 'vue'
+import { computed, defineComponent, onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { api } from '../api'
 import { message, Modal } from "ant-design-vue";
@@ -65,6 +65,7 @@ export default defineComponent({
       const { data } = await api.get(`/feeds/${feedId.value}`)
       feed.value = data.data
       feed.value.fields = JSON.stringify(feed.value.fields, null, 4)
+      isLoading.value = false
     }
 
     const copy = (url: String) => {
