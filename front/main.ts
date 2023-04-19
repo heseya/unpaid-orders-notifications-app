@@ -17,7 +17,6 @@ const appFactory = () => {
 
 const microApp = createVue3MicroApp(APP_NAME, appFactory)
 registerMicroApp(microApp)
-console.log('Loaded child scripts')
 
 // Mount to root if it is not a micro frontend
 if (!isParentApp()) {

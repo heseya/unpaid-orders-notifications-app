@@ -31,11 +31,13 @@ import { defineComponent, reactive, ref, watch } from 'vue'
 import { api } from '../api'
 import { message } from "ant-design-vue";
 import router from "../router";
+import axios from "axios";
+import { Feed } from "../interfaces/Feed";
 
 export default defineComponent({
   name: 'Index',
   setup() {
-    const feeds = ref<[]>([])
+    const feeds = ref<Feed[]>([])
     const isLoading = ref(false)
 
     // Pagination
@@ -57,41 +59,48 @@ export default defineComponent({
         )
         feeds.value = data.data
         pagination.total = data.meta.total
-      } catch (e) {
-        console.error(e)
+      } catch (error) {
+        console.error(error)
+        if (axios.isAxiosError(error)) {
+          message.error(`Error: ${error.response.data.error.message}`)
+        } else {
+          message.error(`Unexpected Error`)
+        }
       }
       isLoading.value = false
     }
 
-    watch(page, () => {
-      getFeeds()
-    })
+    const newFeed = async () => {
+      try {
+        const { data } = await api.post(
+          `/feeds`,
+          {
+            name: 'New feed',
+            auth: 'no',
+            query: '/products',
+            fields: { title: 'name' },
+          }
+        )
+        message.success('Created')
+        await router.push({ name: 'Feed', params: { id: data.data.id } })
 
-    getFeeds()
+      } catch (error) {
+        console.error(error)
+        if (axios.isAxiosError(error)) {
+          message.error(`Error: ${error.response.data.error.message}`)
+        } else {
+          message.error(`Unexpected Error`)
+        }
+      }
+    }
+
+    watch(page, () => getFeeds(), { immediate: true })
 
     return {
+      newFeed,
       feeds,
       isLoading,
       pagination,
-    }
-  },
-  methods: {
-    async newFeed(): void {
-      const { data, status } = await api.post(
-        `/feeds`,
-        {
-          name: 'New feed',
-          query: '/products',
-          auth: 'no',
-          fields: { title: 'name' },
-        }
-      )
-      if (status === 201) {
-        message.success('Created')
-        await router.push({ name: 'Feed', params: {id: data.data.id} })
-      } else {
-        message.error('Error')
-      }
     }
   },
 })

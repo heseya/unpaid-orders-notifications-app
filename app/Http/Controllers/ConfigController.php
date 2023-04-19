@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Response;
 
 class ConfigController extends Controller
@@ -12,7 +13,7 @@ class ConfigController extends Controller
         return Response::json([]);
     }
 
-    public function store(): \Illuminate\Http\Response
+    public function store(): HttpResponse
     {
         return Response::noContent();
     }

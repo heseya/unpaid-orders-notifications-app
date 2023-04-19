@@ -11,6 +11,7 @@ use App\Services\Contracts\FeedServiceContract;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Response;
 
 class FeedController extends Controller
@@ -51,7 +52,7 @@ class FeedController extends Controller
         ));
     }
 
-    public function destroy(Request $request, Feed $feed): \Illuminate\Http\Response
+    public function destroy(Request $request, Feed $feed): HttpResponse
     {
         $this->feedService->delete($feed, $request->user()->api);
 

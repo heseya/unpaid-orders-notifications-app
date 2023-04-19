@@ -6,7 +6,7 @@
   <div v-if="!isLoading">
     <a-page-header
       :title="feed.name"
-      :sub-title="feed.refreshed_at ? `last refreshed: ` + feed.refreshed_at : 'not generated yet'"
+      :sub-title="feed.refreshed_at ? `last refreshed: ${feed.refreshed_at}` : 'not generated yet'"
       @back="() => $router.push({ name: 'Index' })"
     >
       <template #extra>
@@ -17,7 +17,7 @@
 
     <a-form :model="feed" :label-col="{ span: 2 }" :wrapper-col="{ span: 21 }">
       <a-form-item label="Name">
-        <a-input v-model:value="feed.name" required />
+        <a-input v-model:value="feed.name" :rules="[{ required: true }]" />
       </a-form-item>
       <a-form-item label="Auth">
         <a-radio-group v-model:value="feed.auth">
@@ -32,10 +32,10 @@
         <a-input v-model:value="feed.password" />
       </a-form-item>
       <a-form-item label="Query">
-        <a-input v-model:value="feed.query" required />
+        <a-input v-model:value="feed.query" :rules="[{ required: true }]" />
       </a-form-item>
       <a-form-item label="Fields">
-        <a-textarea v-model:value="feed.fields" :auto-size="{ minRows: 16 }" required />
+        <a-textarea v-model:value="feed.fields" :auto-size="{ minRows: 16 }" :rules="[{ required: true }]" />
       </a-form-item>
       <a-form-item label="Save">
         <a-button type="primary" @click="submit(feed)">Save</a-button>
@@ -45,17 +45,19 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, ref} from 'vue'
+import {computed, defineComponent, onBeforeMount, ref, watch} from 'vue'
 import { useRoute } from 'vue-router'
 import { api } from '../api'
 import { message, Modal } from "ant-design-vue";
 import router from "../router";
+import axios from "axios";
+import { Feed } from "../interfaces/Feed";
 
 export default defineComponent({
   name: 'Feed',
   setup() {
     const route = useRoute()
-    const feed = ref(null)
+    const feed = ref<Feed | null>(null)
     const isLoading = ref(true)
     const feedId = computed(() => route.params.id as string)
 
@@ -65,23 +67,14 @@ export default defineComponent({
       feed.value.fields = JSON.stringify(feed.value.fields, null, 4)
     }
 
-    Promise.all([getFeed()]).then(() => {
-      isLoading.value = false
-    })
-
-    return {
-      isLoading,
-      feed,
-    }
-  },
-  methods: {
-    copy(url: String): void {
+    const copy = (url: String) => {
       navigator.clipboard.writeText(url)
       message.success('Copied')
-    },
-    submit(feed): void {
-      let json = {}
-      const saveFeed = async (json: object) => {
+    }
+
+    const submit = async (feed) => {
+      try {
+        const json = JSON.parse(feed.fields)
         await api.patch(`/feeds/${feed.id}`, {
           name: feed.name,
           query: feed.query,
@@ -90,34 +83,47 @@ export default defineComponent({
           password: feed.password,
           fields: json,
         })
-      }
-
-      try {
-        json = JSON.parse(feed.fields)
-      } catch {
-        message.error('JSON is not valid')
-        return
-      }
-
-      Promise.all([saveFeed(json)]).then(() => {
         message.success('Saved')
-      })
-    },
-    deleteFeed(id: String): void {
+      } catch (error) {
+        console.error(error)
+        if (axios.isAxiosError(error)) {
+          message.error(`Error: ${error.response.data.error.message}`)
+        } else {
+          message.error('JSON is not valid')
+        }
+      }
+    }
+
+    const deleteFeed = (id: String) => {
       Modal.confirm({
         title: 'Do you Want to delete this feed?',
         async onOk() {
-          const { status } = await api.delete(`/feeds/${id}`)
-
-          if (status === 204) {
+          try {
+            await api.delete(`/feeds/${id}`)
             message.success('Feed deleted')
             await router.push({name: 'Index'})
-          } else {
-            message.error('Error')
+
+          } catch (error) {
+            console.error(error)
+            if (axios.isAxiosError(error)) {
+              message.error(`Error: ${error.response.data.error.message}`)
+            } else {
+              message.error(`Unexpected Error`)
+            }
           }
         },
       })
-    },
+    }
+
+    onBeforeMount(async () => await getFeed())
+
+    return {
+      copy,
+      submit,
+      deleteFeed,
+      isLoading,
+      feed,
+    }
   },
 })
 </script>
