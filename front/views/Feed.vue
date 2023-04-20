@@ -81,7 +81,7 @@ export default defineComponent({
 
     const deleteFeed = (id: String) => {
       Modal.confirm({
-        title: 'Do you Want to delete this feed?',
+        title: 'Do you want to delete this feed?',
         async onOk() {
           try {
             await api.delete(`/feeds/${id}`)
