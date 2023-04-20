@@ -3,28 +3,25 @@
 namespace App\Providers;
 
 use App\Services\ApiService;
-use App\Services\ConfigService;
 use App\Services\Contracts\ApiServiceContract;
-use App\Services\Contracts\ConfigServiceContract;
-use App\Services\Contracts\InfoServiceContract;
-use App\Services\Contracts\ItemsServiceContract;
-use App\Services\Contracts\OrdersServiceContract;
-use App\Services\Contracts\ProductsServiceContract;
-use App\Services\InfoService;
-use App\Services\ItemsService;
-use App\Services\OrdersService;
-use App\Services\ProductsService;
+use App\Services\Contracts\FeedServiceContract;
+use App\Services\Contracts\FileServiceContract;
+use App\Services\Contracts\RefreshServiceContract;
+use App\Services\Contracts\VariableServiceContract;
+use App\Services\FeedService;
+use App\Services\FileService;
+use App\Services\RefreshService;
+use App\Services\VariableService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
     private const CONTRACTS = [
         ApiServiceContract::class => ApiService::class,
-        ConfigServiceContract::class => ConfigService::class,
-        InfoServiceContract::class => InfoService::class,
-        ItemsServiceContract::class => ItemsService::class,
-        OrdersServiceContract::class => OrdersService::class,
-        ProductsServiceContract::class => ProductsService::class,
+        FeedServiceContract::class => FeedService::class,
+        FileServiceContract::class => FileService::class,
+        RefreshServiceContract::class => RefreshService::class,
+        VariableServiceContract::class => VariableService::class,
     ];
 
     /**

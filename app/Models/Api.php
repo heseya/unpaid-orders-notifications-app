@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @mixin IdeHelperApi
@@ -14,27 +14,15 @@ class Api extends Model
 
     protected $fillable = [
         'url',
-        'name',
         'version',
         'licence_key',
         'integration_token',
         'refresh_token',
         'uninstall_token',
-        'products_updated_at',
-        'products_private_updated_at',
-        'orders_updated_at',
-        'items_updated_at',
     ];
 
-    protected $dates = [
-        'products_updated_at',
-        'products_private_updated_at',
-        'orders_updated_at',
-        'items_updated_at',
-    ];
-
-    public function settings(): HasOne
+    public function feeds(): HasMany
     {
-        return $this->hasOne(Settings::class, 'api_id');
+        return $this->hasMany(Feed::class);
     }
 }

@@ -5,17 +5,21 @@ namespace App\Providers;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * The path to the "home" route for your application.
-     *
-     * This is used by Laravel authentication to redirect users after login.
+     * Define the routes for the application.
      */
-    public const HOME = '/';
+    public function map(): void
+    {
+        foreach (File::allFiles(base_path('routes')) as $routeFile) {
+            Route::middleware('api')->group($routeFile->getPathname());
+        }
+    }
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -23,10 +27,6 @@ class RouteServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureRateLimiting();
-
-        $this->routes(function (): void {
-            Route::middleware('api')->group(base_path('routes/api.php'));
-        });
     }
 
     /**

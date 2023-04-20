@@ -22,8 +22,8 @@ class HeseyaStoreGuard implements Guard
     private ?string $apiUrl = null;
 
     public function __construct(
-        private ApiServiceContract $apiService,
-        private Request $request,
+        private readonly ApiServiceContract $apiService,
+        private readonly Request $request,
     ) {
         Gate::before(function ($user, $ability) {
             if ($user instanceof StoreUser && $user->getPermissions()->contains($ability)) {
@@ -71,7 +71,7 @@ class HeseyaStoreGuard implements Guard
         if ($apiUrl !== null && ($headerApiUrl !== null && $headerApiUrl !== $apiUrl)) {
             return null;
         }
-        $apiUrl = $apiUrl ?? $headerApiUrl;
+        $apiUrl ??= $headerApiUrl;
 
         if (($apiUrl === $this->apiUrl && $token === $this->token) || ($token !== null && $headerApiUrl === null)) {
             return null;
@@ -80,7 +80,7 @@ class HeseyaStoreGuard implements Guard
         [$this->token, $this->apiUrl] = [$token, $apiUrl];
 
         try {
-            $api = Api::where('url', $apiUrl)->firstOrFail();
+            $api = Api::query()->where('url', $apiUrl)->firstOrFail();
         } catch (Throwable) {
             throw new InvalidTokenException('Unregistered API call');
         }
@@ -101,6 +101,7 @@ class HeseyaStoreGuard implements Guard
             $response->json('data.name'),
             $response->json('data.avatar'),
             $response->json('data.permissions'),
+            $api,
         );
 
         return $this->user;
@@ -122,5 +123,10 @@ class HeseyaStoreGuard implements Guard
     private function getToken(): ?string
     {
         return $this->request->bearerToken();
+    }
+
+    public function hasUser(): bool
+    {
+        return $this->user() instanceof Authenticatable;
     }
 }

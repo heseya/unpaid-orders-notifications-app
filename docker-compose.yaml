@@ -11,14 +11,17 @@ services:
     - bash
     - -c
     - |
-      if [ ! -f "${DB_DATABASE}" ]; then
-        touch ${DB_DATABASE}
-      fi
       composer install
       php artisan key:generate
       chmod -R 777 *
       php artisan migrate
       exec apache2-foreground
+  mysql:
+    image: mariadb:10.7
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
   nginx:
     image: nginx
     restart: unless-stopped
@@ -30,4 +33,4 @@ services:
     image: adminer
     restart: unless-stopped
     environment:
-      - ADMINER_DEFAULT_SERVER=mysql_service
+      - ADMINER_DEFAULT_SERVER=mysql

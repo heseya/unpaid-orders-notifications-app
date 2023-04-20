@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\InstallRequest;
 use App\Models\Api;
-use App\Services\Contracts\InfoServiceContract;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
@@ -15,14 +16,6 @@ use Throwable;
 
 class InstallationController extends Controller
 {
-    public function __construct(
-        private InfoServiceContract $infoService,
-    ) {
-    }
-
-    /**
-     * @throws Exception
-     */
     public function install(InstallRequest $request): JsonResponse
     {
         $storeUrl = $request->input('api_url');
@@ -34,7 +27,7 @@ class InstallationController extends Controller
         $token = $request->input('integration_token');
 
         try {
-            $response = Http::withToken($token)->get("${storeUrl}/auth/profile");
+            $response = Http::withToken($token)->get("{$storeUrl}/auth/profile");
         } catch (Throwable) {
             throw new Exception('Failed to connect to the API');
         }
@@ -48,7 +41,7 @@ class InstallationController extends Controller
         }
 
         $permissions = $response->json('data.permissions');
-        $requiredPermissions = $this->infoService->getRequiredPermissions();
+        $requiredPermissions = Collection::make(Config::get('heseya.required_permissions'));
 
         if ($requiredPermissions->diff($permissions)->isNotEmpty()) {
             throw new Exception('App doesn\'t have all required permissions');

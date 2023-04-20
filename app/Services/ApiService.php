@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
-class ApiService implements ApiServiceContract
+final readonly class ApiService implements ApiServiceContract
 {
     /**
      * @throws ApiAuthenticationException

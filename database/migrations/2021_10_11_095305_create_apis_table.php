@@ -19,9 +19,9 @@ class CreateApisTable extends Migration
             $table->string("name")->nullable();
             $table->string("version");
             $table->string("licence_key")->nullable();
-            $table->string("integration_token");
-            $table->string("refresh_token");
-            $table->string("uninstall_token")->unique();
+            $table->string("integration_token", 500);
+            $table->string("refresh_token", 500);
+            $table->string("uninstall_token", 128)->unique();
 
             $table->timestamps();
         });
