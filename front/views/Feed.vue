@@ -62,9 +62,18 @@ export default defineComponent({
     const feedId = computed(() => route.params.id as string)
 
     const getFeed = async () => {
-      const { data } = await api.get(`/feeds/${feedId.value}`)
-      feed.value = data.data
-      feed.value.fields = JSON.stringify(feed.value.fields, null, 4)
+      try {
+        const {data} = await api.get(`/feeds/${feedId.value}`)
+        feed.value = data.data
+        feed.value.fields = JSON.stringify(feed.value.fields, null, 4)
+      } catch (error) {
+        console.error(error)
+        if (axios.isAxiosError(error)) {
+          message.error(`Error: ${error.response.data.error.message}`)
+        } else {
+          message.error('Unexpected error')
+        }
+      }
       isLoading.value = false
     }
 
@@ -97,7 +106,7 @@ export default defineComponent({
 
     const deleteFeed = (id: String) => {
       Modal.confirm({
-        title: 'Do you Want to delete this feed?',
+        title: 'Do you want to delete this feed?',
         async onOk() {
           try {
             await api.delete(`/feeds/${id}`)
