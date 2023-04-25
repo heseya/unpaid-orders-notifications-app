@@ -123,7 +123,9 @@ class RefreshProductsFeed extends Command
 
         $minShippingPrice = array_reduce(
             $shippingMethods,
-            fn ($carry, $item) => $carry === null || $item['price'] < $carry ? $item['price'] : $carry,
+            fn ($carry, $item) => ($carry === null || $item['price'] < $carry)
+                && $item['shipping_type'] !== 'digital'
+                ? $item['price'] : $carry,
             null,
         ) ?? 0;
 
@@ -229,6 +231,7 @@ class RefreshProductsFeed extends Command
             'shipping(country:price)',
             'product_type',
             'custom_label_0',
+            'quantity',
         ]) . "\n";
     }
 
@@ -263,6 +266,7 @@ class RefreshProductsFeed extends Command
             "PL:{$shippingPrice} {$currency}",
             "\"{$productType}\"",
             "\"{$customLabel}\"",
+            $product['quantity'] ?? '',
         ]) . "\n";
     }
 }
