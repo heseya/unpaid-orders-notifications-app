@@ -44,4 +44,7 @@ it('refresh feed', function () {
         ->expectsOutputToContain('Processing ended.');
 
     Storage::assertExists($feed->path());
+
+    $feed->refresh();
+    expect($feed->refreshed_at)->isNotEmpty();
 });

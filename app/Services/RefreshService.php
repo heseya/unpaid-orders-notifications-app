@@ -6,6 +6,7 @@ use App\Models\Feed;
 use App\Services\Contracts\ApiServiceContract;
 use App\Services\Contracts\FileServiceContract;
 use App\Services\Contracts\RefreshServiceContract;
+use Illuminate\Support\Carbon;
 
 final readonly class RefreshService implements RefreshServiceContract
 {
@@ -54,5 +55,8 @@ final readonly class RefreshService implements RefreshServiceContract
 
         // move temp file to right location
         rename($tempPath, $path);
+        $feed->update([
+            'refreshed_at' => Carbon::now(),
+        ]);
     }
 }
