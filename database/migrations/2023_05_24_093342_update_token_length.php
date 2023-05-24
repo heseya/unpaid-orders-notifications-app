@@ -15,7 +15,7 @@ class UpdateTokenLength extends Migration
             $table->string('licence_key', 1800)->nullable()->change();
             $table->string('integration_token', 1800)->change();
             $table->string('refresh_token', 1800)->change();
-            $table->string('uninstall_token', 1800)->unique()->change();
+            $table->string('uninstall_token', 1800)->change();
         });
     }
 
