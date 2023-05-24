@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Resolvers\CoverResolver;
 
 it('resolve cover field', function () {

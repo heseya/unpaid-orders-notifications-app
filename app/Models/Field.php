@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enums\FieldType;
@@ -36,7 +38,7 @@ final class Field
     public function getLocalValue(array $response = []): string
     {
         if ($this->resolver === null) {
-            return Arr::get($response, $this->valueKey, '');
+            return (string) Arr::get($response, $this->valueKey, '');
         }
 
         return $this->resolver::resolve($response);

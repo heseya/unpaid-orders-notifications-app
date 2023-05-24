@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\Feed;
 use App\Services\FileService;
 use App\Services\VariableService;

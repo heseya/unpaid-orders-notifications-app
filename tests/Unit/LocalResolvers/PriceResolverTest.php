@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Resolvers\PriceResolver;
 
 it('resolve field', function () {

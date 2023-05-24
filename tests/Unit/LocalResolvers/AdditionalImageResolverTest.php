@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Resolvers\AdditionalImageResolver;
 
 it('resolve additional image field', function () {

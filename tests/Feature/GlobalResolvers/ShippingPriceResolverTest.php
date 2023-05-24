@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\Feed;
 use App\Resolvers\ShippingPriceResolver;
 use Illuminate\Support\Facades\Http;

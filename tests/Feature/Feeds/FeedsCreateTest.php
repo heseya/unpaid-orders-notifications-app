@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Enums\AuthType;
 
 use function Pest\Laravel\{actingAs, assertDatabaseHas, postJson};

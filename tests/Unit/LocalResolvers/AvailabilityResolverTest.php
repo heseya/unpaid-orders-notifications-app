@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Resolvers\AvailabilityResolver;
 
 it('resolve availability field', function () {

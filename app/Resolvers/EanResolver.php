@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Resolvers;
 
 use Illuminate\Support\Arr;
@@ -11,6 +13,6 @@ class EanResolver implements LocalResolver
     {
         $attribute = Collection::make($response['attributes'] ?? [])->firstWhere('slug', 'ean');
 
-        return Arr::get($attribute, 'selected_options.0.name', '');
+        return (string) Arr::get($attribute, 'selected_options.0.name', '');
     }
 }

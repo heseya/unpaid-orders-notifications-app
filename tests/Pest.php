@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\Api;
 use App\Models\StoreUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;

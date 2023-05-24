@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Enums\FieldType;
 use App\Resolvers\CoverResolver;
 use App\Services\VariableService;

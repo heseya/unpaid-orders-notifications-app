@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\Feed;
 
 use function Pest\Laravel\{actingAs, assertDatabaseMissing, deleteJson};

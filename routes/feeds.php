@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\FeedController;
 use Heseya\Pagination\Http\Middleware\Pagination;
 use Illuminate\Support\Facades\Route;
