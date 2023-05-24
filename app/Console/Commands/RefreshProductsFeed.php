@@ -99,6 +99,12 @@ class RefreshProductsFeed extends Command
             return;
         }
 
+        // create / overwrite file and add headers
+        $file = fopen($tempPath, 'w');
+        fwrite($file, $this->headers());
+        fclose($file);
+        unset($file);
+
         $filteredParentIds = [];
         if ($api->settings?->product_type_set_parent_filter) {
             $filteredParentIds[] = $api->settings->product_type_set_parent_filter;
@@ -109,12 +115,6 @@ class RefreshProductsFeed extends Command
         }
 
         $customLabelMetatag = $api->settings?->google_custom_label_metatag;
-
-        // create / overwrite file
-        $file = fopen($tempPath, 'w');
-        fwrite($file, $this->headers());
-        fclose($file);
-        $file = null;
 
         $fullUrl = '/shipping-methods';
         $this->info("[{$url}] Getting shipping price");
@@ -136,7 +136,7 @@ class RefreshProductsFeed extends Command
 
         $lastPage = 1; // Get at least once
         for ($page = 1; $page <= $lastPage; $page++) {
-            $fullUrl = "/products?full=1&page=${page}&limit=${limit}&has_cover=1&force_database_search=1" .
+            $fullUrl = "/products?full=1&page=${page}&limit=${limit}&force_database_search=1" .
                 ($public ? '&public=1' : '');
             $this->info("[{$url}] Getting page ${page} of {$lastPage}");
 
@@ -154,11 +154,6 @@ class RefreshProductsFeed extends Command
             $file = fopen($tempPath, 'a');
 
             foreach ($response->json('data') as $product) {
-
-                // fallback remove products without cover
-                if ($product['cover'] === null) {
-                    continue;
-                }
 
                 $sets = $product['sets'];
 
@@ -196,8 +191,8 @@ class RefreshProductsFeed extends Command
             fclose($file);
 
             // clear memory
-            $file = null;
-            $response = null;
+            unset($file);
+            unset($response);
         }
 
         rename($tempPath, $path);
