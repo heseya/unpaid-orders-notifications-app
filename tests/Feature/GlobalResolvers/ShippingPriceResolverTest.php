@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Models\Feed;
 use App\Resolvers\ShippingPriceResolver;
 use Illuminate\Support\Facades\Http;
 
@@ -23,8 +22,5 @@ it('resolves field', function () {
         ],
     ]);
 
-    $api = mockApi();
-    $feed = Feed::factory()->create(['api_id' => $api->getKey()]);
-
-    expect(ShippingPriceResolver::resolve($feed))->toBe('PL:10 PLN');
+    expect(ShippingPriceResolver::resolve(mockField(new ShippingPriceResolver())))->toBe('PL:10 PLN');
 });

@@ -38,6 +38,9 @@ final readonly class FeedService implements FeedServiceContract
         $feed->delete();
     }
 
+    /**
+     * @throws ApiAuthorizationException
+     */
     public function checkFeedOwner(Feed $feed, Api $api): void
     {
         if ($feed->api_id !== $api->getKey()) {

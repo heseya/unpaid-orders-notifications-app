@@ -37,6 +37,33 @@
       <a-form-item label="Fields">
         <a-textarea v-model:value="feed.fields" :auto-size="{ minRows: 16 }" :rules="[{ required: true }]" />
       </a-form-item>
+      <a-form-item label="Help">
+        <a-collapse ghost>
+          <a-collapse-panel header="Available fields">
+            <h3>Local</h3>
+            <ul>
+              <li><b>#cover</b> - url to first photo</li>
+              <li><b>#additional_image</b> - url to second photo</li>
+              <li><b>#availability</b> - in stock | out of stock</li>
+              <li><b>#price</b> - price with currency</li>
+              <li><b>#sale_price</b> - sale price with currency</li>
+              <li><b>#ean</b> - ean from attributes</li>
+            </ul>
+            <h3>Global</h3>
+            <ul>
+              <li><b>@shipping_price</b> - lowest shipping price in Google format</li>
+            </ul>
+            <h3>Response</h3>
+            <ul>
+              <li><b>$string</b> - raw data from response</li>
+            </ul>
+            <h3>Raw</h3>
+            <ul>
+              <li><b>string</b> - raw string from input</li>
+            </ul>
+          </a-collapse-panel>
+        </a-collapse>
+      </a-form-item>
       <a-form-item label="Save">
         <a-button type="primary" @click="submit(feed)">Save</a-button>
       </a-form-item>

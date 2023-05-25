@@ -3,7 +3,11 @@
 declare(strict_types=1);
 
 use App\Models\Api;
+use App\Models\Feed;
+use App\Models\Field;
 use App\Models\StoreUser;
+use App\Resolvers\GlobalResolver;
+use App\Resolvers\LocalResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -58,6 +62,14 @@ function mockApi(): Api
         'refresh_token' => Str::random(),
         'uninstall_token' => Str::random(),
     ]);
+}
+
+function mockField(LocalResolver|GlobalResolver $resolver): Field
+{
+    $api = mockApi();
+    $feed = Feed::factory()->create(['api_id' => $api->getKey()]);
+
+    return new Field($feed, 'test', 'test', $resolver);
 }
 
 function mockUser(Api $api): StoreUser

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Resolvers\CoverResolver;
 
 it('resolve cover field', function () {
-    expect(CoverResolver::resolve([
+    expect(CoverResolver::resolve(mockField(new CoverResolver()), [
         'gallery' => [
             [
                 'url' => 'http://example.com/img.png',
@@ -16,7 +16,7 @@ it('resolve cover field', function () {
 });
 
 it('resolve cover field when first media is video', function () {
-    expect(CoverResolver::resolve([
+    expect(CoverResolver::resolve(mockField(new CoverResolver()), [
         'gallery' => [
             [
                 'url' => 'http://example.com/video.png',
@@ -31,5 +31,5 @@ it('resolve cover field when first media is video', function () {
 });
 
 it('resolve cover field when there is no image', function () {
-    expect(CoverResolver::resolve([]))->toEqual('');
+    expect(CoverResolver::resolve(mockField(new CoverResolver()), []))->toEqual('');
 });

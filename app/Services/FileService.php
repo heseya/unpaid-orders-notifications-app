@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Enums\FieldType;
 use App\Exceptions\FileNotFoundException;
 use App\Models\Feed;
+use App\Resolvers\LocalResolver;
 use App\Services\Contracts\FileServiceContract;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final readonly class FileService implements FileServiceContract
 {
+    /**
+     * @throws FileNotFoundException
+     */
     public function get(Feed $feed): StreamedResponse
     {
         if (!Storage::exists($feed->path())) {
@@ -33,10 +36,9 @@ final readonly class FileService implements FileServiceContract
         $cells = [];
 
         foreach ($fields as $field) {
-            $value = match($field->type) {
-                FieldType::STANDARD, FieldType::VAR_LOCAL => $field->getLocalValue($response),
-                FieldType::VAR_GLOBAL => $field->getGlobalValue(),
-            };
+            $value = $field->resolver instanceof LocalResolver ?
+                $field->getLocalValue($response) :
+                $field->getGlobalValue();
 
             $cells[] = Str::of($value)
                 ->replace([',', "\n", '"', "'"], ' ')

@@ -2,29 +2,30 @@
 
 declare(strict_types=1);
 
-use App\Enums\FieldType;
 use App\Resolvers\CoverResolver;
+use App\Resolvers\ResponseResolver;
+use App\Resolvers\ShippingPriceResolver;
+use App\Resolvers\StringResolver;
 use App\Services\VariableService;
 
 $service = new VariableService();
 
-it('resolves standard field type', function () use ($service) {
-    expect($service->resolveType('name'))->toBe(FieldType::STANDARD);
-});
-
-it('resolves global var field type', function () use ($service) {
-    expect($service->resolveType('$shipping_price'))->toBe(FieldType::VAR_GLOBAL);
-});
-
-it('resolves local var field type', function () use ($service) {
-    expect($service->resolveType('#cover'))->toBe(FieldType::VAR_LOCAL);
-});
-
 it('get resolvers for standard field', function () use ($service) {
-    expect($service->getResolver('name'))->toBe(null);
+    expect($service->getResolver('$name'))
+        ->toBeInstanceOf(ResponseResolver::class);
 });
 
-it('get resolvers for var field', function () use ($service) {
+it('get resolvers for string field', function () use ($service) {
+    expect($service->getResolver('name'))
+        ->toBeInstanceOf(StringResolver::class);
+});
+
+it('get resolvers for local var field', function () use ($service) {
     expect($service->getResolver('#cover'))
         ->toBeInstanceOf(CoverResolver::class);
+});
+
+it('get resolvers for global var field', function () use ($service) {
+    expect($service->getResolver('@shipping_price'))
+        ->toBeInstanceOf(ShippingPriceResolver::class);
 });

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Resolvers\EanResolver;
 
 it('resolves field', function () {
-    expect(EanResolver::resolve([
+    expect(EanResolver::resolve(mockField(new EanResolver()), [
         'attributes' => [
             [
                 'slug' => 'ean',
@@ -20,5 +20,5 @@ it('resolves field', function () {
 });
 
 it('resolves field when empty', function () {
-    expect(EanResolver::resolve([]))->toEqual('');
+    expect(EanResolver::resolve(mockField(new EanResolver()), []))->toEqual('');
 });

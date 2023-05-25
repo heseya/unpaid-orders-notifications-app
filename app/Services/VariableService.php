@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Enums\FieldType;
 use App\Models\Feed;
 use App\Models\Field;
 use App\Resolvers\AdditionalImageResolver;
@@ -14,8 +13,10 @@ use App\Resolvers\EanResolver;
 use App\Resolvers\GlobalResolver;
 use App\Resolvers\LocalResolver;
 use App\Resolvers\PriceResolver;
+use App\Resolvers\ResponseResolver;
 use App\Resolvers\SalePriceResolver;
 use App\Resolvers\ShippingPriceResolver;
+use App\Resolvers\StringResolver;
 use App\Services\Contracts\VariableServiceContract;
 use Illuminate\Support\Str;
 
@@ -23,7 +24,7 @@ class VariableService implements VariableServiceContract
 {
     private const RESOLVERS = [
         // Global
-        '$shipping_price' => ShippingPriceResolver::class,
+        '@shipping_price' => ShippingPriceResolver::class,
 
         // Local
         '#cover' => CoverResolver::class,
@@ -44,7 +45,6 @@ class VariableService implements VariableServiceContract
                 $feed,
                 $key,
                 $valueKey,
-                $this->resolveType($valueKey),
                 $this->getResolver($valueKey),
             );
         }
@@ -52,20 +52,7 @@ class VariableService implements VariableServiceContract
         return $fields;
     }
 
-    public function resolveType(string $key): FieldType
-    {
-        if (Str::of($key)->startsWith('$')) {
-            return FieldType::VAR_GLOBAL;
-        }
-
-        if (Str::of($key)->startsWith('#')) {
-            return FieldType::VAR_LOCAL;
-        }
-
-        return FieldType::STANDARD;
-    }
-
-    public function getResolver(string $key): GlobalResolver|LocalResolver|null
+    public function getResolver(string $key): GlobalResolver|LocalResolver
     {
         if (array_key_exists($key, self::RESOLVERS)) {
             $class = self::RESOLVERS[$key];
@@ -73,6 +60,10 @@ class VariableService implements VariableServiceContract
             return new $class();
         }
 
-        return null;
+        if (Str::of($key)->startsWith('$')) {
+            return new ResponseResolver();
+        }
+
+        return new StringResolver();
     }
 }

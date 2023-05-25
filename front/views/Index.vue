@@ -78,7 +78,7 @@ export default defineComponent({
             name: 'New feed',
             auth: 'no',
             query: '/products',
-            fields: { title: 'name' },
+            fields: { id: '$id' },
           }
         )
         message.success('Created')
