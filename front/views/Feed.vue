@@ -26,10 +26,10 @@
         </a-radio-group>
       </a-form-item>
       <a-form-item label="Username" v-if="feed.auth === 'basic'">
-        <a-input v-model:value="feed.username" />
+        <a-input-password v-model:value="feed.username" password />
       </a-form-item>
       <a-form-item label="Password" v-if="feed.auth === 'basic'">
-        <a-input v-model:value="feed.password" />
+        <a-input-password v-model:value="feed.password" password />
       </a-form-item>
       <a-form-item label="Query">
         <a-input v-model:value="feed.query" :rules="[{ required: true }]" />
@@ -112,14 +112,22 @@ export default defineComponent({
     const submit = async (feed) => {
       try {
         const json = JSON.parse(feed.fields)
-        await api.patch(`/feeds/${feed.id}`, {
+        let data = {
           name: feed.name,
           query: feed.query,
           auth: feed.auth,
-          username: feed.username,
-          password: feed.password,
           fields: json,
-        })
+        }
+
+        if (feed.auth === 'basic') {
+          data = {
+            ...data,
+            username: feed.username,
+            password: feed.password,
+          }
+        }
+
+        await api.patch(`/feeds/${feed.id}`, data)
         message.success('Saved')
       } catch (error) {
         console.error(error)
