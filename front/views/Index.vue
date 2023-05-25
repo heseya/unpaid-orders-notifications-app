@@ -21,7 +21,7 @@
       {{ record.auth === 'no' ? 'no auth' : 'basic' }}
     </a-table-column>
     <a-table-column key="refreshed_at" title="Last refresh" data-index="refreshed_at" #default="{ record }">
-      {{ record.refreshed_at ?? 'not generated yet' }}
+      {{ record.refreshed_at ? new Date(record.refreshed_at).toLocaleString() : 'not generated yet' }}
     </a-table-column>
   </a-table>
 </template>

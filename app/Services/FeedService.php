@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Dtos\FeedDto;
+use App\Enums\AuthType;
 use App\Exceptions\ApiAuthorizationException;
 use App\Models\Api;
 use App\Models\Feed;
@@ -27,7 +28,14 @@ final readonly class FeedService implements FeedServiceContract
     public function update(FeedDto $dto, Feed $feed, Api $api): Feed
     {
         $this->checkFeedOwner($feed, $api);
-        $feed->update($dto->toArray());
+        $data = $dto->toArray();
+
+        if ($dto->auth === AuthType::NO) {
+            $data['username'] = null;
+            $data['password'] = null;
+        }
+
+        $feed->update($data);
 
         return $feed;
     }
