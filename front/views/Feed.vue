@@ -6,7 +6,7 @@
   <div v-if="!isLoading">
     <a-page-header
       :title="feed.name"
-      :sub-title="feed.refreshed_at ? `last refreshed: ${feed.refreshed_at}` : 'not generated yet'"
+      :sub-title="feed.refreshed_at ? `last refreshed: ${new Date(feed.refreshed_at).toLocaleString()}` : 'not generated yet'"
       @back="() => $router.push({ name: 'Index' })"
     >
       <template #extra>
@@ -15,9 +15,21 @@
       </template>
     </a-page-header>
 
-    <a-form :model="feed">
+    <a-form :model="feed" :label-col="{ span: 3 }" :wrapper-col="{ span: 21 }">
       <a-form-item label="Name">
         <a-input v-model:value="feed.name" :rules="[{ required: true }]" />
+      </a-form-item>
+      <a-form-item label="Auth">
+        <a-radio-group v-model:value="feed.auth">
+          <a-radio-button value="no">No auth</a-radio-button>
+          <a-radio-button value="basic">Basic auth</a-radio-button>
+        </a-radio-group>
+      </a-form-item>
+      <a-form-item label="Username" v-if="feed.auth === 'basic'">
+        <a-input-password v-model:value="feed.username" password />
+      </a-form-item>
+      <a-form-item label="Password" v-if="feed.auth === 'basic'">
+        <a-input-password v-model:value="feed.password" password />
       </a-form-item>
       <a-form-item label="Query">
         <a-input v-model:value="feed.query" :rules="[{ required: true }]" />
@@ -25,7 +37,34 @@
       <a-form-item label="Fields">
         <a-textarea v-model:value="feed.fields" :auto-size="{ minRows: 16 }" :rules="[{ required: true }]" />
       </a-form-item>
-      <a-form-item class="text-right">
+      <a-form-item label="Help">
+        <a-collapse ghost>
+          <a-collapse-panel header="Available fields">
+            <h3>Local</h3>
+            <ul>
+              <li><b>#cover</b> - url to first photo</li>
+              <li><b>#additional_image</b> - url to second photo</li>
+              <li><b>#availability</b> - in stock | out of stock</li>
+              <li><b>#price</b> - price with currency</li>
+              <li><b>#sale_price</b> - sale price with currency</li>
+              <li><b>#ean</b> - ean from attributes</li>
+            </ul>
+            <h3>Global</h3>
+            <ul>
+              <li><b>@shipping_price</b> - lowest shipping price in Google format</li>
+            </ul>
+            <h3>Response</h3>
+            <ul>
+              <li><b>$string</b> - raw data from response</li>
+            </ul>
+            <h3>Raw</h3>
+            <ul>
+              <li><b>string</b> - raw string from input</li>
+            </ul>
+          </a-collapse-panel>
+        </a-collapse>
+      </a-form-item>
+      <a-form-item label="Save">
         <a-button type="primary" @click="submit(feed)">Save</a-button>
       </a-form-item>
     </a-form>
@@ -33,7 +72,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, onBeforeMount, ref, watch} from 'vue'
+import { computed, defineComponent, onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { api } from '../api'
 import { message, Modal } from "ant-design-vue";
@@ -46,7 +85,7 @@ export default defineComponent({
   setup() {
     const route = useRoute()
     const feed = ref<Feed | null>(null)
-    const isLoading = ref(false)
+    const isLoading = ref(true)
     const feedId = computed(() => route.params.id as string)
 
     const getFeed = async () => {
@@ -62,6 +101,7 @@ export default defineComponent({
           message.error('Unexpected error')
         }
       }
+      isLoading.value = false
     }
 
     const copy = (url: String) => {
@@ -72,11 +112,22 @@ export default defineComponent({
     const submit = async (feed) => {
       try {
         const json = JSON.parse(feed.fields)
-        await api.patch(`/feeds/${feed.id}`, {
+        let data = {
           name: feed.name,
           query: feed.query,
+          auth: feed.auth,
           fields: json,
-        })
+        }
+
+        if (feed.auth === 'basic') {
+          data = {
+            ...data,
+            username: feed.username,
+            password: feed.password,
+          }
+        }
+
+        await api.patch(`/feeds/${feed.id}`, data)
         message.success('Saved')
       } catch (error) {
         console.error(error)
@@ -127,9 +178,5 @@ export default defineComponent({
     text-align: center;
     width: 100%;
     margin-top: 100px;
-}
-
-.text-right {
-    text-align: right;
 }
 </style>

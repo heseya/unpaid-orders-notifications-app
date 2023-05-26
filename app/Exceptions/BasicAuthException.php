@@ -7,7 +7,7 @@ namespace App\Exceptions;
 use Exception;
 use Throwable;
 
-class ApiAuthorizationException extends Exception
+class BasicAuthException extends Exception
 {
     public function __construct(
         string $message = '',

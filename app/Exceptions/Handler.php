@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exceptions;
 
 use App\Http\Resources\ErrorResource;
@@ -17,7 +19,7 @@ class Handler extends ExceptionHandler
 {
     private const ERRORS = [
         AuthenticationException::class => [
-            'message' => 'Unauthenticated',
+            'message' => 'Unauthorized',
             'code' => Response::HTTP_UNAUTHORIZED,
         ],
         AuthorizationException::class => [
@@ -60,6 +62,10 @@ class Handler extends ExceptionHandler
         FileNotFoundException::class => [
             'code' => Response::HTTP_NOT_FOUND,
         ],
+        BasicAuthException::class => [
+            'message' => 'Unauthorized',
+            'code' => Response::HTTP_UNAUTHORIZED,
+        ],
     ];
 
     /**
@@ -98,8 +104,14 @@ class Handler extends ExceptionHandler
             $error = new Error();
         }
 
-        return ErrorResource::make($error)
+        $response =  ErrorResource::make($error)
             ->response()
             ->setStatusCode($error->code);
+
+        if ($class === BasicAuthException::class) {
+            $response->header('WWW-Authenticate', 'Basic realm="User Visible Realm", charset="UTF-8"');
+        }
+
+        return $response;
     }
 }

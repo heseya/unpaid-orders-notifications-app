@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Resolvers\AdditionalImageResolver;
 
 it('resolve additional image field', function () {
-    expect(AdditionalImageResolver::resolve([
+    expect(AdditionalImageResolver::resolve(mockField(new AdditionalImageResolver()), [
         'gallery' => [
             [
                 'url' => 'http://example.com/img.png',
@@ -18,7 +20,7 @@ it('resolve additional image field', function () {
 });
 
 it('resolve additional image field when first media is video', function () {
-    expect(AdditionalImageResolver::resolve([
+    expect(AdditionalImageResolver::resolve(mockField(new AdditionalImageResolver()), [
         'gallery' => [
             [
                 'url' => 'http://example.com/video.png',
@@ -41,5 +43,8 @@ it('resolve additional image field when first media is video', function () {
 });
 
 it('resolve additional image field when there is no image', function () {
-    expect(AdditionalImageResolver::resolve([]))->toEqual('');
+    expect(AdditionalImageResolver::resolve(
+        mockField(new AdditionalImageResolver()),
+        [],
+    ))->toEqual('');
 });

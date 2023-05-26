@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
+use App\Enums\AuthType;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,12 +22,16 @@ class Feed extends Model
     protected $fillable = [
         'api_id',
         'name',
+        'auth',
+        'username',
+        'password',
         'query',
         'refreshed_at',
         'fields',
     ];
 
     protected $casts = [
+        'auth' => AuthType::class,
         'refreshed_at' => 'datetime',
         'fields' => 'array',
     ];

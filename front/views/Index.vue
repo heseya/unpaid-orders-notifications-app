@@ -17,8 +17,11 @@
         {{ record.name }}
       </router-link>
     </a-table-column>
+    <a-table-column key="auth" title="Auth" data-index="auth" #default="{ record }">
+      {{ record.auth === 'no' ? 'no auth' : 'basic' }}
+    </a-table-column>
     <a-table-column key="refreshed_at" title="Last refresh" data-index="refreshed_at" #default="{ record }">
-      {{ record.refreshed_at ?? 'not generated yet' }}
+      {{ record.refreshed_at ? new Date(record.refreshed_at).toLocaleString() : 'not generated yet' }}
     </a-table-column>
   </a-table>
 </template>
@@ -73,8 +76,9 @@ export default defineComponent({
           `/feeds`,
           {
             name: 'New feed',
+            auth: 'no',
             query: '/products',
-            fields: { title: 'name' },
+            fields: { id: '$id' },
           }
         )
         message.success('Created')
@@ -88,7 +92,7 @@ export default defineComponent({
           message.error(`Unexpected Error`)
         }
       }
-  }
+    }
 
     watch(page, () => getFeeds(), { immediate: true })
 

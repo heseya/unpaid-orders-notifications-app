@@ -1,16 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Resolvers;
 
+use App\Models\Field;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 class EanResolver implements LocalResolver
 {
-    public static function resolve(array $response): string
+    public static function resolve(Field $field, array $response): string
     {
         $attribute = Collection::make($response['attributes'] ?? [])->firstWhere('slug', 'ean');
 
-        return Arr::get($attribute, 'selected_options.0.name', '');
+        return (string) Arr::get($attribute, 'selected_options.0.name', '');
     }
 }

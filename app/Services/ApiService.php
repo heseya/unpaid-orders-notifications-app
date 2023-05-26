@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Exceptions\ApiAuthenticationException;
@@ -155,7 +157,7 @@ final readonly class ApiService implements ApiServiceContract
                 $request = $request->withToken($api->integration_token);
             }
 
-            $fullUrl = rtrim($api->url . $url, '/');
+            $fullUrl = rtrim($api->url, '/') . '/' . trim($url, '/');
 
             $response = match ($method) {
                 'post' => $request->post($fullUrl, $data),
@@ -169,7 +171,8 @@ final readonly class ApiService implements ApiServiceContract
 
         if ($response->failed()) {
             if ($response->serverError()) {
-                throw new ApiServerErrorException('API responded with an Error ' . $response->status());
+                Log::error("API responded with an Error {$response->status()}", (array) $response->json());
+                throw new ApiServerErrorException("API responded with an Error {$response->status()}");
             }
 
             if ($response->status() === 403) {
@@ -177,7 +180,8 @@ final readonly class ApiService implements ApiServiceContract
             }
 
             if ($response->status() !== 401) {
-                throw new ApiClientErrorException('API responded with an Error 401');
+                Log::error("API responded with an Error {$response->status()}", (array) $response->json());
+                throw new ApiClientErrorException("API responded with an Error {$response->status()}");
             }
 
             if ($tryRefreshing === false) {

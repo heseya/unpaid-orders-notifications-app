@@ -1,7 +1,8 @@
 <?php
 
-use App\Models\Feed;
+declare(strict_types=1);
 
+use App\Models\Feed;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
@@ -44,4 +45,7 @@ it('refresh feed', function () {
         ->expectsOutputToContain('Processing ended.');
 
     Storage::assertExists($feed->path());
+
+    $feed->refresh();
+    expect($feed->refreshed_at)->toBeObject();
 });

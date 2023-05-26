@@ -17,6 +17,7 @@
     "no_unused_imports": true,
     "object_operator_without_whitespace": true,
     "no_useless_return": true,
+    "declare_strict_types": true,
     "single_line_comment_style": {
       "comment_types": ["asterisk"]
     },

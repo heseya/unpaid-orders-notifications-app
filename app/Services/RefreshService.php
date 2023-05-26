@@ -1,18 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Models\Feed;
 use App\Services\Contracts\ApiServiceContract;
 use App\Services\Contracts\FileServiceContract;
 use App\Services\Contracts\RefreshServiceContract;
+use App\Services\Contracts\VariableServiceContract;
+use Illuminate\Support\Carbon;
 
 final readonly class RefreshService implements RefreshServiceContract
 {
     public function __construct(
         private ApiServiceContract $apiService,
         private FileServiceContract $fileService,
-        private VariableService $variableService,
+        private VariableServiceContract $variableService,
     ) {
     }
 
@@ -54,5 +58,8 @@ final readonly class RefreshService implements RefreshServiceContract
 
         // move temp file to right location
         rename($tempPath, $path);
+        $feed->update([
+            'refreshed_at' => Carbon::now(),
+        ]);
     }
 }
