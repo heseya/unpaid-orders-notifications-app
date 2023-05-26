@@ -170,6 +170,11 @@ final readonly class ApiService implements ApiServiceContract
         }
 
         if ($response->failed()) {
+            if ($response->serverError()) {
+                Log::error("API responded with an Error {$response->status()}", (array) $response->json());
+                throw new ApiServerErrorException("API responded with an Error {$response->status()}");
+            }
+
             if ($response->status() === 403) {
                 throw new ApiAuthorizationException('This action is unauthorized by API');
             }
