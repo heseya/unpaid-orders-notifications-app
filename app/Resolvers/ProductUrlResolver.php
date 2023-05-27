@@ -12,6 +12,6 @@ class ProductUrlResolver implements LocalResolver
     public static function resolve(Field $field, array $response): string
     {
         return $response['slug'] ?
-            Str::of($field->valueKey)->after(' ')->trim('/') . '/' . $response['slug'] : '';
+            Str::of($field->valueKey)->after(' ')->rtrim('/') . '/' . $response['slug'] : '';
     }
 }

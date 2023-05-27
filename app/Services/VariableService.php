@@ -55,13 +55,15 @@ class VariableService implements VariableServiceContract
 
     public function getResolver(string $key): GlobalResolver|LocalResolver
     {
+        $key = Str::before($key, ' ');
+
         if (array_key_exists($key, self::RESOLVERS)) {
-            $class = self::RESOLVERS[Str::before($key, ' ')];
+            $class = self::RESOLVERS[$key];
 
             return new $class();
         }
 
-        if (Str::of($key)->startsWith('$')) {
+        if (Str::startsWith($key, '$')) {
             return new ResponseResolver();
         }
 
