@@ -36,7 +36,7 @@ final readonly class RefreshService implements RefreshServiceContract
         $fields = $this->variableService->resolve($feed);
 
         $lastPage = 1; // Get at least once
-        for ($page = 1; $page <= $lastPage; $page++) {
+        for ($page = 1; $page <= $lastPage; ++$page) {
             $response = $this->apiService->get($feed->api, $query);
             $lastPage = $response->json('meta.last_page');
 

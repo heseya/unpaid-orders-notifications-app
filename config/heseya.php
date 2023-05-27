@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Illuminate\Support\Env;
 
 return [
-
     'name' => $appName = Env::get('APP_NAME', 'Exporter'),
     'author' => 'Heseya',
     'description' => Env::get('APP_DESCRIPTION'),
@@ -28,5 +27,4 @@ return [
             'unauthenticated' => false,
         ],
     ],
-
 ];

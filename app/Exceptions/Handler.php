@@ -104,7 +104,7 @@ class Handler extends ExceptionHandler
             $error = new Error();
         }
 
-        $response =  ErrorResource::make($error)
+        $response = ErrorResource::make($error)
             ->response()
             ->setStatusCode($error->code);
 

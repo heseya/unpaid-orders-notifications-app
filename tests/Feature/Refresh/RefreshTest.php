@@ -20,23 +20,23 @@ it('refresh feed', function () {
     ]);
 
     Http::fake([
-       '*' => Http::response([
-           'data' => [
-               [
-                   'name' => 'Test Product',
-                   'price_min' => 200,
-                   'price_max' => 300,
-               ],
-               [
-                   'name' => 'Test Product 2',
-                   'price_min' => 100,
-                   'price_max' => 200,
-               ],
-           ],
-           'meta' => [
-               'last_page' => 1,
-           ],
-       ]),
+        '*' => Http::response([
+            'data' => [
+                [
+                    'name' => 'Test Product',
+                    'price_min' => 200,
+                    'price_max' => 300,
+                ],
+                [
+                    'name' => 'Test Product 2',
+                    'price_min' => 100,
+                    'price_max' => 200,
+                ],
+            ],
+            'meta' => [
+                'last_page' => 1,
+            ],
+        ]),
     ]);
 
     artisan('refresh')

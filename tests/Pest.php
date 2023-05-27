@@ -24,7 +24,6 @@ use Tests\TestCase;
 |
 */
 
-
 uses(TestCase::class, RefreshDatabase::class)->in('Feature');
 
 /*

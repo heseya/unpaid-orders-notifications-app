@@ -44,7 +44,7 @@ class Refresh extends Command
         $processedCounter = 0;
         $totalCount = $feeds->count();
 
-        $this->info("Starting...");
+        $this->info('Starting...');
         $this->info("{$totalCount} feeds to process.");
 
         foreach ($feeds as $feed) {
@@ -61,7 +61,7 @@ class Refresh extends Command
                 }
             }
 
-            $processedCounter++;
+            ++$processedCounter;
             $this->info("Processed {$processedCounter}/{$totalCount} feeds.");
         }
 

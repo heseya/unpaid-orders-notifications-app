@@ -10,7 +10,6 @@ $appUrl = Str::endsWith($appUrl, '/')
     : $appUrl;
 
 return [
-
     'store_front_url' => [
         'key' => 'store_front_url',
         'label' => 'Storefront URL',
@@ -50,5 +49,4 @@ return [
         'required' => false,
         'options' => [],
     ],
-
 ];

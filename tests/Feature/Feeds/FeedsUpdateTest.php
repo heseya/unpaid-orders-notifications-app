@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 use App\Models\Feed;
 
-use function Pest\Laravel\{actingAs, assertDatabaseHas, assertDatabaseMissing, deleteJson, patchJson};
+use function Pest\Laravel\actingAs;
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\patchJson;
 
 it('doesn\'t allow update when unauthorized', function () {
     $feed = Feed::factory()->create(['api_id' => mockApi()->getKey()]);
@@ -27,7 +29,6 @@ it('doesn\'t allow update not owned feed', function () {
         'name' => $feed->name,
     ]);
 });
-
 
 it('deletes feeds', function () {
     $api = mockApi();
