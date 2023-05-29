@@ -6,13 +6,21 @@
   <div v-if="!isLoading">
     <a-page-header
       :title="feed.name"
-      :sub-title="feed.refreshed_at ? `last refreshed: ${new Date(feed.refreshed_at).toLocaleString()}` : 'not generated yet'"
       @back="() => $router.push({ name: 'Index' })"
+      class="feed-header"
     >
       <template #extra>
         <a-button v-if="feed.url" @click="copy(feed.url)">Copy url</a-button>
         <a-button v-if="feed.id" @click="deleteFeed(feed.id)" type="danger">Delete</a-button>
       </template>
+      <a-descriptions size="small" :column="3">
+        <a-descriptions-item label="last refreshed">
+          {{ feed.refreshed_at ? new Date(feed.refreshed_at).toLocaleString() : 'not generated yet' }}
+        </a-descriptions-item>
+        <a-descriptions-item label="Processed rows">
+          {{ feed.processed_rows }}
+        </a-descriptions-item>
+      </a-descriptions>
     </a-page-header>
 
     <a-form :model="feed" :label-col="{ span: 3 }" :wrapper-col="{ span: 21 }">
@@ -178,5 +186,9 @@ export default defineComponent({
     text-align: center;
     width: 100%;
     margin-top: 100px;
+}
+
+.feed-header {
+  padding: 16px 0 !important;
 }
 </style>
