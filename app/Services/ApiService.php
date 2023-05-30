@@ -12,7 +12,6 @@ use App\Exceptions\ApiServerErrorException;
 use App\Models\Api;
 use App\Services\Contracts\ApiServiceContract;
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -29,33 +28,17 @@ final readonly class ApiService implements ApiServiceContract
     public function get(
         Api $api,
         string $url,
+        array $parameters = [],
         array $headers = [],
-        bool $tryRefreshing = true,
     ): Response {
-        return $this->send($api, 'get', $url, null, $headers, $tryRefreshing);
-    }
-
-    public function getAll(Api $api, string $url, string $params, bool $with_currency = false): Collection
-    {
-        $collection = Collection::make([]);
-
-        $lastPage = 1; // Get at least once
-        for ($page = 1; $page <= $lastPage; ++$page) {
-            $fullUrl = "/{$url}?limit=200&page={$page}{$params}";
-            Log::info('Getting ' . $api->url . '/' . $fullUrl);
-
-            $response = $this->get($api, $fullUrl);
-            $collection = $collection->concat($response->json('data'));
-
-            $lastPage = $response->json('meta.last_page');
-        }
-
-        if ($with_currency) {
-            $currency = $response->json('meta.currency.symbol');
-            $collection = $collection->map(fn ($item) => $item + ['currency' => $currency]);
-        }
-
-        return $collection;
+        return $this->send(
+            $api,
+            'get',
+            $url,
+            null,
+            $headers,
+            parameters: $parameters,
+        );
     }
 
     /**
@@ -149,9 +132,13 @@ final readonly class ApiService implements ApiServiceContract
         array $headers = [],
         bool $tryRefreshing = true,
         bool $withToken = true,
+        array $parameters = [],
     ): Response {
         try {
-            $request = Http::acceptJson()->asJson()->withHeaders($headers);
+            $request = Http::acceptJson()
+                ->asJson()
+                ->withHeaders($headers)
+                ->withUrlParameters($parameters);
 
             if ($withToken) {
                 $request = $request->withToken($api->integration_token);

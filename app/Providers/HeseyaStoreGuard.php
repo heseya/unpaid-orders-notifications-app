@@ -82,6 +82,7 @@ class HeseyaStoreGuard implements Guard
         [$this->token, $this->apiUrl] = [$token, $apiUrl];
 
         try {
+            /** @var Api $api */
             $api = Api::query()->where('url', $apiUrl)->firstOrFail();
         } catch (Throwable) {
             throw new InvalidTokenException('Unregistered API call');
