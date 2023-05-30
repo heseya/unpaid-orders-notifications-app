@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 use App\Models\Feed;
 
-use function Pest\Laravel\{actingAs, assertDatabaseMissing, deleteJson};
+use function Pest\Laravel\actingAs;
+use function Pest\Laravel\assertDatabaseMissing;
+use function Pest\Laravel\deleteJson;
 
 it('doesn\'t allow delete when unauthorized', function () {
     $feed = Feed::factory()->create(['api_id' => mockApi()->getKey()]);

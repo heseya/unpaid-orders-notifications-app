@@ -13,6 +13,7 @@ use App\Resolvers\EanResolver;
 use App\Resolvers\GlobalResolver;
 use App\Resolvers\LocalResolver;
 use App\Resolvers\PriceResolver;
+use App\Resolvers\ProductUrlResolver;
 use App\Resolvers\ResponseResolver;
 use App\Resolvers\SalePriceResolver;
 use App\Resolvers\ShippingPriceResolver;
@@ -33,7 +34,7 @@ class VariableService implements VariableServiceContract
         '#price' => PriceResolver::class,
         '#sale_price' => SalePriceResolver::class,
         '#ean' => EanResolver::class,
-//        '#product_url' => ProductUrlResolver::class,
+        '#product_url' => ProductUrlResolver::class,
     ];
 
     public function resolve(Feed $feed): array
@@ -54,13 +55,15 @@ class VariableService implements VariableServiceContract
 
     public function getResolver(string $key): GlobalResolver|LocalResolver
     {
+        $key = Str::before($key, ' ');
+
         if (array_key_exists($key, self::RESOLVERS)) {
             $class = self::RESOLVERS[$key];
 
             return new $class();
         }
 
-        if (Str::of($key)->startsWith('$')) {
+        if (Str::startsWith($key, '$')) {
             return new ResponseResolver();
         }
 

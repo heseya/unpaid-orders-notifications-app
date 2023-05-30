@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Enums\AuthType;
 use App\Models\Feed;
-
 use Illuminate\Support\Facades\Storage;
 
 use function Pest\Laravel\get;

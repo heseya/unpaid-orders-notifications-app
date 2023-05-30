@@ -10,7 +10,6 @@ $appUrl = Str::endsWith($appUrl, '/')
     : $appUrl;
 
 return [
-
     'products_limit' => env('PRODUCTS_LIMIT', 50),
 
     /*
@@ -146,7 +145,6 @@ return [
     */
 
     'providers' => [
-
         // Laravel Framework Service Providers...
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
@@ -177,7 +175,6 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
     ],
 
     /*
@@ -192,9 +189,6 @@ return [
     */
 
     'aliases' => [
-
         'Route' => Illuminate\Support\Facades\Route::class,
-
     ],
-
 ];

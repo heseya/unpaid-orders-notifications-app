@@ -17,7 +17,7 @@ final class Error
     public string $message;
 
     /**
-     * Errors details
+     * Errors details.
      */
     public array $errors;
 

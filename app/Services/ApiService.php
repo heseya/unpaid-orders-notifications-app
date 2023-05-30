@@ -40,8 +40,8 @@ final readonly class ApiService implements ApiServiceContract
         $collection = Collection::make([]);
 
         $lastPage = 1; // Get at least once
-        for ($page = 1; $page <= $lastPage; $page++) {
-            $fullUrl = "/${url}?limit=200&page=${page}${params}";
+        for ($page = 1; $page <= $lastPage; ++$page) {
+            $fullUrl = "/{$url}?limit=200&page={$page}{$params}";
             Log::info('Getting ' . $api->url . '/' . $fullUrl);
 
             $response = $this->get($api, $fullUrl);

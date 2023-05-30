@@ -25,19 +25,17 @@ final readonly class RefreshService implements RefreshServiceContract
         $tempPath = storage_path('app/' . $feed->tempPath());
         $path = storage_path('app/' . $feed->path());
 
-        // TODO: remove this ugly shit
-        $query = $feed->query . '&force_database_search=1';
-
         // create / overwrite temp file
         $tempFile = fopen($tempPath, 'w');
         fwrite($tempFile, implode(',', $this->fileService->buildHeaders($feed)) . "\n");
         fclose($tempFile);
-        $tempFile = null;
+        unset($tempFile);
         $fields = $this->variableService->resolve($feed);
 
+        $processedRows = 0;
         $lastPage = 1; // Get at least once
-        for ($page = 1; $page <= $lastPage; $page++) {
-            $response = $this->apiService->get($feed->api, $query);
+        for ($page = 1; $page <= $lastPage; ++$page) {
+            $response = $this->apiService->get($feed->api, $feed->query);
             $lastPage = $response->json('meta.last_page');
 
             // append data
@@ -48,18 +46,20 @@ final readonly class RefreshService implements RefreshServiceContract
                     $fields,
                     $responseObject,
                 )) . "\n");
+                ++$processedRows;
             }
 
             // clear memory
             fclose($tempFile);
-            $tempFile = null;
-            $response = null;
+            unset($tempFile);
+            unset($response);
         }
 
         // move temp file to right location
         rename($tempPath, $path);
         $feed->update([
             'refreshed_at' => Carbon::now(),
+            'processed_rows' => $processedRows,
         ]);
     }
 }

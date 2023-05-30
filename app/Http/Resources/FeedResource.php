@@ -23,6 +23,7 @@ class FeedResource extends JsonResource
             'password' => $this->resource->password,
             'query' => $this->resource->query,
             'refreshed_at' => $this->resource->refreshed_at,
+            'processed_rows' => $this->resource->processed_rows,
             'updated_at' => $this->resource->updated_at,
             'created_at' => $this->resource->created_at,
             'url' => $this->resource->url(),
