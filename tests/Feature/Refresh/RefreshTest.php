@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Enums\FileFormat;
 use App\Models\Feed;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 use function Pest\Laravel\artisan;
 
@@ -11,6 +13,7 @@ it('refresh feed', function () {
     $api = mockApi();
     $feed = Feed::factory()->create([
         'api_id' => $api->getKey(),
+        'format' => FileFormat::CSV,
         'query' => '/products',
         'fields' => [
             'title' => 'name',
@@ -43,7 +46,7 @@ it('refresh feed', function () {
         ->expectsOutputToContain('1 feeds to process.')
         ->expectsOutputToContain('Processing ended.');
 
-    expect(file_exists($feed->path()))->toBeTrue();
+    Storage::assertExists($feed->path());
 
     $feed->refresh();
     expect($feed->refreshed_at)->toBeObject();

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\AuthType;
+use App\Enums\FileFormat;
 use App\Models\Feed;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,6 +27,7 @@ it('can\'t download file when wile is protected', function () {
     $api = mockApi();
     $feed = Feed::factory()->create([
         'api_id' => $api->getKey(),
+        'format' => FileFormat::CSV,
         'auth' => AuthType::BASIC,
         'username' => 'test',
         'password' => 'test',
@@ -49,6 +51,7 @@ it('downloads protected file', function () {
     $api = mockApi();
     $feed = Feed::factory()->create([
         'api_id' => $api->getKey(),
+        'format' => FileFormat::CSV,
         'auth' => AuthType::BASIC,
         'username' => 'test',
         'password' => 'test',

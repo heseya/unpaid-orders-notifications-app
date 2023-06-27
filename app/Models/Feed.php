@@ -47,14 +47,14 @@ class Feed extends Model
 
     public function path(): string
     {
-        return storage_path("app/feeds/{$this->getKey()}.csv");
+        return "feeds/{$this->getKey()}.{$this->format->value}";
     }
 
     public function tempPath(): string
     {
         $now = time();
 
-        return storage_path("app/feeds-temp/{$this->getKey()}-{$now}.csv");
+        return "feeds-temp/{$this->getKey()}-{$now}.{$this->format->value}";
     }
 
     public function url(): string

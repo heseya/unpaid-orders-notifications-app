@@ -22,7 +22,8 @@ final readonly class RefreshService implements RefreshServiceContract
 
     public function refreshFeed(Feed $feed): void
     {
-        $tempPath = $feed->tempPath();
+        $tempPath = storage_path('app/' . $feed->tempPath());
+        $path = storage_path('app/' . $feed->path());
 
         /** @var FileServiceContract $fileService */
         $fileService = App::get($feed->format->service());
@@ -60,7 +61,7 @@ final readonly class RefreshService implements RefreshServiceContract
         fclose($tempFile);
 
         // move temp file to right location
-        rename($tempPath, $feed->path());
+        rename($tempPath, $path);
         $feed->update([
             'refreshed_at' => Carbon::now(),
             'processed_rows' => $processedRows,
