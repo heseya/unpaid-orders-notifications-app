@@ -18,6 +18,7 @@ class FeedResource extends JsonResource
         return [
             'id' => $this->resource->getKey(),
             'name' => $this->resource->name,
+            'format' => $this->resource->format,
             'auth' => $this->resource->auth,
             'username' => $this->resource->username,
             'password' => $this->resource->password,

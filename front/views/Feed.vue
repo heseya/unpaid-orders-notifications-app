@@ -27,6 +27,12 @@
       <a-form-item label="Name">
         <a-input v-model:value="feed.name" :rules="[{ required: true }]" />
       </a-form-item>
+      <a-form-item label="Format">
+        <a-radio-group v-model:value="feed.format">
+          <a-radio-button value="csv">CSV</a-radio-button>
+          <a-radio-button value="xml">XML</a-radio-button>
+        </a-radio-group>
+      </a-form-item>
       <a-form-item label="Auth">
         <a-radio-group v-model:value="feed.auth">
           <a-radio-button value="no">No auth</a-radio-button>

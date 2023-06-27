@@ -5,17 +5,12 @@ declare(strict_types=1);
 namespace App\Services\Contracts;
 
 use App\Models\Feed;
-use App\Models\Field;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 interface FileServiceContract
 {
-    public function get(Feed $feed): StreamedResponse;
+    public function buildHeader(Feed $feed): string;
 
-    public function buildHeaders(Feed $feed): array;
+    public function buildRow(array $fields, array $response): string;
 
-    /**
-     * @param Field[] $fields
-     */
-    public function buildCell(array $fields, array $response): array;
+    public function buildEnding(Feed $feed): string;
 }

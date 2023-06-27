@@ -11,7 +11,7 @@ use App\Services\Contracts\FileServiceContract;
 use App\Services\Contracts\RefreshServiceContract;
 use App\Services\Contracts\VariableServiceContract;
 use App\Services\FeedService;
-use App\Services\FileService;
+use App\Services\FileServiceCSV;
 use App\Services\RefreshService;
 use App\Services\VariableService;
 use Illuminate\Support\ServiceProvider;
@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
     private const CONTRACTS = [
         ApiServiceContract::class => ApiService::class,
         FeedServiceContract::class => FeedService::class,
-        FileServiceContract::class => FileService::class,
+        FileServiceContract::class => FileServiceCSV::class,
         RefreshServiceContract::class => RefreshService::class,
         VariableServiceContract::class => VariableService::class,
     ];

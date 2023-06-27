@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use App\Models\Feed;
-use App\Services\FileService;
+use App\Services\FileServiceCSV;
 use App\Services\VariableService;
 
-$service = new FileService();
+$service = new FileServiceCSV();
 
 it('generates file headers', function () use ($service) {
     $feed = new Feed(['fields' => [
@@ -14,11 +14,8 @@ it('generates file headers', function () use ($service) {
         'test1' => 'test-value-1',
     ]]);
 
-    expect($service->buildHeaders($feed))
-        ->toEqual([
-            'test',
-            'test1',
-        ]);
+    expect($service->buildHeader($feed))
+        ->toEqual("test,test1\n");
 });
 
 it('generates file cell', function () use ($service) {
@@ -37,10 +34,6 @@ it('generates file cell', function () use ($service) {
         ],
     ];
 
-    expect($service->buildCell($fields, $response))
-        ->toEqual([
-            '"value"',
-            '"value-1"',
-            '""',
-        ]);
+    expect($service->buildRow($fields, $response))
+        ->toEqual('"value","value-1",""' . "\n");
 });

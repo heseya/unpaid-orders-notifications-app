@@ -27,7 +27,7 @@ final readonly class RefreshService implements RefreshServiceContract
 
         // create / overwrite temp file
         $tempFile = fopen($tempPath, 'w');
-        fwrite($tempFile, implode(',', $this->fileService->buildHeaders($feed)) . "\n");
+        fwrite($tempFile, $this->fileService->buildHeader($feed));
         fclose($tempFile);
         unset($tempFile);
         $fields = $this->variableService->resolve($feed);
@@ -42,10 +42,7 @@ final readonly class RefreshService implements RefreshServiceContract
             $tempFile = fopen($tempPath, 'a');
 
             foreach ($response->json('data') as $responseObject) {
-                fwrite($tempFile, implode(',', $this->fileService->buildCell(
-                    $fields,
-                    $responseObject,
-                )) . "\n");
+                fwrite($tempFile, $this->fileService->buildRow($fields, $responseObject));
                 ++$processedRows;
             }
 
@@ -54,6 +51,11 @@ final readonly class RefreshService implements RefreshServiceContract
             unset($tempFile);
             unset($response);
         }
+
+        // add ending to file
+        $tempFile = fopen($tempPath, 'a');
+        fwrite($tempFile, $this->fileService->buildEnding($feed));
+        fclose($tempFile);
 
         // move temp file to right location
         rename($tempPath, $path);
