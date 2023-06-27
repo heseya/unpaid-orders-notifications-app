@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Dtos;
 
 use App\Enums\AuthType;
+use App\Enums\FileFormat;
 use App\Http\Requests\FeedStoreRequest;
 use App\Http\Requests\FeedUpdateRequest;
 use Heseya\Dto\Dto;
@@ -13,6 +14,7 @@ use Heseya\Dto\Missing;
 final class FeedDto extends Dto
 {
     public readonly string|Missing $name;
+    public readonly FileFormat|Missing $format;
     public readonly AuthType|Missing $auth;
     public readonly string|Missing $username;
     public readonly string|Missing $password;
@@ -23,6 +25,7 @@ final class FeedDto extends Dto
     {
         return new self(
             name: $request->input('name', new Missing()),
+            format: $request->enum('format', AuthType::class) ?? new Missing(),
             query: $request->input('query', new Missing()),
             auth: $request->has('auth') ? $request->enum('auth', AuthType::class) : new Missing(),
             username: $request->input('username', new Missing()),
