@@ -128,6 +128,7 @@ export default defineComponent({
         const json = JSON.parse(feed.fields)
         let data = {
           name: feed.name,
+          format: feed.format,
           query: feed.query,
           auth: feed.auth,
           fields: json,
