@@ -4,14 +4,11 @@
     "description": "Universal file exporter",
     "require": {
         "php": "^8.2",
-        "doctrine/dbal": "^3.2",
-        "guzzlehttp/guzzle": "^7.0.1",
+        "guzzlehttp/guzzle": "^7.2",
+        "laravel/framework": "^10.10",
         "heseya/app-helper": "dev-main",
         "heseya/dto": "^1.0.1",
         "heseya/pagination": "^1.0",
-        "laravel/framework": "^10.0",
-        "league/csv": "^9.7",
-        "maatwebsite/excel": "^3.1",
         "sentry/sentry-laravel": "^3.2"
     },
     "require-dev": {
