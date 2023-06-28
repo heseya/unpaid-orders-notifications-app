@@ -62,6 +62,10 @@
               <li><b>#price</b> - price with currency</li>
               <li><b>#sale_price</b> - sale price with currency</li>
               <li><b>#ean</b> - ean from attributes</li>
+              <li><b>#product_url {url}</b> - full url to product</li>
+              <li><b>#category</b> - full product category name</li>
+              <li><b>#attrs</b> - full attributes list in xml format</li>
+              <li><b>#imgs</b> - full images list in xml format</li>
             </ul>
             <h3>Global</h3>
             <ul>

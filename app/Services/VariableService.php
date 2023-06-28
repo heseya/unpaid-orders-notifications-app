@@ -8,6 +8,7 @@ use App\Models\Feed;
 use App\Models\Field;
 use App\Resolvers\AdditionalImageResolver;
 use App\Resolvers\AvailabilityResolver;
+use App\Resolvers\CategoryResolver;
 use App\Resolvers\CoverResolver;
 use App\Resolvers\EanResolver;
 use App\Resolvers\GlobalResolver;
@@ -35,6 +36,9 @@ class VariableService implements VariableServiceContract
         '#sale_price' => SalePriceResolver::class,
         '#ean' => EanResolver::class,
         '#product_url' => ProductUrlResolver::class,
+        '#category' => CategoryResolver::class,
+        '#attrs',
+        '#imgs',
     ];
 
     public function resolve(Feed $feed): array
