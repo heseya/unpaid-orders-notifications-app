@@ -24,5 +24,5 @@ it('generates file cell', function () {
     ];
 
     expect($service->buildRow($fields, $response))
-        ->toEqual('<o><test><![CDATA[value]]></test><test1><![CDATA[value-1]]></test1><test2><![CDATA[]]></test2></o>');
+        ->toEqual('<o><test>value</test><test1>value-1</test1><test2></test2></o>');
 });

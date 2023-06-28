@@ -31,8 +31,8 @@ final readonly class FileServiceXML implements FileServiceContract
 
             $cells[] = Str::of($value)
                 ->replace([',', "\n", '"', "'"], ' ')
-                ->start("<{$field->key}><![CDATA[")
-                ->append("]]></{$field->key}>")
+                ->start("<{$field->key}>")
+                ->append("</{$field->key}>")
                 ->toString();
         }
 
