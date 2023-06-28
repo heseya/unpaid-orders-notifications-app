@@ -7,11 +7,13 @@ namespace App\Services;
 use App\Models\Feed;
 use App\Models\Field;
 use App\Resolvers\AdditionalImageResolver;
+use App\Resolvers\AttrsResolver;
 use App\Resolvers\AvailabilityResolver;
 use App\Resolvers\CategoryResolver;
 use App\Resolvers\CoverResolver;
 use App\Resolvers\EanResolver;
 use App\Resolvers\GlobalResolver;
+use App\Resolvers\ImgsResolver;
 use App\Resolvers\LocalResolver;
 use App\Resolvers\PriceResolver;
 use App\Resolvers\ProductUrlResolver;
@@ -37,8 +39,8 @@ class VariableService implements VariableServiceContract
         '#ean' => EanResolver::class,
         '#product_url' => ProductUrlResolver::class,
         '#category' => CategoryResolver::class,
-        '#attrs',
-        '#imgs',
+        '#attrs' => AttrsResolver::class,
+        '#imgs' => ImgsResolver::class,
     ];
 
     public function resolve(Feed $feed): array
