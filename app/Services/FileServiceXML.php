@@ -25,11 +25,17 @@ final readonly class FileServiceXML implements FileServiceContract
         $cells = ['<o>'];
 
         foreach ($fields as $field) {
-            $value = $field->resolver instanceof LocalResolver ?
+            $value = Str::of($field->resolver instanceof LocalResolver ?
                 $field->getLocalValue($response) :
-                $field->getGlobalValue();
+                $field->getGlobalValue());
 
-            $cells[] = Str::of($value)
+            if ($field->resolver::ESCAPE) {
+                $value = $value
+                    ->start('<![CDATA[')
+                    ->append(']]>');
+            }
+
+            $cells[] = $value
                 ->start("<{$field->key}>")
                 ->append("</{$field->key}>")
                 ->toString();

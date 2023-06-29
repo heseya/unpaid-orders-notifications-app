@@ -9,6 +9,7 @@ use App\Models\Field;
 use App\Resolvers\AdditionalImageResolver;
 use App\Resolvers\AttrsResolver;
 use App\Resolvers\AvailabilityResolver;
+use App\Resolvers\AvailResolver;
 use App\Resolvers\CategoryResolver;
 use App\Resolvers\CoverResolver;
 use App\Resolvers\EanResolver;
@@ -34,6 +35,7 @@ class VariableService implements VariableServiceContract
         '#cover' => CoverResolver::class,
         '#additional_image' => AdditionalImageResolver::class,
         '#availability' => AvailabilityResolver::class,
+        '#avail' => AvailResolver::class,
         '#price' => PriceResolver::class,
         '#sale_price' => SalePriceResolver::class,
         '#ean' => EanResolver::class,

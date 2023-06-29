@@ -9,6 +9,8 @@ use Illuminate\Support\Arr;
 
 class AttrsResolver implements LocalResolver
 {
+    public const ESCAPE = false;
+
     public static function resolve(Field $field, array $response): string
     {
         $attributes = '';

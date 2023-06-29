@@ -21,12 +21,15 @@ final readonly class FileServiceCSV implements FileServiceContract
         $cells = [];
 
         foreach ($fields as $field) {
-            $value = $field->resolver instanceof LocalResolver ?
+            $value = Str::of($field->resolver instanceof LocalResolver ?
                 $field->getLocalValue($response) :
-                $field->getGlobalValue();
+                $field->getGlobalValue());
 
-            $cells[] = Str::of($value)
-                ->replace([',', "\n", '"', "'"], ' ')
+            if ($field->resolver::ESCAPE) {
+                $value = $value->replace([',', "\n", '"', "'"], ' ');
+            }
+
+            $cells[] = $value
                 ->wrap('"', '"')
                 ->toString();
         }
