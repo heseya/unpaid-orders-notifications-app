@@ -11,8 +11,10 @@ class WpIdResolver implements LocalResolver
 {
     public static function resolve(Field $field, array $response): string
     {
-        $meta = Arr::get($response, 'metadata_private');
-
-        return $meta['wp_id'] ?? Arr::get($response, 'id', '');
+        return Arr::get(
+            $response,
+            'metadata_private.wp_id',
+            Arr::get($response, 'id', ''),
+        );
     }
 }
