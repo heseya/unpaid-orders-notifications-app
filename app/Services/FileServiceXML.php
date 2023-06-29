@@ -30,7 +30,6 @@ final readonly class FileServiceXML implements FileServiceContract
                 $field->getGlobalValue();
 
             $cells[] = Str::of($value)
-                ->replace([',', "\n", '"', "'"], ' ')
                 ->start("<{$field->key}>")
                 ->append("</{$field->key}>")
                 ->toString();
