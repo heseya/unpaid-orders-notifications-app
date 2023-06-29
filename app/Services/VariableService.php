@@ -22,6 +22,7 @@ use App\Resolvers\ResponseResolver;
 use App\Resolvers\SalePriceResolver;
 use App\Resolvers\ShippingPriceResolver;
 use App\Resolvers\StringResolver;
+use App\Resolvers\WpIdResolver;
 use App\Services\Contracts\VariableServiceContract;
 use Illuminate\Support\Str;
 
@@ -43,6 +44,7 @@ class VariableService implements VariableServiceContract
         '#category' => CategoryResolver::class,
         '#attrs' => AttrsResolver::class,
         '#imgs' => ImgsResolver::class,
+        '#wp_id' => WpIdResolver::class,
     ];
 
     public function resolve(Feed $feed): array
