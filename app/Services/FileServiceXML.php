@@ -31,6 +31,7 @@ final readonly class FileServiceXML implements FileServiceContract
 
             if ($field->resolver::ESCAPE) {
                 $value = $value
+                    ->replace('', '')
                     ->start('<![CDATA[')
                     ->append(']]>');
             }
