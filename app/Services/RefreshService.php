@@ -37,31 +37,25 @@ final readonly class RefreshService implements RefreshServiceContract
 
         $processedRows = 0;
         $lastPage = 1; // Get at least once
+        $tempFile = fopen($tempPath, 'a'); // append data
         for ($page = 1; $page <= $lastPage; ++$page) {
+            $pageRows = '';
             $response = $this->apiService->get($feed->api, $feed->query, ['page' => $page]);
             $lastPage = $response->json('meta.last_page');
 
-            // append data
-            $tempFile = fopen($tempPath, 'a');
-
             foreach ($response->json('data') as $responseObject) {
-                fwrite($tempFile, $fileService->buildRow($fields, $responseObject));
+                $pageRows .= $fileService->buildRow($fields, $responseObject);
                 ++$processedRows;
             }
 
-            // clear memory
-            fclose($tempFile);
-            unset($tempFile);
-            unset($response);
+            fwrite($tempFile, $pageRows);
+            fflush($tempFile);
         }
 
-        // add ending to file
-        $tempFile = fopen($tempPath, 'a');
         fwrite($tempFile, $fileService->buildEnding($feed));
         fclose($tempFile);
 
-        // move temp file to right location
-        rename($tempPath, $path);
+        rename($tempPath, $path); // move temp file to right location
         $feed->update([
             'refreshed_at' => Carbon::now(),
             'processed_rows' => $processedRows,

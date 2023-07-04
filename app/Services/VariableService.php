@@ -16,6 +16,7 @@ use App\Resolvers\EanResolver;
 use App\Resolvers\GlobalResolver;
 use App\Resolvers\ImgsResolver;
 use App\Resolvers\LocalResolver;
+use App\Resolvers\PriceFloatResolver;
 use App\Resolvers\PriceResolver;
 use App\Resolvers\ProductUrlResolver;
 use App\Resolvers\ResponseResolver;
@@ -38,6 +39,7 @@ class VariableService implements VariableServiceContract
         '#availability' => AvailabilityResolver::class,
         '#avail' => AvailResolver::class,
         '#price' => PriceResolver::class,
+        '#price_float' => PriceFloatResolver::class,
         '#sale_price' => SalePriceResolver::class,
         '#ean' => EanResolver::class,
         '#product_url' => ProductUrlResolver::class,
