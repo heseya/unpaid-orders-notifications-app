@@ -40,7 +40,7 @@ final readonly class RefreshService implements RefreshServiceContract
         $tempFile = fopen($tempPath, 'a'); // append data
         for ($page = 1; $page <= $lastPage; ++$page) {
             $pageRows = '';
-            $response = $this->apiService->get($feed->api, $feed->query, ['page' => $page]);
+            $response = $this->apiService->get($feed->api, "{$feed->query}&page={$page}");
             $lastPage = $response->json('meta.last_page');
 
             foreach ($response->json('data') as $responseObject) {
