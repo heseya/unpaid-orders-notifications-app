@@ -11,10 +11,10 @@ class PriceFloatResolver implements LocalResolver
 {
     public static function resolve(Field $field, array $response): string
     {
-        return Arr::get(
+        return number_format(Arr::get(
             $response,
             'price_min_initial',
             Arr::get($response, 'price_min', 0),
-        );
+        ), 2, '.', '');
     }
 }
