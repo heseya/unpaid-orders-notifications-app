@@ -18,6 +18,7 @@ return [
         'products.show',
         'products.show_details',
         'products.show_hidden',
+        'products.show_metadata_private',
         'shipping_methods.show',
     ],
     'internal_permissions' => [

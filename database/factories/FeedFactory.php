@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\FileFormat;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class FeedFactory extends Factory
@@ -12,6 +13,7 @@ class FeedFactory extends Factory
     {
         return [
             'name' => $this->faker->jobTitle,
+            'format' => FileFormat::XML,
             'query' => $this->faker->url,
             'fields' => ['test' => 'test'],
         ];

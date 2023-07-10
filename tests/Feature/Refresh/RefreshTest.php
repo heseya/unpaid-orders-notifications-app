@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\FileFormat;
 use App\Models\Feed;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -12,6 +13,7 @@ it('refresh feed', function () {
     $api = mockApi();
     $feed = Feed::factory()->create([
         'api_id' => $api->getKey(),
+        'format' => FileFormat::CSV,
         'query' => '/products',
         'fields' => [
             'title' => 'name',

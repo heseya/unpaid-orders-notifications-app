@@ -16,7 +16,7 @@ class Refresh extends Command
      *
      * @var string
      */
-    protected $signature = 'refresh';
+    protected $signature = 'refresh {search?}';
 
     /**
      * The console command description.
@@ -39,7 +39,11 @@ class Refresh extends Command
      */
     public function handle(): int
     {
-        $feeds = Feed::all();
+        $search = $this->argument('search');
+
+        $feeds = $search
+            ? Feed::query()->where('name', 'LIKE', "%{$search}%")->get()
+            : Feed::all();
 
         $processedCounter = 0;
         $totalCount = $feeds->count();

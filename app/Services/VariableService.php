@@ -7,17 +7,24 @@ namespace App\Services;
 use App\Models\Feed;
 use App\Models\Field;
 use App\Resolvers\AdditionalImageResolver;
+use App\Resolvers\AttrsResolver;
 use App\Resolvers\AvailabilityResolver;
+use App\Resolvers\AvailResolver;
+use App\Resolvers\CategoryResolver;
 use App\Resolvers\CoverResolver;
 use App\Resolvers\EanResolver;
 use App\Resolvers\GlobalResolver;
+use App\Resolvers\ImgsResolver;
 use App\Resolvers\LocalResolver;
+use App\Resolvers\PriceFloatResolver;
 use App\Resolvers\PriceResolver;
 use App\Resolvers\ProductUrlResolver;
 use App\Resolvers\ResponseResolver;
 use App\Resolvers\SalePriceResolver;
 use App\Resolvers\ShippingPriceResolver;
+use App\Resolvers\SkuResolver;
 use App\Resolvers\StringResolver;
+use App\Resolvers\WpIdResolver;
 use App\Services\Contracts\VariableServiceContract;
 use Illuminate\Support\Str;
 
@@ -31,10 +38,17 @@ class VariableService implements VariableServiceContract
         '#cover' => CoverResolver::class,
         '#additional_image' => AdditionalImageResolver::class,
         '#availability' => AvailabilityResolver::class,
+        '#avail' => AvailResolver::class,
         '#price' => PriceResolver::class,
+        '#price_float' => PriceFloatResolver::class,
         '#sale_price' => SalePriceResolver::class,
         '#ean' => EanResolver::class,
         '#product_url' => ProductUrlResolver::class,
+        '#category' => CategoryResolver::class,
+        '#attrs' => AttrsResolver::class,
+        '#imgs' => ImgsResolver::class,
+        '#wp_id' => WpIdResolver::class,
+        '#sku' => SkuResolver::class,
     ];
 
     public function resolve(Feed $feed): array

@@ -8,7 +8,7 @@ it('resolves field', function () {
     expect(EanResolver::resolve(mockField(new EanResolver()), [
         'attributes' => [
             [
-                'slug' => 'ean',
+                'name' => 'EAN',
                 'selected_options' => [
                     [
                         'name' => '9788311169654',

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\AuthType;
+use App\Enums\FileFormat;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
@@ -18,6 +19,7 @@ it('creates feeds', function () {
 
     postJson('/feeds', [
         'name' => 'Sample Feed',
+        'format' => FileFormat::CSV->value,
         'auth' => AuthType::NO->value,
         'query' => '/products?public=1',
         'fields' => ['test' => 'test'],
@@ -25,6 +27,7 @@ it('creates feeds', function () {
 
     assertDatabaseHas('feeds', [
         'api_id' => $api->getKey(),
+        'format' => 'csv',
         'name' => 'Sample Feed',
         'query' => '/products?public=1',
         'fields' => '{"test":"test"}',

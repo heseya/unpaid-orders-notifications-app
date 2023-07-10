@@ -10,12 +10,12 @@ use App\Services\Contracts\FileServiceContract;
 use App\Services\Contracts\RefreshServiceContract;
 use App\Services\Contracts\VariableServiceContract;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
 
 final readonly class RefreshService implements RefreshServiceContract
 {
     public function __construct(
         private ApiServiceContract $apiService,
-        private FileServiceContract $fileService,
         private VariableServiceContract $variableService,
     ) {
     }
@@ -25,38 +25,37 @@ final readonly class RefreshService implements RefreshServiceContract
         $tempPath = storage_path('app/' . $feed->tempPath());
         $path = storage_path('app/' . $feed->path());
 
+        /** @var FileServiceContract $fileService */
+        $fileService = App::get($feed->format->service());
+
         // create / overwrite temp file
         $tempFile = fopen($tempPath, 'w');
-        fwrite($tempFile, implode(',', $this->fileService->buildHeaders($feed)) . "\n");
+        fwrite($tempFile, $fileService->buildHeader($feed));
         fclose($tempFile);
         unset($tempFile);
         $fields = $this->variableService->resolve($feed);
 
         $processedRows = 0;
         $lastPage = 1; // Get at least once
+        $tempFile = fopen($tempPath, 'a'); // append data
         for ($page = 1; $page <= $lastPage; ++$page) {
-            $response = $this->apiService->get($feed->api, $feed->query, ['page' => $page]);
+            $pageRows = '';
+            $response = $this->apiService->get($feed->api, "{$feed->query}&page={$page}");
             $lastPage = $response->json('meta.last_page');
 
-            // append data
-            $tempFile = fopen($tempPath, 'a');
-
             foreach ($response->json('data') as $responseObject) {
-                fwrite($tempFile, implode(',', $this->fileService->buildCell(
-                    $fields,
-                    $responseObject,
-                )) . "\n");
+                $pageRows .= $fileService->buildRow($fields, $responseObject);
                 ++$processedRows;
             }
 
-            // clear memory
-            fclose($tempFile);
-            unset($tempFile);
-            unset($response);
+            fwrite($tempFile, $pageRows);
+            fflush($tempFile);
         }
 
-        // move temp file to right location
-        rename($tempPath, $path);
+        fwrite($tempFile, $fileService->buildEnding($feed));
+        fclose($tempFile);
+
+        rename($tempPath, $path); // move temp file to right location
         $feed->update([
             'refreshed_at' => Carbon::now(),
             'processed_rows' => $processedRows,

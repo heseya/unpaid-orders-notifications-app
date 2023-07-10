@@ -8,5 +8,7 @@ use App\Models\Field;
 
 interface LocalResolver
 {
+    public const ESCAPE = true;
+
     public static function resolve(Field $field, array $response): string;
 }

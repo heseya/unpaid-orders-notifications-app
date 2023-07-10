@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Enums\AuthType;
+use App\Enums\FileFormat;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
@@ -14,6 +15,7 @@ class FeedStoreRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:64'],
+            'format' => ['required', new Enum(FileFormat::class)],
             'query' => ['required', 'string', 'max:1000'],
             'fields' => ['required', 'array'],
             'fields.*' => ['string'],

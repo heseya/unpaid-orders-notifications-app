@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\FileFormat;
 use App\Models\Feed;
 
 use function Pest\Laravel\actingAs;
@@ -17,12 +18,13 @@ it('shows feeds', function () {
 
     $feed = $api->feeds()->create([
         'name' => 'Test Feed',
+        'format' => FileFormat::CSV->value,
         'query' => '/products',
         'fields' => '{}',
     ]);
 
     // This one should be hidden, since it belongs to different api.
-    Feed::create([
+    Feed::query()->create([
         'api_id' => mockApi()->getKey(),
         'name' => 'Test Feed 1',
         'query' => '/products',
@@ -35,6 +37,7 @@ it('shows feeds', function () {
         ->assertJsonFragment([
             'id' => $feed->getKey(),
             'name' => 'Test Feed',
+            'format' => FileFormat::CSV->value,
             'query' => '/products',
             'fields' => '{}',
         ]);

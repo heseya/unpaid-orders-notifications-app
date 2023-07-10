@@ -27,6 +27,12 @@
       <a-form-item label="Name">
         <a-input v-model:value="feed.name" :rules="[{ required: true }]" />
       </a-form-item>
+      <a-form-item label="Format">
+        <a-radio-group v-model:value="feed.format">
+          <a-radio-button value="csv">CSV</a-radio-button>
+          <a-radio-button value="xml">XML</a-radio-button>
+        </a-radio-group>
+      </a-form-item>
       <a-form-item label="Auth">
         <a-radio-group v-model:value="feed.auth">
           <a-radio-button value="no">No auth</a-radio-button>
@@ -53,9 +59,15 @@
               <li><b>#cover</b> - url to first photo</li>
               <li><b>#additional_image</b> - url to second photo</li>
               <li><b>#availability</b> - in stock | out of stock</li>
+              <li><b>#avail</b> - availability in Ceneo format</li>
               <li><b>#price</b> - price with currency</li>
               <li><b>#sale_price</b> - sale price with currency</li>
               <li><b>#ean</b> - ean from attributes</li>
+              <li><b>#product_url {url}</b> - full url to product</li>
+              <li><b>#category</b> - full product category name</li>
+              <li><b>#attrs</b> - full attributes list in xml format</li>
+              <li><b>#imgs</b> - full images list in xml format</li>
+              <li><b>#wp_id</b> - id from wp_id private metadata or product id</li>
             </ul>
             <h3>Global</h3>
             <ul>
@@ -122,6 +134,7 @@ export default defineComponent({
         const json = JSON.parse(feed.fields)
         let data = {
           name: feed.name,
+          format: feed.format,
           query: feed.query,
           auth: feed.auth,
           fields: json,

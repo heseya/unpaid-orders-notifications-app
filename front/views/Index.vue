@@ -76,6 +76,7 @@ export default defineComponent({
           `/feeds`,
           {
             name: 'New feed',
+            format: 'csv',
             auth: 'no',
             query: '/products',
             fields: { id: '$id' },

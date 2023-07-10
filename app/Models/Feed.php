@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\AuthType;
+use App\Enums\FileFormat;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,6 +23,7 @@ class Feed extends Model
     protected $fillable = [
         'api_id',
         'name',
+        'format',
         'auth',
         'username',
         'password',
@@ -32,6 +34,7 @@ class Feed extends Model
     ];
 
     protected $casts = [
+        'format' => FileFormat::class,
         'auth' => AuthType::class,
         'refreshed_at' => 'datetime',
         'fields' => 'array',
@@ -44,12 +47,14 @@ class Feed extends Model
 
     public function path(): string
     {
-        return "feeds/{$this->getKey()}.csv";
+        return "feeds/{$this->getKey()}.{$this->format->value}";
     }
 
     public function tempPath(): string
     {
-        return "feeds-temp/{$this->getKey()}.csv";
+        $now = time();
+
+        return "feeds-temp/{$this->getKey()}-{$now}.{$this->format->value}";
     }
 
     public function url(): string
