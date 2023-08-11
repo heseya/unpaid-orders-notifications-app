@@ -72,6 +72,7 @@
             <h3>Global</h3>
             <ul>
               <li><b>@shipping_price</b> - lowest shipping price in Google format</li>
+              <li><b>@file_created_at</b> - file creation date</li>
             </ul>
             <h3>Response</h3>
             <ul>
