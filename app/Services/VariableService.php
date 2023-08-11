@@ -12,6 +12,7 @@ use App\Resolvers\AvailabilityResolver;
 use App\Resolvers\AvailResolver;
 use App\Resolvers\CategoryResolver;
 use App\Resolvers\CoverResolver;
+use App\Resolvers\FileCreatedAtResolver;
 use App\Resolvers\EanResolver;
 use App\Resolvers\GlobalResolver;
 use App\Resolvers\ImgsResolver;
@@ -33,6 +34,7 @@ class VariableService implements VariableServiceContract
     private const RESOLVERS = [
         // Global
         '@shipping_price' => ShippingPriceResolver::class,
+        '@file_created_at' => FileCreatedAtResolver::class,
 
         // Local
         '#cover' => CoverResolver::class,
