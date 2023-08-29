@@ -37,9 +37,7 @@ uses(TestCase::class, RefreshDatabase::class)->in('Feature');
 |
 */
 
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
+expect()->extend('toBeOne', fn () => $this->toBe(1));
 
 /*
 |--------------------------------------------------------------------------
@@ -63,7 +61,7 @@ function mockApi(): Api
     ]);
 }
 
-function mockField(LocalResolver|GlobalResolver $resolver): Field
+function mockField(GlobalResolver|LocalResolver $resolver): Field
 {
     $api = mockApi();
     $feed = Feed::factory()->create(['api_id' => $api->getKey()]);

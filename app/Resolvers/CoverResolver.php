@@ -7,7 +7,7 @@ namespace App\Resolvers;
 use App\Models\Field;
 use Illuminate\Support\Arr;
 
-class CoverResolver implements LocalResolver
+final class CoverResolver implements LocalResolver
 {
     public static function resolve(Field $field, array $response): string
     {

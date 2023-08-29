@@ -7,7 +7,7 @@ namespace App\Resolvers;
 use App\Models\Field;
 use Illuminate\Support\Str;
 
-class ProductUrlResolver implements LocalResolver
+final class ProductUrlResolver implements LocalResolver
 {
     public static function resolve(Field $field, array $response): string
     {

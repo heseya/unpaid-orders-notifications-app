@@ -7,7 +7,7 @@ namespace App\Resolvers;
 use App\Models\Field;
 use Illuminate\Support\Arr;
 
-class SalePriceResolver implements LocalResolver
+final class SalePriceResolver implements LocalResolver
 {
     public static function resolve(Field $field, array $response): string
     {

@@ -7,7 +7,7 @@ namespace App\Resolvers;
 use App\Models\Field;
 use Illuminate\Support\Arr;
 
-class AttrsResolver implements LocalResolver
+final class AttrsResolver implements LocalResolver
 {
     public const ESCAPE = false;
 

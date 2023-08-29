@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Throwable;
 
-class HeseyaStoreGuard implements Guard
+final class HeseyaStoreGuard implements Guard
 {
     private ?Authenticatable $user = null;
     private ?string $token = null;
@@ -120,7 +120,7 @@ class HeseyaStoreGuard implements Guard
 
         $payloadEncoded = Str::between($token, '.', '.');
 
-        return json_decode(base64_decode($payloadEncoded), true);
+        return json_decode(base64_decode($payloadEncoded, true), true);
     }
 
     private function getToken(): ?string

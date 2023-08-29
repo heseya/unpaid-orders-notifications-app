@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 use Throwable;
 
-class InstallationController extends Controller
+final class InstallationController extends Controller
 {
     public function install(InstallRequest $request): JsonResponse
     {

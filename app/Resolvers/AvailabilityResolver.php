@@ -7,7 +7,7 @@ namespace App\Resolvers;
 use App\Models\Field;
 use Illuminate\Support\Arr;
 
-class AvailabilityResolver implements LocalResolver
+final class AvailabilityResolver implements LocalResolver
 {
     public static function resolve(Field $field, array $response): string
     {

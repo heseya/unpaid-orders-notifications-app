@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Config;
 
 use function Pest\Laravel\{getJson};
 
-it('shows app info', function () {
+it('shows app info', function (): void {
     getJson('/')
         ->assertOk()
         ->assertJsonFragment([

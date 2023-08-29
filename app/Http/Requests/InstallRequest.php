@@ -7,7 +7,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class InstallRequest extends FormRequest
+final class InstallRequest extends FormRequest
 {
     public function rules(): array
     {

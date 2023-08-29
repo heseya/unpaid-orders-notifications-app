@@ -7,7 +7,7 @@ namespace App\Exceptions;
 use Exception;
 use Throwable;
 
-class InvalidTokenException extends Exception
+final class InvalidTokenException extends Exception
 {
     public function __construct(
         string $message = '',

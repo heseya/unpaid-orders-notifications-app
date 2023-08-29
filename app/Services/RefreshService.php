@@ -17,8 +17,7 @@ final readonly class RefreshService implements RefreshServiceContract
     public function __construct(
         private ApiServiceContract $apiService,
         private VariableServiceContract $variableService,
-    ) {
-    }
+    ) {}
 
     public function refreshFeed(Feed $feed): void
     {

@@ -8,7 +8,7 @@ use App\Models\Field;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
-class EanResolver implements LocalResolver
+final class EanResolver implements LocalResolver
 {
     public static function resolve(Field $field, array $response): string
     {

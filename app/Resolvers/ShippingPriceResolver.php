@@ -8,7 +8,7 @@ use App\Models\Field;
 use App\Services\Contracts\ApiServiceContract;
 use Illuminate\Support\Facades\App;
 
-class ShippingPriceResolver implements GlobalResolver
+final class ShippingPriceResolver implements GlobalResolver
 {
     public static function resolve(Field $field): string
     {

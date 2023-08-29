@@ -8,7 +8,7 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 
-class AuthServiceProvider extends ServiceProvider
+final class AuthServiceProvider extends ServiceProvider
 {
     /**
      * The policy mappings for the application.
@@ -26,8 +26,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Auth::extend('heseya-store', function ($app, $name, array $config) {
-            return App::make(HeseyaStoreGuard::class);
-        });
+        Auth::extend('heseya-store', fn ($app, $name, array $config) => App::make(HeseyaStoreGuard::class));
     }
 }

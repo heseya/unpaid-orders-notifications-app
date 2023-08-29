@@ -14,7 +14,7 @@ use App\Services\RefreshService;
 use App\Services\VariableService;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+final class AppServiceProvider extends ServiceProvider
 {
     private const CONTRACTS = [
         ApiServiceContract::class => ApiService::class,

@@ -11,19 +11,18 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Support\Collection;
 use Ramsey\Uuid\Lazy\LazyUuidFromString;
 
-class StoreUser implements AuthenticatableContract, AuthorizableContract
+final class StoreUser implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable;
     use Authorizable;
 
     public function __construct(
-        public string|null|LazyUuidFromString $id,
+        public LazyUuidFromString|string|null $id,
         public string $name,
         public string $avatar,
         public array $permissions,
         public Api $api,
-    ) {
-    }
+    ) {}
 
     public function getKeyName(): string
     {

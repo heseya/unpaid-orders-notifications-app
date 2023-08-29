@@ -7,7 +7,7 @@ namespace App\Resolvers;
 use App\Models\Field;
 use Illuminate\Support\Arr;
 
-class ImgsResolver implements LocalResolver
+final class ImgsResolver implements LocalResolver
 {
     public const ESCAPE = false;
 

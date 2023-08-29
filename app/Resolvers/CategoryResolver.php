@@ -8,7 +8,7 @@ use App\Models\Field;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
-class CategoryResolver implements LocalResolver
+final class CategoryResolver implements LocalResolver
 {
     public static function resolve(Field $field, array $response): string
     {

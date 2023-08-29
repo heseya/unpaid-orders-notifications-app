@@ -7,7 +7,7 @@ namespace App\Resolvers;
 use App\Models\Field;
 use Illuminate\Support\Arr;
 
-class AdditionalImageResolver implements LocalResolver
+final class AdditionalImageResolver implements LocalResolver
 {
     public static function resolve(Field $field, array $response): string
     {

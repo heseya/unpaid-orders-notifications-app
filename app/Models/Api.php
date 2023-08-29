@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Traits\HasUuid;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin IdeHelperApi
  */
-class Api extends Model
+final class Api extends Model
 {
-    use HasUuid;
-
     protected $fillable = [
         'url',
         'version',
@@ -22,9 +19,4 @@ class Api extends Model
         'refresh_token',
         'uninstall_token',
     ];
-
-    public function feeds(): HasMany
-    {
-        return $this->hasMany(Feed::class);
-    }
 }

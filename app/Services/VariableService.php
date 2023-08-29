@@ -29,7 +29,7 @@ use App\Resolvers\WpIdResolver;
 use App\Services\Contracts\VariableServiceContract;
 use Illuminate\Support\Str;
 
-class VariableService implements VariableServiceContract
+final class VariableService implements VariableServiceContract
 {
     private const RESOLVERS = [
         // Global

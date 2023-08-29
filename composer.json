@@ -1,14 +1,12 @@
 {
-    "name": "heseya/exporter",
+    "name": "heseya/unpaid-orders-notifications",
     "type": "project",
     "description": "Universal file exporter",
     "require": {
         "php": "^8.2",
         "guzzlehttp/guzzle": "^7.2",
-        "laravel/framework": "^10.10",
+        "laravel/framework": "^10.0",
         "heseya/app-helper": "dev-main",
-        "heseya/dto": "^1.0.1",
-        "heseya/pagination": "^1.0",
         "sentry/sentry-laravel": "^3.2"
     },
     "require-dev": {
@@ -25,9 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/",
-            "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "App\\": "app/"
         }
     },
     "autoload-dev": {

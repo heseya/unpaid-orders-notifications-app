@@ -7,7 +7,7 @@ namespace App\Resolvers;
 use App\Models\Field;
 use Illuminate\Support\Carbon;
 
-class FileCreatedAtResolver implements GlobalResolver
+final class FileCreatedAtResolver implements GlobalResolver
 {
     public static function resolve(Field $field): string
     {

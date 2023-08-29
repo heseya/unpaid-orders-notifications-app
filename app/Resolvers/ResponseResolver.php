@@ -8,7 +8,7 @@ use App\Models\Field;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-class ResponseResolver implements LocalResolver
+final class ResponseResolver implements LocalResolver
 {
     public static function resolve(Field $field, array $response): string
     {

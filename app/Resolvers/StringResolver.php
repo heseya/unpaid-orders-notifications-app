@@ -6,7 +6,7 @@ namespace App\Resolvers;
 
 use App\Models\Field;
 
-class StringResolver implements GlobalResolver
+final class StringResolver implements GlobalResolver
 {
     public static function resolve(Field $field): string
     {

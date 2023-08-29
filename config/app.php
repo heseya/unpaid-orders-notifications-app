@@ -10,8 +10,6 @@ $appUrl = Str::endsWith($appUrl, '/')
     : $appUrl;
 
 return [
-    'products_limit' => env('PRODUCTS_LIMIT', 50),
-
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -23,7 +21,7 @@ return [
     |
     */
 
-    'name' => strlen(env('APP_NAME', 'Exporter')) > 0 ? env('APP_NAME') : 'Exporter',
+    'name' => 'Unpaid orders notifications',
 
     /*
     |--------------------------------------------------------------------------
