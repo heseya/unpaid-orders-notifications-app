@@ -10,6 +10,6 @@ Route::post('/install', [InstallationController::class, 'install']);
 Route::post('/uninstall', [InstallationController::class, 'uninstall']);
 
 Route::get('/config', [ConfigController::class, 'show'])
-    ->middleware('can:configure');
+    ->middleware('can:unpaid_notifications_configure');
 Route::post('/config', [ConfigController::class, 'store'])
-    ->middleware('can:configure');
+    ->middleware('can:unpaid_notifications_configure');

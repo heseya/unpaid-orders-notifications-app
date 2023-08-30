@@ -21,7 +21,7 @@ return [
     ],
     'internal_permissions' => [
         [
-            'name' => 'configure',
+            'name' => 'unpaid_notifications_configure',
             'display_name' => "Permission to manage {$appName}",
             'unauthenticated' => false,
         ],
