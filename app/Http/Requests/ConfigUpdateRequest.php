@@ -16,7 +16,8 @@ final class ConfigUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'payment_url' => ['required', 'string', 'max:400'],
+            'name' => ['required', 'string', 'lte:200'],
+            'payment_url' => ['required', 'string', 'lte:400'],
             'orders_from_days' => ['required', 'integer', 'gte:0', 'lte:64'],
         ];
     }

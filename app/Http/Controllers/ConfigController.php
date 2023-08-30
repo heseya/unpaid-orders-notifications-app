@@ -20,6 +20,14 @@ final class ConfigController extends Controller
 
         return Response::json([
             [
+                'key' => 'name',
+                'label' => 'Nazwa nadawcy maila',
+                'type' => 'text',
+                'default_value' => $api->name,
+                'value' => $api->name,
+                'required' => true,
+            ],
+            [
                 'key' => 'payment_url',
                 'label' => 'Link do płatności',
                 'type' => 'text',
@@ -44,6 +52,7 @@ final class ConfigController extends Controller
         $api = $request->user()->api;
 
         $api->update([
+            'name' => $request->input('name'),
             'payment_url' => $request->input('payment_url'),
             'orders_from_days' => $request->input('orders_from_days'),
         ]);

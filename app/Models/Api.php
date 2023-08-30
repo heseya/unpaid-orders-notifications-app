@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 final class Api extends Model
 {
     protected $fillable = [
+        'name',
         'url',
         'version',
         'licence_key',

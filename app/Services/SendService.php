@@ -35,13 +35,13 @@ final readonly class SendService
         $lastPage = 1; // Get at least once
 
         for ($page = 1; $page <= $lastPage; ++$page) {
-            $response = $this->apiService->get($api, '/orders', [
-                'paid' => false,
-                'from' => $from,
-                'to' => $to,
-                'limit' => 100,
-                'page' => $page,
-            ]);
+            $response = $this->apiService->get($api, '/orders' .
+                '?paid=0' .
+                "&from={$from}" .
+                "&to={$to}" .
+                '&limit=100' .
+                "&page={$page}",
+            );
 
             $lastPage = $response->json('meta.last_page');
 

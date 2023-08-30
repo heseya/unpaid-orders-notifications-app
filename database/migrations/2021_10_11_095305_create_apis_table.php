@@ -15,7 +15,7 @@ return new class extends Migration {
         Schema::create('apis', function (Blueprint $table): void {
             $table->id();
             $table->string('url')->unique();
-            $table->string('name')->nullable();
+            $table->string('name', 200)->nullable();
 
             $table->string('payment_url', 400)->default('');
             $table->unsignedTinyInteger('orders_from_days')->default(2);
