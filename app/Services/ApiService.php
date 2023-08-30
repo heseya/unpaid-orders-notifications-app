@@ -10,13 +10,12 @@ use App\Exceptions\ApiClientErrorException;
 use App\Exceptions\ApiConnectionException;
 use App\Exceptions\ApiServerErrorException;
 use App\Models\Api;
-use App\Services\Contracts\ApiServiceContract;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
-final readonly class ApiService implements ApiServiceContract
+final readonly class ApiService
 {
     /**
      * @throws ApiAuthenticationException

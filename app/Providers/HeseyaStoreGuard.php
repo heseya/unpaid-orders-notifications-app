@@ -8,7 +8,7 @@ use App\Exceptions\ApiClientErrorException;
 use App\Exceptions\InvalidTokenException;
 use App\Models\Api;
 use App\Models\StoreUser;
-use App\Services\Contracts\ApiServiceContract;
+use App\Services\ApiService;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
@@ -24,7 +24,7 @@ final class HeseyaStoreGuard implements Guard
     private ?string $apiUrl = null;
 
     public function __construct(
-        private readonly ApiServiceContract $apiService,
+        private readonly ApiService $apiService,
         private readonly Request $request,
     ) {
         Gate::before(function ($user, $ability) {

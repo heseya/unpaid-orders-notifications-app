@@ -13,9 +13,13 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('apis', function (Blueprint $table): void {
-            $table->id()->primary();
+            $table->id();
             $table->string('url')->unique();
             $table->string('name')->nullable();
+
+            $table->string('payment_url', 400)->default('');
+            $table->unsignedTinyInteger('orders_from_days')->default(2);
+
             $table->string('version');
             $table->string('licence_key')->nullable();
             $table->string('integration_token', 1000);

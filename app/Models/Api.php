@@ -18,5 +18,8 @@ final class Api extends Model
         'integration_token',
         'refresh_token',
         'uninstall_token',
+
+        'payment_url',
+        'orders_from_days',
     ];
 }
