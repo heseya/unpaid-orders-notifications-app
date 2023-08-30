@@ -33,8 +33,12 @@ final class Send extends Command
 
         $service = app(SendService::class);
 
-        $this->withProgressBar(Api::all(), function (Api $api) use ($service): void {
-            $service->sendForApi($api);
-        });
+        foreach (Api::all() as $api) {
+            $this->info("{$api->url} processing...");
+            $emailsSent = $service->sendForApi($api);
+            $this->info("{$api->url} done ({$emailsSent} emails sent).");
+        }
+
+        $this->info('All done.');
     }
 }

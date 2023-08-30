@@ -27,12 +27,13 @@ final readonly class SendService
      * @throws ApiAuthenticationException
      * @throws ApiAuthorizationException
      */
-    public function sendForApi(Api $api): void
+    public function sendForApi(Api $api): int
     {
         $from = Carbon::now()->subDays($api->orders_from_days)->startOfDay()->format('Y-m-d');
         $to = Carbon::now()->subDays($api->orders_from_days)->endOfDay()->format('Y-m-d');
 
         $lastPage = 1; // Get at least once
+        $emailsSent = 0;
 
         for ($page = 1; $page <= $lastPage; ++$page) {
             $response = $this->apiService->get($api, '/orders' .
@@ -43,15 +44,19 @@ final readonly class SendService
                 "&page={$page}",
             );
 
-            $lastPage = $response->json('meta.last_page');
+            $lastPage = (int) $response->json('meta.last_page');
+            $lastPage = max($lastPage, 1);
 
             foreach ($response->json('data') as $order) {
                 if ($order['payable']) {
                     Mail::to($order['email'])->send(
                         new UnpaidOrder($api, $order),
                     );
+                    ++$emailsSent;
                 }
             }
         }
+
+        return $emailsSent;
     }
 }

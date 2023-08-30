@@ -1,7 +1,5 @@
 <x-mail::message>
-<x-mail::panel>
 # {{ $storeName }}
-</x-mail::panel>
 
 Zamówienie nr. {{ $orderNumber }} nadal czeka na Twoją płatność.
 
