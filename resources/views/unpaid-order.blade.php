@@ -1,6 +1,6 @@
 <x-mail::message>
     <x-mail::panel>
-        # {{ $shopName }}
+        # {{ $storeName }}
     </x-mail::panel>
 
     Zamówienie nr. {{ $orderNumber }} nadal czeka na Twoją płatność.
@@ -12,5 +12,5 @@
     </x-mail::button>
 
     Dziękujemy,
-    {{ $shopName }}
+    {{ $storeName }}
 </x-mail::message>

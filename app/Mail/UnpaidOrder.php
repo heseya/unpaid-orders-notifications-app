@@ -47,7 +47,7 @@ final class UnpaidOrder extends Mailable
             markdown: 'unpaid-order',
             with: [
                 'storeName' => $this->api->name,
-                'orderCode' => $this->order['code'],
+                'orderNumber' => $this->order['code'],
                 'summary' => $this->order['summary'],
                 'url' => Str::of($this->api->payment_url)
                     ->finish('/')
