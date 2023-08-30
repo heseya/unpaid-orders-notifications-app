@@ -7,9 +7,11 @@ namespace App\Mail;
 use App\Models\Api;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 
 final class UnpaidOrder extends Mailable
@@ -31,6 +33,7 @@ final class UnpaidOrder extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
+            from: new Address(Config::get('mail.from.address'), $this->api->name),
             subject: 'Twoje zamówienie nadal czeka na płatność',
         );
     }
