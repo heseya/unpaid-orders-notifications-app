@@ -79,6 +79,8 @@ final class HeseyaStoreGuard implements Guard
             return null;
         }
 
+        $apiUrl = rtrim($apiUrl, '/');
+
         [$this->token, $this->apiUrl] = [$token, $apiUrl];
 
         try {

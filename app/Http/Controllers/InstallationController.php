@@ -20,11 +20,7 @@ final class InstallationController extends Controller
 {
     public function install(InstallRequest $request): JsonResponse
     {
-        $storeUrl = $request->input('api_url');
-
-        if (Str::endsWith($storeUrl, '/')) {
-            $storeUrl = Str::substr($storeUrl, 0, Str::length($storeUrl) - 1);
-        }
+        $storeUrl = rtrim($request->input('api_url'), '/');
 
         $token = $request->input('integration_token');
 
