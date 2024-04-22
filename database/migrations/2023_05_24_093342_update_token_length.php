@@ -12,10 +12,10 @@ class UpdateTokenLength extends Migration
     public function up(): void
     {
         Schema::table('apis', function (Blueprint $table) {
-            $table->string('licence_key', 1800)->nullable()->change();
-            $table->string('integration_token', 1800)->change();
-            $table->string('refresh_token', 1800)->change();
-            $table->string('uninstall_token', 1800)->change();
+            $table->text('licence_key')->nullable()->change();
+            $table->text("integration_token")->change();
+            $table->text("refresh_token")->change();
+            $table->string("uninstall_token", 255)->unique()->change();
         });
     }
 
