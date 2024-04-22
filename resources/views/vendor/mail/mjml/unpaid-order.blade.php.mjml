@@ -1,0 +1,38 @@
+<mjml>
+    <mj-head>
+        <mj-style inline="inline">
+            .rounded > table { border-collapse:separate; border-radius:15px; }
+        </mj-style>
+    </mj-head>
+    <mj-body background-color="#fff">
+
+        <mj-section background-color="#fff" background-repeat="repeat" text-align="center" padding-top="50px" padding-left="20px" padding-right="20px">
+            <mj-column background-color="#244d8b" css-class="rounded">
+                <mj-text align="center" color="#fff" line-height="68px" font-size="40px" font-family="DM Serif Display">
+                    {{ $storeName }}
+                </mj-text>
+            </mj-column>
+        </mj-section>
+
+        <mj-section>
+            <mj-column>
+                <mj-text align="left" color="#333" font-family="Arial, sans-serif" font-size="16px" line-height="22px">
+                    <p>
+                        Dziękujemy za zakupy w {{ $storeName }}
+                    </p>
+                    <p>
+                        Pragniemy poinformować że Twoje zamówienie o numerze {{ $orderNumber }} oczekuje na płatność. W celu sfinalizowania transakcji prosimy o dokończenie płatności pod linkiem <a href="{{ $url }}" target="_blank">Opłać zamówienie ({{ $summary }} zł)</a>
+                    </p>
+
+                </mj-text>
+                <mj-text align="right" color="#000" font-family="Arial, sans-serif" font-size="14px" line-height="0px">
+                    <p>
+                        Dziękujemy,
+                        {{ $storeName }}
+                    </p>
+                </mj-text>
+            </mj-column>
+        </mj-section>
+
+    </mj-body>
+</mjml>
