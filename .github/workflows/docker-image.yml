@@ -32,4 +32,5 @@ jobs:
         with:
           context: .
           push: true
+          file: ./docker/Dockerfile-prod
           tags: heseya/unpaid-orders-notifications:${{ env.IMAGE_TAG }}
