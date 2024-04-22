@@ -29,8 +29,8 @@ final readonly class SendService
      */
     public function sendForApi(Api $api): int
     {
-        $from = Carbon::now()->subDays($api->orders_from_days)->startOfDay()->format('Y-m-d');
-        $to = Carbon::now()->subDays($api->orders_from_days)->endOfDay()->format('Y-m-d');
+        $from = Carbon::now()->startOfHour($api->orders_from_hours)->subHours()->format('Y-m-d H:i:s');
+        $to = Carbon::now()->endOfHour($api->orders_from_hours)->subHours()->format('Y-m-d H:i:s');
 
         $lastPage = 1; // Get at least once
         $emailsSent = 0;
