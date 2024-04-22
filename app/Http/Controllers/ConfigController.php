@@ -36,11 +36,11 @@ final class ConfigController extends Controller
                 'required' => true,
             ],
             [
-                'key' => 'orders_from_days',
-                'label' => 'Liczba dni po których zostanie wysłane powiadomienie',
+                'key' => 'orders_from_hours',
+                'label' => 'Liczba godzin po których zostanie wysłane powiadomienie',
                 'type' => 'number',
-                'default_value' => $api->orders_from_days,
-                'value' => $api->orders_from_days,
+                'default_value' => $api->orders_from_hours,
+                'value' => $api->orders_from_hours,
                 'required' => true,
             ],
         ]);
@@ -54,7 +54,7 @@ final class ConfigController extends Controller
         $api->update([
             'name' => $request->input('name'),
             'payment_url' => $request->input('payment_url'),
-            'orders_from_days' => $request->input('orders_from_days'),
+            'orders_from_hours' => $request->input('orders_from_hours'),
         ]);
 
         return Response::noContent();

@@ -1,4 +1,10 @@
 FROM escolasoft/php:8.2-heseya
 
+RUN apt update && apt install cron -y
+RUN echo "5 * * * *	root	$( which php ) /var/www/html/artisan send" >> /etc/cron.d/feed
+
 COPY . ./
 RUN composer i
+RUN chown -R www-data:www-data /var/www/html
+
+CMD printenv > /etc/environment && service cron start && apache2-foreground

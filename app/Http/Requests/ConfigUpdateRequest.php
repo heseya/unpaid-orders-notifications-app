@@ -18,7 +18,7 @@ final class ConfigUpdateRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:200'],
             'payment_url' => ['required', 'string', 'max:400'],
-            'orders_from_days' => ['required', 'integer', 'gte:0', 'lte:64'],
+            'orders_from_hours' => ['required', 'integer', 'gte:0', 'lte:1500'],
         ];
     }
 }

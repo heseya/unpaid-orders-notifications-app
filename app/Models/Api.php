@@ -21,6 +21,6 @@ final class Api extends Model
         'uninstall_token',
 
         'payment_url',
-        'orders_from_days',
+        'orders_from_hours',
     ];
 }

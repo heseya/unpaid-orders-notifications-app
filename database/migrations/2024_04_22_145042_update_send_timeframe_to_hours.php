@@ -13,10 +13,11 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('apis', function (Blueprint $table): void {
-            $table->text('licence_key')->nullable()->change();
-            $table->text('integration_token')->change();
-            $table->text('refresh_token')->change();
-            $table->string('uninstall_token', 255)->change();
+            $table->unsignedInteger('orders_from_days')->default(48)->change();
+        });
+
+        Schema::table('apis', function (Blueprint $table): void {
+            $table->renameColumn('orders_from_days', 'orders_from_hours');
         });
     }
 
@@ -26,10 +27,11 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('apis', function (Blueprint $table): void {
-            $table->string('licence_key')->nullable()->change();
-            $table->string('integration_token', 1000)->change();
-            $table->string('refresh_token', 1000)->change();
-            $table->string('uninstall_token', 128)->change();
+            $table->unsignedInteger('orders_from_hours')->default(2)->change();
+        });
+
+        Schema::table('apis', function (Blueprint $table): void {
+            $table->renameColumn('orders_from_hours', 'orders_from_days');
         });
     }
 };
