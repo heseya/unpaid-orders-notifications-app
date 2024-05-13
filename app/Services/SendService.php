@@ -49,6 +49,7 @@ final readonly class SendService
 
             foreach ($response->json('data') as $order) {
                 if ($order['payable']) {
+                    $order = $this->apiService->get($api, '/orders/id:' . $order['id'])->json('data');
                     Mail::to($order['email'])->send(
                         new UnpaidOrder($api, $order),
                     );

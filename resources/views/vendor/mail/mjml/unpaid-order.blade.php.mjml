@@ -25,6 +25,110 @@
                     </p>
 
                 </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#fff" background-repeat="repeat" background-size="auto" padding-bottom="0px" padding-top="0px" padding="20px 0" text-align="center">
+            <mj-column>
+                <mj-text align="left" color="#333" font-family="Arial, sans-serif" font-size="16px" line-height="22px" padding-bottom="0" padding-top="10px" padding="10px 25px">
+                    <mj-column>
+
+                        <p style="text-align: center; background-color: #244d8b; color: #fff; font-size:14px" text-transform="uppercase">Informacje o zamówieniu:</p>
+                        <p style="text-align: center;">
+                            Zamówienie numer {{ $order['code'] }} z dnia {{ date('d-m-Y', strtotime($order['created_at'])) }}
+                        </p>
+                        @if (isset($order['shippingMethod']))
+                        <p style="text-align: center;"> Dostawa: {{ $order['shippingMethod']['name'] }} </p>
+                        @endif
+                    </mj-column>
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#fff" padding-bottom="0">
+            <mj-column>
+                <mj-text align="left" color="#333" font-family="Arial, sans-serif" font-size="16px" line-height="22px" padding-bottom="0" padding-top="10px" padding="10px 25px">
+                    <p style="text-align: center; background-color: #244d8b; color: #fff; font-size:14px" text-transform="uppercase">Zamówione produkty:</p>
+                </mj-text>
+                <mj-table>
+                    <tr style="border-bottom:1px solid #ecedee;text-align:left;padding:15px 0;">
+                        <th style="text-align: center; padding: 0 15px 0 0;">Nazwa</th>
+                        <th style="text-align: center; padding: 0 15px; width: 30px;">Ilość</th>
+                        <th style="text-align: center; padding: 0 0 0 15px; width: 25%;">Cena</th>
+                    </tr>
+                    @foreach ($order['products'] as $item)
+                    <tr style='border-bottom: 2px #244d8b solid; line-height: 38px;'>
+                        <td style="padding: 0 15px 0 0;">{{ $item['product']['name'] }}</td>
+                        <td style="text-align: center; padding: 0 15px; width: 30px;">{{ $item['quantity'] }}</td>
+                        <td style="text-align: center; padding: 0 0 0 15px; width: 25%;">{{ number_format($item['price'], 2, '.', '') }} {{ $order['currency'] }}</td>
+                    </tr>
+                    @endforeach
+                </mj-table>
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#fff" background-repeat="repeat" background-size="auto" padding-bottom="0px" text-align="center">
+
+            <mj-column>
+                <mj-table>
+                    <tr>
+                        <td style="width: 180px">Wartość produktów:</td>
+                        <td><b>{{ number_format($order['cart_total'], 2, '.', '') }} {{ $order['currency'] }}</b></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 180px">Koszt dostawy:</td>
+                        <td><b>{{ number_format($order['shipping_price'], 2, '.', '') }} {{ $order['currency'] }}</b></td>
+                    </tr>
+                    @if ($order['cart_total_initial'] !== $order['cart_total'])
+                    <tr>
+                        <td style="width: 180px">Rabat:</td>
+                        <td><b>{{ number_format($order['cart_total_initial'] - $order['cart_total'], 2, '.', '') }} {{ $order['currency'] }}</b></td>
+                    </tr>
+                    @endif
+                    <tr>
+                        <td style="width: 180px">Do zapłaty:</td>
+                        <td><b>{{ number_format($order['summary'], 2, '.', '') }} {{ $order['currency'] }}</b></td>
+                    </tr>
+                </mj-table>
+            </mj-column>
+        </mj-section>
+
+        <mj-section background-color="#fff" background-repeat="repeat" background-size="auto" padding-bottom="0px" text-align="center">
+            <mj-column>
+                <mj-text align="left" color="#000" font-family="Arial, sans-serif" font-size="14px" line-height="22px">
+                    <p style="text-align: center; background-color: #244d8b; color: #fff; font-size:14px" text-transform="uppercase">Zamawiający:</p>
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#fff" background-repeat="repeat" background-size="auto" padding-top='0px' padding-bottom="0px" text-align="center">
+            <mj-column>
+                <mj-table>
+                    <tr>
+                        <td style="width: 180px">{{ isset($order['invoiceAddress']['name']) ? 'Firma' : 'Imię i nazwisko' }}:</td>
+                        <td>{{ isset($order['invoiceAddress']['name']) ? $order['invoiceAddress']['name'] : (isset($order['deliveryAddress']['name']) ? $order['deliveryAddress']['name'] : '-') }}</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 180px">Adres:</td>
+                        <td>{{ isset($order['invoiceAddress']['address']) ? $order['invoiceAddress']['address'] : (isset($order['deliveryAddress']['address']) ? $order['deliveryAddress']['address'] : '-') }}</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 180px">Kod pocztowy:</td>
+                        <td>{{ isset($order['invoiceAddress']['zip']) ? $order['invoiceAddress']['zip'] : (isset($order['deliveryAddress']['zip']) ? $order['deliveryAddress']['zip'] : '-') }}</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 180px">Miejscowość:</td>
+                        <td>{{ isset($order['invoiceAddress']['city']) ? $order['invoiceAddress']['city'] : (isset($order['deliveryAddress']['city']) ? $order['deliveryAddress']['city'] : '-') }}</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 180px">Kraj:</td>
+                        <td>{{ isset($order['invoiceAddress']['country']) ? $order['invoiceAddress']['country'] : (isset($order['deliveryAddress']['country']) ? $order['deliveryAddress']['country'] : '-') }}</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 180px">Telefon kontaktowy:</td>
+                        <td>{{ isset($order['invoiceAddress']['phone']) ? $order['invoiceAddress']['phone'] : (isset($order['deliveryAddress']['phone']) ? $order['deliveryAddress']['phone'] : '-') }}</td>
+                    </tr>
+                </mj-table>
+            </mj-column>
+        </mj-section>
+        <mj-section>
+            <mj-column>
                 <mj-text align="right" color="#000" font-family="Arial, sans-serif" font-size="14px" line-height="0px">
                     <p>
                         Dziękujemy,

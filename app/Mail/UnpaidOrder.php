@@ -49,6 +49,7 @@ final class UnpaidOrder extends Mailable
                 'storeName' => $this->api->name,
                 'orderNumber' => $this->order['code'],
                 'summary' => $this->order['summary'],
+                'order' => $this->order,
                 'url' => Str::of($this->api->payment_url)
                     ->finish('/')
                     ->append($this->order['code'])
