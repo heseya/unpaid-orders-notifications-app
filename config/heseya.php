@@ -16,6 +16,7 @@ return [
     'required_permissions' => [
         'auth.check_identity',
         'orders.show',
+        'orders.show_details',
     ],
     'internal_permissions' => [
         [
