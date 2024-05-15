@@ -187,8 +187,8 @@
                                 <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                     <table cellpadding="0" cellspacing="0" width="100%" border="0" style="color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;width:100%;border:none;">
                                         <tr style="border-bottom:1px solid #ecedee;text-align:left;padding:15px 0;">
-                                            <th style="text-align: center; padding: 0 15px 0 0;">Nazwa</th>
-                                            <th style="text-align: center; padding: 0 15px; width: 30px;">Ilość</th>
+                                            <th style="text-align: center; padding: 0 15px 0 0; width: 50%">Nazwa</th>
+                                            <th style="text-align: center; padding: 0 15px; width: 25%;">Ilość</th>
                                             <th style="text-align: center; padding: 0 0 0 15px; width: 25%;">Cena</th>
                                         </tr> @foreach ($order['products'] as $item) <tr style="border-bottom: 2px #244d8b solid; line-height: 38px;">
                                             <td style="padding: 0 15px 0 0;">{{ $item['product']['name'] }}</td>
@@ -286,28 +286,28 @@
                                 <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                     <table cellpadding="0" cellspacing="0" width="100%" border="0" style="color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;width:100%;border:none;">
                                         <tr>
-                                            <td style="width: 180px">{{ isset($order['invoiceAddress']['name']) ? 'Firma' : 'Imię i nazwisko' }}:</td>
-                                            <td>{{ isset($order['invoiceAddress']['name']) ? $order['invoiceAddress']['name'] : (isset($order['deliveryAddress']['name']) ? $order['deliveryAddress']['name'] : '-') }}</td>
+                                            <td style="width: 180px">{{ $order['invoice_requested'] ? 'Firma' : 'Imię i nazwisko' }}:</td>
+                                            <td>{{ $order['billing_address']['name'] ?? ($order['shipping_place']['name'] ?? '-') }}</td>
                                         </tr>
                                         <tr>
                                             <td style="width: 180px">Adres:</td>
-                                            <td>{{ isset($order['invoiceAddress']['address']) ? $order['invoiceAddress']['address'] : (isset($order['deliveryAddress']['address']) ? $order['deliveryAddress']['address'] : '-') }}</td>
+                                            <td>{{ $order['billing_address']['address'] ?? ($order['shipping_place']['address'] ?? '-') }}</td>
                                         </tr>
                                         <tr>
                                             <td style="width: 180px">Kod pocztowy:</td>
-                                            <td>{{ isset($order['invoiceAddress']['zip']) ? $order['invoiceAddress']['zip'] : (isset($order['deliveryAddress']['zip']) ? $order['deliveryAddress']['zip'] : '-') }}</td>
+                                            <td>{{ $order['billing_address']['zip'] ?? ($order['shipping_place']['zip'] ?? '-') }}</td>
                                         </tr>
                                         <tr>
                                             <td style="width: 180px">Miejscowość:</td>
-                                            <td>{{ isset($order['invoiceAddress']['city']) ? $order['invoiceAddress']['city'] : (isset($order['deliveryAddress']['city']) ? $order['deliveryAddress']['city'] : '-') }}</td>
+                                            <td>{{ $order['billing_address']['city'] ?? ($order['shipping_place']['city'] ?? '-') }}</td>
                                         </tr>
                                         <tr>
                                             <td style="width: 180px">Kraj:</td>
-                                            <td>{{ isset($order['invoiceAddress']['country']) ? $order['invoiceAddress']['country'] : (isset($order['deliveryAddress']['country']) ? $order['deliveryAddress']['country'] : '-') }}</td>
+                                            <td>{{ $order['billing_address']['country'] ?? ($order['shipping_place']['country'] ?? '-') }}</td>
                                         </tr>
                                         <tr>
                                             <td style="width: 180px">Telefon kontaktowy:</td>
-                                            <td>{{ isset($order['invoiceAddress']['phone']) ? $order['invoiceAddress']['phone'] : (isset($order['deliveryAddress']['phone']) ? $order['deliveryAddress']['phone'] : '-') }}</td>
+                                            <td>{{ $order['billing_address']['phone'] ?? ($order['shipping_place']['phone'] ?? '-') }}</td>
                                         </tr>
                                     </table>
                                 </td>
