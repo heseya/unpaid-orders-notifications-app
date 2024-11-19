@@ -52,7 +52,7 @@ final class UnpaidOrder extends Mailable
                 'order' => $this->order,
                 'url' => Str::of($this->api->payment_url)
                     ->finish('/')
-                    ->append($this->order['code'])
+                    ->append(config('orders.using_uuid') ? $this->order['id'] : $this->order['code'])
                     ->toString(),
             ],
         );
